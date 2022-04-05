@@ -1,0 +1,46 @@
+/config
+     contains the code to connect to the database and export collections 
+     from the database
+     * mongoCollections.js - specifies which collections to export
+     * mongoConnection.js - specifies how to connect to mongoDB
+     * settings.json - connection settings for mongoDB
+
+/data
+    contains the code to retrieve data from the database, separated by collection
+    * /validations
+        contains the code to validate our data
+
+    * index.js - specifies what to export from the data directory, should export each collection
+
+/documentation
+    contains documentation about this project
+
+/public
+    contains code that may need to be referenced elsewhere in the project
+    * /css
+        contains stylesheets that need to be referenced by our html pages
+    * /scripts
+        contains scripts that may need to be referenced on the client-side
+
+/routes
+    contains code for our routers to define what action should be taken when a user goes to a specific url endpoint
+    * index.js - defines which routers correspond to a particular url endpoint
+
+/tasks
+    contains code for tasks to run on startup
+    * seed.js - a file which will seed our database
+
+/tests
+    contains code to test that our functions work as expected
+
+/views
+    contains the html/handlebars files that form the content of our pages
+    * /layouts - contains the main layout templates that we will need for our site
+    * /frames  - contains templates of portions of a site that may be used at multiple sections of the site
+
+*app.js 
+    entry point for the project; defines and runs the express server
+
+*package.json
+    generated file by npm init, contains information about the project and dependencies; 
+    contains aliases for running common commands via npm

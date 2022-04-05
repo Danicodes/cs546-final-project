@@ -1,0 +1,171 @@
+﻿Routes for Mentorship Application
+Updated: APR/05/2022
+Doubts:
+Routes should have username or userId or none
+
+
+
+
+Miscellaneous:
+/signup: (Brenden)
+        POST: 
+                ReqBody: All the mandatory fields of the User Record
+                Res: Return the added User without password
+                Description: Validate all the credentials necessary and add the User record into the database.
+
+
+/login: (Brenden)
+        POST:
+                ReqBody: Username and Password provided during the signup 
+                Res: return true or false
+                Description: Encryption and Decryption of password are used
+
+
+Users: All the routes in this URL will have a middleware function where we verify if the user has valid session. If not, respond with unauthorized status code
+/users/{userId}: (Brenden)
+        GET:
+                ReqBody: None
+                Res: User fields that are taken during the signup process (except password)
+                Description: Used for showing the profile information
+        PUT:
+                ReqBody: All the user fields which can be modified (userId, username, password cannot be modifiable)
+                Res: User fields that are taken during the signup process (except password)
+                Description: Updates the user collection in database for modifiable properties and returns the updated collection. (Same as GET Response as above)
+
+
+/users/{userId}/reset:
+        PUT:
+                ReqBody: New Password
+                Res: Message indicating “Success/Failure”
+                Description: For a user already logged in, he/she can reset the password
+
+
+________________
+
+
+Relationships: All the routes in this URL will have a middleware function where we verify if the user has valid session. If not, respond with unauthorized status code. 
+Every Route can get the userId from Request’s Session Object
+All Relationship Routes should check if the current user is involved in the relationship they are hitting on
+/relationship/mentors:
+        GET:
+                ReqBody: None
+                Res: Relationship objects in which current user acts as Mentee
+                Description: Logged in user asking for all his mentors 
+
+
+/relationship/mentees:  
+        GET:
+                ReqBody: None
+                Res: Relationship objects in which current user acts as Mentor
+                Description: Logged in user asking for all his Mentees 
+
+
+/relationship: (Dani)
+        POST:
+                ReqBody: All the mandatory fields of the Relationship Collection
+                Res: Return the added Relationship (without sensitive information if there is any)
+                Description: Validate all the fields necessary and add the Relationship record with PENDING status. 
+
+
+/relationship/{id}: (Dani)
+        GET:
+                ReqBody(Query Param): None
+                Res: Complete Relation Object along with it’s Chat Channel (Messages in the channel), Files in corresponding workspace, user record of both persons involved in the relation
+                Description:  When the user clicks on one relation from his dashboard, he/she be able to see the whole information of that relationship.
+
+
+/relationship/{id}/messages: (Ethan)
+        POST:
+                ReqBody: Author, timestamp, content of the message
+                Res: Added message
+                Description: When the users send new message for a particular relationship
+        GET:
+                QueryParams: timestamp 
+                Res: Latest Message Objects
+                Description: Messages added after given timestamp are retrieved periodically to show to user
+
+
+
+
+/relationship/{id}/status: (Ethan)
+        GET: 🡪 Optional
+                ReqBody: None
+                Res: Latest Status of the relation
+                Description: To Refresh the status of the relation periodically if the current status is PENDING.
+        POST:
+                ReqBody: New Status
+                Res: Updated Status of the relation
+                Description: When any user performs action for one particular relation, status needs to be updated
+
+
+/relationship/{id}/file:
+        POST:
+                ReqBody: Take file from the user client and upload to the driver
+                Res: Updated workspace object
+                Description: When a user uploads a file into their workspace, respond whole workspace object after the operation
+        GET:
+                ReqBody: File path 
+                Res: Return the copy of the file content
+                Description: File can be downloaded by user. Need to be validated whether the workspace folder is accessible for the user or not
+
+
+
+
+POSTS: All the routes in this URL will have a middleware function where we verify if the user has valid session. If not, respond with unauthorized status code.
+Every Route can get the userId from Request’s Session Object
+All below descriptions are only meant for public posts. Private posts working needs to be discussed
+/posts: (Harish)
+        POST:
+                ReqBody: All the mandatory fields of the Post Collection
+                Res: Return the inserted Post (Without Sensitive Information 
+                Description: Create a new Post
+        GET:
+                ReqBody: None
+                Res: Return all the posts sorted in descending order
+                Description: On the feed page, we must return all the public posts sorted by the date in descending order
+
+
+/posts/{id}/like: (Harish)
+        POST:
+                ReqBody: None
+                Res: increased likes count of the post
+                Description: Increase the likes count of the post and add this postId to the current user likedPosts attributes
+
+
+
+
+/posts/{id}/comments: (Harish)
+        GET: 
+                ReqBody: None
+                Res: Comments of post
+                Description: When user clicks on comments, he/she must get all the comments of that post.
+        POST:
+                ReqBody: Comment Object fields
+                Res: Comment added
+                Description: User can add comment
+        DELETE: 🡪 Optional
+                ReqBody: None
+                Res: Delete a Comment of post if it is his/her comment
+                Description: user should be able to delete his/her comment
+
+
+/posts/{id}/report: (Harish)
+        POST:
+                ReqBody: None
+                Res: Success/Failure of the update
+                Description: User can report one post
+
+
+
+
+Searches:
+/search/posts: (Yash)
+        GET:
+                ReqBody: Array of tags
+                Response: posts that match the input tags with its search tags
+
+
+/search/users: (Yash)
+        GET:
+                ReqBody: Array of tags
+                Response: posts that match the input tags with its search tags

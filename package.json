@@ -1,0 +1,12 @@
+{
+  "name": "finalproject",
+  "version": "1.0.0",
+  "description": "Mentorship Network Website",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node app.js"
+  },
+  "author": "Danielle Williams, Ethan Grzeda, Yash Kosambia, Sai Harish Kumar Vitta, Brendan Murray",
+  "license": "MIT"
+}

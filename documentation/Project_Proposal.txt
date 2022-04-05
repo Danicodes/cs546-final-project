@@ -1,0 +1,88 @@
+﻿Mentorship Network Project Proposal
+
+
+Group Members: Danielle Williams, Ethan Grzeda, Yash Kosambia, Sai Harish Kumar Vitta, Brendan Murray
+Github: https://github.com/Danicodes/cs546-final-project.git
+Brief Description: 
+The purpose of this application is to form a network of persons who want to help each other learn and grow in their respective fields. This application will allow potential mentees to connect with experienced professionals volunteering to mentor others in their fields.
+
+
+Core Features:
+* Homepage:
+   * Users who are not logged in will view a general feed and general advice from recent public posts made by both mentors and mentees. There will be a general feed and a filter allowing users to limit the feed to posts made under a certain profession (e.g: #ComputerScience, #Photography, #Writing, #HR).
+   * Mentor view: Visible when viewing the homepage with the mentor role, in addition to the user’s preferred feed view (the profession the user designates as the user’s default) the user’s mentor dashboard will also be visible in a sidebar
+   * Mentee view: Visible when viewing the homepage with the mentee role, in addition to the user’s preferred feed view (the profession you’ve designated as your default), the user’s mentee dashboard will also be visible
+
+
+* Feed:
+   * Logged in users can interact with posts, with likes/dislikes and comments
+   * A post can also be reported if it is thought to be inappropriate or misleading
+   * Can be filtered by profession
+
+
+* Search:
+   * Post search by text index
+   * Mentor search: It is important for potential mentees to be able to find mentors that can relate to their experiences so we propose a search feature that has the option for users to search for mentees by race, nationality, gender identity, years of experience etc.
+
+
+* Profile Page:
+   * Mentors:
+      * Biography/About you section
+      * Share your mentorship style
+      * Accept/reject mentorship requests
+      * See your previous posts, make new post
+      * Edit your page
+   * Mentees:
+      * Biography/About you section
+      * Share your passions/what you want to learn/are learning
+      * View your mentors
+      * See your previous posts, make new post
+      * Edit your page
+
+   * Post: 
+   * Post to general (everyone can see your post under the profession you post to) 
+   * Mentors: Post to your mentees only
+   * (Extra: Post to your mentees in a specific profession)
+
+      * In-app direct messaging:
+      * Send messages between connected mentors and mentees
+      * Based on a goal timeline, the mentor will get reminders to check-in with their mentees at specified intervals
+
+         * Shared Workspace:
+         * Allows users to upload documents and share resources with restricted access. The idea is that mentors and mentees will have persistent storage for some project they’re working on together for example.
+
+            * Mentorship requests:
+            * In order to encourage a successful mentor/mentee experience we ask that mentees provide some goals that they’re asking the mentors to help them meet. 
+We provide a form that guides the mentees in making a mentorship request, and that will be sent to the mentor when a mentorship request is made.
+            * If a mentor chooses to accept a mentorship request, they can accept all of the ‘terms’ in the form sent by the mentee. They can accept conditionally, opting to just help with one of the requested terms. They will also be prompted to suggest a timeline for meeting the proposed terms.
+
+
+
+
+Extra Features:
+               * Authenticate login with LinkedIn: Using firebase custom token method
+               * Zoom integration to allow for video calls with mentors and their mentees
+               * Real-time direct messaging: Push notifications, live view of whether or not your mentors are online
+               * Rating system: Allow for a mentees to rate their mentors, and for mentees to look for good mentors
+               * Goal page: Overall goals a mentee is wanting to meet within a profession, with some suggestions of goals to set
+
+
+
+
+________________
+
+
+
+
+Feedback
+
+
+URL referred by Professor: https://www.loginradius.com/blog/async/linkedin-login-using-node-passport/
+
+
+- Shared workspace:
+        Can add an auth flag to access this folder/file – 
+        Collection of shared spaces and userid belonging to that space
+
+
+               * Real-time direct messaging: Push notification may present some difficulty
