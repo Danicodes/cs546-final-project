@@ -50,6 +50,16 @@ When working on a 'fix' branch, please create a longer, itemized commit message.
 ### Push
 If you're working alongside someone else on the same branch, please push often enough that the other person/s has access to your changes.
 
+When pushing from a new branch, you will initially need to set the equivalent upstream branch that your local branch corresponds to - that name should match your local branch name. 
+```
+git checkout -b feature-add-user-routes
+
+# Make some file changes and commit them
+
+git push -u origin feature-add-user-routes
+```
+
+
 ### Pull Requests
 Only make a pull request for a branch that is functional with the latest version of the dev branch. We will decide whether code can be merged by semi-formal code review via the github UI. Comment on the pull request with any potential concerns and when at least two other members of the team have reviewed and approved the code, then it will be merged with dev.
 
