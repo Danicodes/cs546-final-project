@@ -1,7 +1,10 @@
 const mongoCollections = require('../config/mongoCollections');
-const status = require('./status');
 const relationshipCollection = mongoCollections.relationships;
 const { ObjectId } = require('mongodb');
+
+const status = require('./status');
+const validate = require('../validations/data');
+
 
 /**
  * Insert a new relationship into the relationships collection
@@ -15,13 +18,20 @@ const { ObjectId } = require('mongodb');
  */
  async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
     //TODO: Validate inputs
+    validate.checkArgLength(arguments, 4);
+    validate.checkIsEmptyString(relationshipDescription); // Cannot be empty
+    mentor = validate.convertID(mentor); // TODO: decide if this should be a string or object id
+    mentee = validate.convertID(mentee);
+
+    // validate array content relationshipCategory
+
     let relationshipDB = await relationshipCollection();
 
     let workspaceId = null;
     let chatChannel = null;
 
-    let createdOn = Date.now(); // a number representing the milliseconds elapsed since epoch
-    let updatedOn = Date.now();
+    let createdOn = new Date(); // a number representing the milliseconds elapsed since epoch
+    let updatedOn = createdOn; // Initially will be the same as createdOn
 
     const relationshipObject = {
         _id: null,
@@ -48,7 +58,10 @@ const { ObjectId } = require('mongodb');
   * @returns {object} relationshipObject corresponding to the given id
   */
  async function getRelationshipById(relationshipId){
-    // TODO: convert string relationshipId to objectId 
+    //Validating arguments
+    validate.checkArgLength(arguments, 1);
+    relationshipId = validate.convertID(relationshipId);
+
     let relationshipDB = await relationshipCollection();
     let foundRelationships = await relationshipDB.find({'_id': id}).toArray();
     
@@ -67,6 +80,11 @@ const { ObjectId } = require('mongodb');
  *  @param {status} newStatus: The changed status of the relationship
  */
  async function updateRelationshipStatus(relationshipId, newStatus){
+    // Validate arguments
+    validate.checkArgLength(arguments, 2);
+    relationshipId = validate.convertID(relationshipId);
+    if (!(newStatus instanceof status)) throw `Error: newStatus must be a status enum`;
+
     let relationshipDB = await relationshipCollection();
 
     let foundRelationships = await relatiionshipDB.find({'_id': id}).toArray();
@@ -77,7 +95,7 @@ const { ObjectId } = require('mongodb');
     delete updateRelationshipObj._id // remove _id property from updateObject
 
     updateRelationshipObj.status = newStatus;
-    updateRelationshipObj.updatedOn = Date.now();
+    updateRelationshipObj.updatedOn = new Date(); // new date object
 
     let updatedObj = await relationshipDB.replaceOne({ '_id': relationshipId }, updateRelationshipObj);
 
