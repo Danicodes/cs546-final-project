@@ -1,5 +1,4 @@
 // Basic server structure
-// Adding comment to force initial branch commit -- please remove later
 const express = require('express');
 const hbars = require('express-handlebars');
 
