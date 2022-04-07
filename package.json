@@ -8,5 +8,9 @@
     "start": "node app.js"
   },
   "author": "Danielle Williams, Ethan Grzeda, Yash Kosambia, Sai Harish Kumar Vitta, Brendan Murray",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.3",
+    "express-handlebars": "^6.0.4"
+  }
 }
