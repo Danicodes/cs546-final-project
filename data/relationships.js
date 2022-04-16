@@ -4,6 +4,7 @@ const { ObjectId } = require('mongodb');
 
 const status = require('./status');
 const validate = require('../validations/data');
+const Category = require('./categories');
 
 
 /**
@@ -14,6 +15,7 @@ const validate = require('../validations/data');
  * @param {string} relationshipDescription string short description of the mentorship topic
  * @param {ObjectId} mentor userId of the mentor that was requested
  * @param {ObjectId} mentee userId of the mentor that was requested
+ * @param {Category} relationshipCategory the profession under which this relationship belongs
  * @returns relationshipId of the newly created relationship
  */
  async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
@@ -47,7 +49,7 @@ const validate = require('../validations/data');
     }
 
     let insertedRelationship = await relationshipDB.insertOne(relationshipObject);
-    let relationshipId = await get(insertedRelationship.insertedId.toString());
+    let relationshipId = await getRelationshipById(insertedRelationship.insertedId.toString());
 
     return relationshipId
  }
@@ -63,9 +65,9 @@ const validate = require('../validations/data');
     relationshipId = validate.convertID(relationshipId);
 
     let relationshipDB = await relationshipCollection();
-    let foundRelationships = await relationshipDB.find({'_id': id}).toArray();
+    let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
     
-    if (foundRelationships.length === 0) throw `Error: no relationship with id '${id}' in the database`;
+    if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' in the database`;
     foundRelationships[0]._id = foundRelationships[0]._id.toString();
 
     return foundRelationships[0]; // There should only be one relationship in the db with the given id
@@ -87,8 +89,8 @@ const validate = require('../validations/data');
 
     let relationshipDB = await relationshipCollection();
 
-    let foundRelationships = await relatiionshipDB.find({'_id': id}).toArray();
-    if (foundRelationships.length === 0) throw `Error: no relationship with id '${id}' to update`;
+    let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
+    if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' to update`;
     
     let updateRelationshipObj = foundRelationships[0]; // Should have the id in string format for updating?
 
@@ -98,6 +100,15 @@ const validate = require('../validations/data');
     updateRelationshipObj.updatedOn = new Date(); // new date object
 
     let updatedObj = await relationshipDB.replaceOne({ '_id': relationshipId }, updateRelationshipObj);
+    if (updatedObj.modifiedCount == 0) throw `Error: could not update object`;
 
-    return updatedObj;
+    updatedObj = await relationshipDB.find({'_id': relationshipId}).toArray();
+    updatedObj[0]._id = updatedObj[0]._id.toString();
+    return updatedObj[0];
  }  
+
+ module.exports = {
+    createRelationship,
+    getRelationshipById,
+    updateRelationshipStatus
+ }
