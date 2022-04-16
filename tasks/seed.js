@@ -1,1 +1,3 @@
-// TODO
+const relationships = require('./relationship');
+
+relationships();
