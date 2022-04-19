@@ -1,11 +1,25 @@
 let {ObjectId} = require("mongodb");
 
+/**
+ * Should be either string that can be parsed to ObjectId or ObjectId
+ * @param {string/ObjectId} id 
+ * @param {string} varName - For valid Error Message
+ * @returns the ObjectId regardless of the input format
+ */
 let validateId = function(id, varName) {
-    if(!ObjectId.isValid(id))
+    if(typeof id === "string") {
+        return ObjectId(id);
+    } else if(!ObjectId.isValid(id))
         throw `${varName} is not a Valid mongodb ObjectId`;
     return id;
 }
 
+/**
+ * Should be either number or string that can be parsed to number
+ * @param {number/string} num 
+ * @param {string} varName 
+ * @returns the parsed/given number
+ */
 let validateNumber = function(num, varName) {
     if(num == null)
         throw `${varName} should be a valid number`;
@@ -22,6 +36,14 @@ let validateNumber = function(num, varName) {
     return num;
 }
 
+/**
+ * string should not be null or undefined
+ * type should be string
+ * shouldn't be empty or just spaces
+ * @param {string} string 
+ * @param {string} varName 
+ * @returns string that is trimmed
+ */
 let validateString = function(string, varName) {
     if(string == null || typeof string != "string") 
         throw `${varName} should be a valid String`;
@@ -29,7 +51,14 @@ let validateString = function(string, varName) {
         throw `${varName} cannot be empty or just spaces`;
     return string.trim();
 };
-    
+
+/**
+ * Should be a valid Array
+ * @param {Array} list 
+ * @param {string} varName 
+ * @param {boolean} isOptional - True represents that a list can be empty
+ * @returns the given list
+ */
 let validateList = function(list, varName, isOptional) {
     if(list == null || !Array.isArray(list))
         throw `${varName} should be a valid List`;
@@ -37,48 +66,24 @@ let validateList = function(list, varName, isOptional) {
         throw `${varName} cannot be Empty`;
         return list;
 };
-    
+
+/**
+ * @param {Date} date 
+ * @param {string} varName 
+ * @returns the parsed/given Date 
+ */
 let validateDate = function(date, varName) {
     if(date == null)
         throw `${varName} should be a valid Date`;
+    if(date instanceof Date)
+        return date;
     let parsedDate = Date.parse(date);
     if(isNaN(parsedDate))
         throw `${varName} should be a parsable Date`;        
-    return date;
+    return parsedDate;
 }
 
-// let post = {
-//     postId: ObjectId(),
-//     author: userId,
-//     visibility: visibility,
-//     content: content,
-//     searchTags: searchTags,
-//     createdOn: createdOn,
-//     comments: [], -- Empty During the creation
-//     reportedBy: [], -- Empty During the Creation
-//     likedBy: [] -- Empty During the creation
-// };
-let validatePost = function(post) {
-    if(post._id != null) validateId(post._id, "_id");
-    post.author = validateId(post.author, "author");
-    post.visibility = validateString(post.visibility, "visibility");
-    post.content = validateString(post.content, "cannot");
-    post.searchTags = validateList(post.searchTags, "Search Tags");
-    for(let i in post.searchTags)
-        post.searchTags[i] = validateString(post.searchTags[i], "Search Tag");
-    post.createdOn = validateDate(post.createdOn, "Created On");
-    post.comments = validateList(post.comments, "Comments", true);
-    post.reportedBy = validateList(post.reportedBy, "Reported By", true);
-    for(let i in post.reportedBy)
-        post.reportedBy[i] = validateId(post.reportedBy[i], "Reported User");
-    post.likedBy = validateList(post.likedBy, "Liked Users", true);
-    for(let i in post.likedBy)
-        post.likedBy[i] = validateId(post.likedBy[i], "Liked User");
-    return post;
-};
-
 module.exports = {
-    validatePost    : validatePost,
     validateId      : validateId,
     validateString  : validateString,
     validateDate    : validateDate,

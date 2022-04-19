@@ -9,7 +9,24 @@ class Category {
 
     constructor(name){
         this.name = name;
-    } 
+    }
+
+    static get(from) {
+        switch(from.trim().toLowerCase()) {
+            case "software engineering": 
+                return this.SoftwareEng;
+            case "education": 
+                return this.Education;
+            case "writing":
+                return this.Writing;
+            case "graphicdesign":
+                return this.GraphicDesign;
+            case "hr":
+                return this.HR;
+            default:
+                throw `Error: Undefined Category`;
+        }
+    }
 }
 
 module.exports = Category;

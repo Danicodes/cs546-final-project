@@ -1,0 +1,7 @@
+const DEFAULT_PAGE_NO = 0;
+const DEFAULT_POSTS_PER_PAGE = 4;
+
+module.exports = {
+    DEFAULT_PAGE_NO,
+    DEFAULT_POSTS_PER_PAGE
+}
