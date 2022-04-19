@@ -1,3 +1,3 @@
-const relationships = require('./relationship');
+const relationships = require('./relationships');
 
 relationships();
