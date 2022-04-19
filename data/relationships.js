@@ -2,9 +2,9 @@ const mongoCollections = require('../config/mongoCollections');
 const relationshipCollection = mongoCollections.relationships;
 const { ObjectId } = require('mongodb');
 
-const status = require('./status');
+const status = require('../enums/status');
 const validate = require('../validations/data');
-const Category = require('./categories');
+const Category = require('../enums/categories');
 
 
 /**

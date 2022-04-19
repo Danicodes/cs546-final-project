@@ -1,6 +1,6 @@
 const data = require('../data/relationships');
 const { ObjectId } = require('mongodb');
-const Category = require('../data/categories');
+const Category = require('../enums/categories');
 
 module.exports = 
     async function(){
