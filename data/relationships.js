@@ -16,10 +16,9 @@ const Category = require('./categories');
  * @param {ObjectId} mentor userId of the mentor that was requested
  * @param {ObjectId} mentee userId of the mentor that was requested
  * @param {Category} relationshipCategory the profession under which this relationship belongs
- * @returns relationshipId of the newly created relationship
+ * @returns relationship object of the newly created relationship
  */
  async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
-    //TODO: Validate inputs
     validate.checkArgLength(arguments, 4);
     validate.checkIsEmptyString(relationshipDescription); // Cannot be empty
     mentor = validate.convertID(mentor); // TODO: decide if this should be a string or object id
@@ -49,9 +48,9 @@ const Category = require('./categories');
     }
 
     let insertedRelationship = await relationshipDB.insertOne(relationshipObject);
-    let relationshipId = await getRelationshipById(insertedRelationship.insertedId.toString());
+    let relationship = await getRelationshipById(insertedRelationship.insertedId.toString());
 
-    return relationshipId
+    return relationship; // returns the relationship object
  }
 
  /**
@@ -68,6 +67,7 @@ const Category = require('./categories');
     let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
     
     if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' in the database`;
+    if (foundRelationships.length > 1) throw `Error: Database returned multiple relationships`;
     foundRelationships[0]._id = foundRelationships[0]._id.toString();
 
     return foundRelationships[0]; // There should only be one relationship in the db with the given id
@@ -91,6 +91,7 @@ const Category = require('./categories');
 
     let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
     if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' to update`;
+    if (foundRelationships.length > 1) throw `Error: Database returned multiple relationships`;
     
     let updateRelationshipObj = foundRelationships[0]; // Should have the id in string format for updating?
 
