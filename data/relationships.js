@@ -108,8 +108,30 @@ const Category = require('../enums/categories');
     return updatedObj[0];
  }  
 
+/**
+ * Filter the relationships in a given list by a given status
+ * @param {array} relationshipList list of relationshipIds to filter
+ * @param {status} statusFilter status of relationship to filter by
+ * @returns {array} list of relationshipIds with that status
+ */
+ async function filterRelationshipsByStatus(relationshipList, statusFilter){
+    validate.checkArgLength(arguments, 2);
+    relationshipList.map((relationshipId) => {
+         relationshipId = validate.convertID(relationshipId);
+    });
+
+    let filteredRelationshipList = [];
+    relationshipList.map((relationshipId) => {
+       let relationshipObj = await getRelationshipById(relationshipId);
+       if (relationshipObj.status === statusFilter) filteredRelationshipList.push(relationshipObj._id);
+    });
+
+   return filteredRelationshipList;
+ }
+
  module.exports = {
     createRelationship,
     getRelationshipById,
-    updateRelationshipStatus
+    updateRelationshipStatus,
+    filterRelationshipsByStatus
  }
