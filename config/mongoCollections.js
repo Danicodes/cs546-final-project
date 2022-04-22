@@ -17,5 +17,7 @@ const getCollectionFn = (collection) => {
 
 module.exports = {
     // Add collections here as needed
-    users: getCollectionFn('users')
+    users: getCollectionFn('users'),
+	chats: getCollectionFn('chats'),
+	relationships: getCollectionFn('relationships')
 };
