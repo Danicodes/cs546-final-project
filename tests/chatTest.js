@@ -18,6 +18,8 @@ const chatsCol = mongoCollections.chats;
 // Seeds users database
 async function seedUsers(){
 
+    console.log("seedUsers() starting");
+
     /*
 
     let user = {
@@ -47,6 +49,8 @@ async function seedUsers(){
         "menteeRelations": [],
         "myPosts": []
     }
+    
+    console.log("user1 created");
 
     let user2 = {
         "userId": new ObjectId(),
@@ -99,9 +103,13 @@ async function seedUsers(){
         "menteeRelations": [],
         "myPosts": []
     }
+    
+    console.log("user5 created");
 
     const usersCollection = await usersCol();
     let returnArray = [];
+
+    console.log("collection created and returnArray initialized");
 
     const insertInfo1 = await usersCollection.insertOne(user1);
     if(!insertInfo1.acknowledged || !insertInfo.insertedId){
@@ -198,72 +206,83 @@ async function testNewChannel(){
 
 
 async function main(){
+    console.log("Starting");
 
     // Seed data into database
     try{
-        seedUsers();
+        await seedUsers();
     } catch (e) {
         console.log("seedUsers failed. Result below:");
         console.log(e);
     }
+    console.log("seedUsers() finished");
     try{
-        seedRelationships();
+        await seedRelationships();
     } catch (e) {
         console.log("seedRelationships failed. Result below:");
         console.log(e);
     }
+    console.log("seedRelationships() finished");
     try{
-        seedChats();
+        await seedChats();
     } catch (e) {
         console.log("seedChats failed. Result below:");
         console.log(e);
     }
+    console.log("seedChats() finished");
 
     // Test data functions
     try{
-        testNewMessage();
+        await testNewMessage();
     } catch (e) {
         console.log("testNewMessage failed. Result below:");
         console.log(e);
     }
+    console.log("testNewMessage() finished");
     try{
-        testGetChatByChannel();
+        await testGetChatByChannel();
     } catch (e) {
         console.log("testGetChatByChannel failed. Result below:");
         console.log(e);
     }
+    console.log("testGetChatByChannel() finished");
     try{
-        testUpdateStatus();
+        await testUpdateStatus();
     } catch (e) {
         console.log("testUpdateStatus failed. Result below:");
         console.log(e);
     }
+    console.log("testUpdateStatus() finished");
     try{
-        testNewChannel();
+        await testNewChannel();
     } catch (e) {
         console.log("testNewChannel failed. Result below:");
         console.log(e);
     }
+    console.log("testNewChannel() finished");
 
     // Clear data from database
     try{
-        clearUsers();
+        await clearUsers();
     } catch (e) {
         console.log("clearUsers failed. Result below:");
         console.log(e);
     }
+    console.log("clearUsers() finished");
     try{
-        clearRelationships();
+        await clearRelationships();
     } catch (e) {
         console.log("clearRelationships failed. Result below:");
         console.log(e);
     }
+    console.log("clearRelationships() finished");
     try{
-        clearChats();
+        await clearChats();
     } catch (e) {
         console.log("clearChats failed. Result below:");
         console.log(e);
     }
+    console.log("clearChats() finished");
 }
 
 main();

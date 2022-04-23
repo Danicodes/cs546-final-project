@@ -93,30 +93,6 @@ module.exports = {
         return 0;
     },
 
-    // This function may not be necessary since someone can just get the channel's id from the relationship and run getChatByChannel
-    getChatByRelationship: async (relationshipId) => {
-
-        // <ERROR CHECKING>
-
-        // Check that relationshipId is provided
-        if(!relationshipId) throw "getChatByRelationship: relationshipId must be provided";
-        // Check that relationshipId is a string
-        if(typeof relationshipId !== "string") throw "getChatByRelationship: relationshipId must be a string";
-        // Check that relationshipId is a valid ObjectId
-        if(!ObjectId.isValid(relationshipId)) throw "getChatByRelationship: relationshipId must be a valid ObjectId";
-        // Check that relationshipId is in the database
-        const relationshipsCollection = await relationshipsCol();
-        const relationship = relationshipsCollection.findOne({ relationshipId: ObjectId(relationshipId) });
-        if(relationship === null) throw "getChatByRelationship: relationshipId must be the id of an existing relationship";
-
-        // </ERROR CHECKING>
-
-        // Get the channelId of the chat channel in the relationship and do the getChatByChannel code from there
-
-        console.log("getChatByRelationship: not implemented yet");
-        return 0;
-    },
-
     updateStatus: async (relationshipId, newStatus) => {
         // <ERROR CHECKING>
 
