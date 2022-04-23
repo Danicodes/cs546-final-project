@@ -2,9 +2,11 @@ const mongoCollections = require('../config/mongoCollections');
 const relationshipCollection = mongoCollections.relationships;
 const { ObjectId } = require('mongodb');
 
-const status = require('../enums/status');
+const enums = require('../enums');
+const status = enums.status;
+const Category = enums.categories;
 const validate = require('../validations/data');
-const Category = require('../enums/categories');
+
 
 
 /**
@@ -21,7 +23,7 @@ const Category = require('../enums/categories');
  async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
     validate.checkArgLength(arguments, 4);
     validate.checkIsEmptyString(relationshipDescription); // Cannot be empty
-    mentor = validate.convertID(mentor); // TODO: decide if this should be a string or object id
+    mentor = validate.convertID(mentor);
     mentee = validate.convertID(mentee);
 
     // validate array content relationshipCategory
