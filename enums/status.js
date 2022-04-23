@@ -7,6 +7,21 @@ class Status {
 
     constructor(name){
         this.name = name;
+    };
+
+    static get(status){
+        switch (status.trim().toLowerCase()) {
+            case "pending":
+                return this.PENDING;
+            case "approved":
+                return this.APPROVED;
+            case "rejected":
+                return this.REJECTED;
+            case "completed":
+                return this.COMPLETED;
+            default:
+                throw `Error: Undefined status`;
+        }
     }
 }
 
