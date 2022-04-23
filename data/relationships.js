@@ -31,7 +31,7 @@ const Category = require('../enums/categories');
     let workspaceId = null;
     let chatChannel = null;
 
-    let createdOn = new Date(); // a number representing the milliseconds elapsed since epoch
+    let createdOn = new Date(); // a new Date object
     let updatedOn = createdOn; // Initially will be the same as createdOn
 
     const relationshipObject = {
