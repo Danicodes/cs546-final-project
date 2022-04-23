@@ -15,9 +15,9 @@ const validate = require('../validations/data');
  * Workspace and chatChannel will initially be null
  * createdOn and updatedOn will be time.now()
  * @param {string} relationshipDescription string short description of the mentorship topic
- * @param {ObjectId} mentor userId of the mentor that was requested
- * @param {ObjectId} mentee userId of the mentor that was requested
- * @param {Category} relationshipCategory the profession under which this relationship belongs
+ * @param {ObjectId|string} mentor userId of the mentor that was requested
+ * @param {ObjectId|string} mentee userId of the mentor that was requested
+ * @param {Category|string} relationshipCategory the profession under which this relationship belongs
  * @returns relationship object of the newly created relationship
  */
  async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
@@ -25,6 +25,9 @@ const validate = require('../validations/data');
     validate.checkIsEmptyString(relationshipDescription); // Cannot be empty
     mentor = validate.convertID(mentor);
     mentee = validate.convertID(mentee);
+    if (typeof(relationshipCategory) === 'string'){
+       relationshipCategory = new Category(relationshipCategory.trim()); //convert to Category object
+    }
 
     // validate array content relationshipCategory
 
@@ -81,13 +84,16 @@ const validate = require('../validations/data');
  * that should be able to be changed is the status. That will be done on the user end by accepting a mentorship request,
  * rejecting it, terminating it etc. 
  * @param {string} relationshipId: An objectId associated with the relationship that needs to be changed
- *  @param {status} newStatus: The changed status of the relationship
+ *  @param {status|string} newStatus: The changed status of the relationship
  */
  async function updateRelationshipStatus(relationshipId, newStatus){
     // Validate arguments
     validate.checkArgLength(arguments, 2);
     relationshipId = validate.convertID(relationshipId);
-    if (!(newStatus instanceof status)) throw `Error: newStatus must be a status enum`;
+    if (!(newStatus instanceof status)){
+      validate.checkIsEmptyString(newStatus);
+      newStatus = status.get(newStatus); // throws an error if the string is not one of our predefined statuses
+    };
 
     let relationshipDB = await relationshipCollection();
 

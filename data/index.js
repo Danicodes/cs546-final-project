@@ -1,7 +1,7 @@
-//const users = require('./users');
 const relationships = require('./relationships');
+const postsData = require('./posts');
 
 module.exports = {
-    //example users: users
-    relationships: relationships
+    relationships: relationships,
+    posts: postsData
 };
