@@ -11,10 +11,13 @@
   "author": "Danielle Williams, Ethan Grzeda, Yash Kosambia, Sai Harish Kumar Vitta, Brendan Murray",
   "license": "MIT",
   "dependencies": {
+    "bcrypt": "^5.0.1",
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.3",
     "express-handlebars": "^6.0.4",
     "mongo": "^0.1.0",
     "mongodb": "^4.5.0",
-    "xss": "^1.0.11"
+    "xss": "^1.0.11",
+    "express-session": "^1.17.2"
   }
 }
