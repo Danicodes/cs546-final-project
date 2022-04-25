@@ -62,13 +62,21 @@ module.exports = {
         // </ERROR CHECKING>
 
         // Make the message object
+        let createdMessage = {
+            "author": sender,
+            "message": message,
+            "Datetime": "PLACEHOLDER" // PLACEHOLDER
+        };
 
-        // Insert the object into the database
+        const channelId = messageRelationship["chatChannel"];
 
-        // Make sure the object was inserted into the database correctly
+        // Insert the object into the database and make sure it was inserted correctly
+        const updatedInfo = await chatsCollection.updateOne({"channelId": channelId}, {"$push": {"messages": createdMessage}});
+        if(!updatedInfo.acknowledged){
+            throw "newMessage() could not insert the newly created chat message into the database";
+        }
 
-        console.log("newMessage: not implemented yet");
-        return 0;
+        return createdMessage;
     },
 
     getChatByChannel: async (channelId) => {
