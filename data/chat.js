@@ -18,6 +18,7 @@ const relationshipsCol = mongoCollections.relationships;
 module.exports = {
     description: 'These are the functions for the chat feature of MentorMe',
 
+    // This function is finished but untested
     newMessage: async (sender, relationship, message) => {
         // <ERROR CHECKING>
 
@@ -75,10 +76,13 @@ module.exports = {
         if(!updatedInfo.acknowledged){
             throw "newMessage() could not insert the newly created chat message into the database";
         }
+        // I brushed up on the return value of updateOne() here:
+        // https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/
 
         return createdMessage;
     },
 
+    // This function is finished but untested
     getChatByChannel: async (channelId) => {
         // <ERROR CHECKING>
 
@@ -90,17 +94,15 @@ module.exports = {
         if(!ObjectId.isValid(channelId)) throw "getChatByChannel: channelId must be a valid ObjectId";
         // Check that channelId is in the database
         const chatsCollection = await chatsCol();
-        const chatChannel = chatsCollection.findOne({ channelId: ObjectId(channelId) });
+        const foundChannel = chatsCollection.findOne({ channelId: ObjectId(channelId) });
         if(chatChannel === null) throw "getChatByChannel: channelId must be the id of an existing channel";
 
         // </ERROR CHECKING>
 
-        // Return the chat channel from the database
-
-        console.log("getChat: not implemented yet");
-        return 0;
+        return foundChannel;
     },
 
+    // This function is finished but untested
     updateStatus: async (relationshipId, newStatus) => {
         // <ERROR CHECKING>
 
@@ -125,13 +127,29 @@ module.exports = {
 
         // </ERROR CHECKING>
 
+        const relationshipsCollection = await relationshipsCol();
+        let updatedInfo = await relationshipsCollection.updateOne({"relationshipId": relationshipId}, {"$set": {"status": newStatus}});
+        if(!updatedInfo.acknowledged){
+            throw "updateStatus() could not update the status";
+        }
 
-        console.log("updateStatus: not implemented yet");
-        return 0;
+        return {updated: true};
     },
 
+    // This function is finished but untested
     newChannel: async () => {
-        console.log("newChannel: not implemented yet");
-        return 0;
+        let channelId = new ObjectId();
+        let newChat = {
+            "channelId": channelId,
+            "messages": []
+        }
+
+        const chatsCollection = await chatsCol();
+        const insertedInfo = await chatsCollection.insertOne(newChat);
+        if(!insertInfo.acknowledged || !insertInfo.insertedId){
+            throw "newChannel: Could not add a chat channel to the database";
+        }
+
+        return channelId;
     }
 }

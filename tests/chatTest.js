@@ -14,11 +14,13 @@ const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 
+let usersArray = [];
+let relationshipsArray = [];
+let chatsArray = [];
+
 
 // Seeds users database
 async function seedUsers(){
-
-    console.log("seedUsers() starting");
 
     let user1 = {
         "userId": new ObjectId(),
@@ -85,31 +87,31 @@ async function seedUsers(){
     let returnArray = [];
 
     const insertInfo1 = await usersCollection.insertOne(user1);
-    if(!insertInfo1.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo1.acknowledged || !insertInfo1.insertedId){
         throw "Could not insert user 1";
     }
     returnArray.push(insertInfo1.insertedId.toString());
 
     const insertInfo2 = await usersCollection.insertOne(user2);
-    if(!insertInfo2.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
         throw "Could not insert user 2";
     }
     returnArray.push(insertInfo2.insertedId.toString());
 
     const insertInfo3 = await usersCollection.insertOne(user3);
-    if(!insertInfo3.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo3.acknowledged || !insertInfo3.insertedId){
         throw "Could not insert user 3";
     }
     returnArray.push(insertInfo3.insertedId.toString());
 
     const insertInfo4 = await usersCollection.insertOne(user4);
-    if(!insertInfo4.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo4.acknowledged || !insertInfo4.insertedId){
         throw "Could not insert user 4";
     }
     returnArray.push(insertInfo4.insertedId.toString());
 
     const insertInfo5 = await usersCollection.insertOne(user5);
-    if(!insertInfo5.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo5.acknowledged || !insertInfo5.insertedId){
         throw "Could not insert user 5";
     }
     returnArray.push(insertInfo5.insertedId.toString());
@@ -119,15 +121,9 @@ async function seedUsers(){
 
 // Seeds chats database
 async function seedChats(){
-    console.log("seedChats() starting");
 
     const usersCollection = await usersCol();
-    let usersArray = [];
-    try{
-        usersArray = await usersCollection.find({}).toArray();
-    } catch (e) {
-        throw "seedChats() failed while trying to get the users array";
-    }
+    let usersArray = await usersCollection.find({}).toArray();
 
     // Create the chat objects
     let chat1 = { // 1 -> 2
@@ -216,46 +212,46 @@ async function seedChats(){
     chat1["messages"].push(chatObj11);
     chat1["messages"].push(chatObj12);
     chat2["messages"].push(chatObj21);
-    chat2["message"].push(chatObj22);
-    chat2["message"].push(chatObj23);
-    chat3["message"].push(chatObj31);
-    chat3["message"].push(chatObj32);
-    chat4["message"].push(chatObj41);
-    chat4["message"].push(chatObj42);
-    chat4["message"].push(chatObj43);
-    chat4["message"].push(chatObj44);
-    chat4["message"].push(chatObj45);
+    chat2["messages"].push(chatObj22);
+    chat2["messages"].push(chatObj23);
+    chat3["messages"].push(chatObj31);
+    chat3["messages"].push(chatObj32);
+    chat4["messages"].push(chatObj41);
+    chat4["messages"].push(chatObj42);
+    chat4["messages"].push(chatObj43);
+    chat4["messages"].push(chatObj44);
+    chat4["messages"].push(chatObj45);
 
     // Put data in the database
     let returnArray = [];
     const chatsCollection = await chatsCol();
 
     const insertInfo1 = await chatsCollection.insertOne(chat1);
-    if(!insertInfo1.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo1.acknowledged || !insertInfo1.insertedId){
         throw "Could not insert chat 1";
     }
     returnArray.push(insertInfo1.insertedId.toString());
 
     const insertInfo2 = await chatsCollection.insertOne(chat2);
-    if(!insertInfo2.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
         throw "Could not insert chat 2";
     }
     returnArray.push(insertInfo2.insertedId.toString());
 
     const insertInfo3 = await chatsCollection.insertOne(chat3);
-    if(!insertInfo3.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo3.acknowledged || !insertInfo3.insertedId){
         throw "Could not insert chat 3";
     }
     returnArray.push(insertInfo3.insertedId.toString());
 
     const insertInfo4 = await chatsCollection.insertOne(chat4);
-    if(!insertInfo4.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo4.acknowledged || !insertInfo4.insertedId){
         throw "Could not insert chat 4";
     }
     returnArray.push(insertInfo4.insertedId.toString());
 
     const insertInfo5 = await chatsCollection.insertOne(chat5);
-    if(!insertInfo5.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo5.acknowledged || !insertInfo5.insertedId){
         throw "Could not insert chat 5";
     }
     returnArray.push(insertInfo5.insertedId.toString());
@@ -265,7 +261,6 @@ async function seedChats(){
 
 // Seeds relationships database
 async function seedRelationships(){
-    console.log("seedRelationships() starting");
 
     const usersCollection = await usersCol();
     let usersArray = [];
@@ -287,57 +282,57 @@ async function seedRelationships(){
     let relationship1 = {
         "relationshipId": new ObjectId(),
         "relationshipDescription": "Relationship 1",
-        "mentor": usersCol[0]["userId"],
-        "mentee": usersCol[1]["userID"],
+        "mentor": usersArray[0]["userId"],
+        "mentee": usersArray[1]["userID"],
+        "workspace": new ObjectId(),
+        "status": "ACTIVE",
+        "createdOn": "2022-04-03T21:14:37.337Z",
+        "updatedOn": "2022-04-03T21:14:37.337Z",
+        "chatChannel": chatsArray[0]["channelId"]
+    }
+    let relationship2 = {
+        "relationshipId": new ObjectId(),
+        "relationshipDescription": "Relationship 2",
+        "mentor": usersArray[2]["userId"],
+        "mentee": usersArray[3]["userID"],
         "workspace": new ObjectId(),
         "status": "ACTIVE",
         "createdOn": "2022-04-03T21:14:37.337Z",
         "updatedOn": "2022-04-03T21:14:37.337Z",
         "chatChannel": chatsArray[1]["channelId"]
     }
-    let relationship2 = {
+    let relationship3 = {
         "relationshipId": new ObjectId(),
-        "relationshipDescription": "Relationship 2",
-        "mentor": usersCol[2]["userId"],
-        "mentee": usersCol[3]["userID"],
+        "relationshipDescription": "Relationship 3",
+        "mentor": usersArray[0]["userId"],
+        "mentee": usersArray[4]["userID"],
         "workspace": new ObjectId(),
         "status": "ACTIVE",
         "createdOn": "2022-04-03T21:14:37.337Z",
         "updatedOn": "2022-04-03T21:14:37.337Z",
         "chatChannel": chatsArray[2]["channelId"]
     }
-    let relationship3 = {
+    let relationship4 = {
         "relationshipId": new ObjectId(),
-        "relationshipDescription": "Relationship 3",
-        "mentor": usersCol[0]["userId"],
-        "mentee": usersCol[4]["userID"],
+        "relationshipDescription": "Relationship 4",
+        "mentor": usersArray[1]["userId"],
+        "mentee": usersArray[2]["userID"],
         "workspace": new ObjectId(),
         "status": "ACTIVE",
         "createdOn": "2022-04-03T21:14:37.337Z",
         "updatedOn": "2022-04-03T21:14:37.337Z",
         "chatChannel": chatsArray[3]["channelId"]
     }
-    let relationship4 = {
+    let relationship5 = {
         "relationshipId": new ObjectId(),
-        "relationshipDescription": "Relationship 4",
-        "mentor": usersCol[1]["userId"],
-        "mentee": usersCol[2]["userID"],
+        "relationshipDescription": "Relationship 5",
+        "mentor": usersArray[1]["userId"],
+        "mentee": usersArray[4]["userID"],
         "workspace": new ObjectId(),
         "status": "ACTIVE",
         "createdOn": "2022-04-03T21:14:37.337Z",
         "updatedOn": "2022-04-03T21:14:37.337Z",
         "chatChannel": chatsArray[4]["channelId"]
-    }
-    let relationship5 = {
-        "relationshipId": new ObjectId(),
-        "relationshipDescription": "Relationship 5",
-        "mentor": usersCol[1]["userId"],
-        "mentee": usersCol[4]["userID"],
-        "workspace": new ObjectId(),
-        "status": "ACTIVE",
-        "createdOn": "2022-04-03T21:14:37.337Z",
-        "updatedOn": "2022-04-03T21:14:37.337Z",
-        "chatChannel": chatsArray[5]["channelId"]
     }
 
     // Put data into database
@@ -345,31 +340,31 @@ async function seedRelationships(){
     let relationshipsCollection = await relationshipsCol();
 
     const insertInfo1 = await relationshipsCollection.insertOne(relationship1);
-    if(!insertInfo1.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo1.acknowledged || !insertInfo1.insertedId){
         throw "Could not insert relationship 1";
     }
     returnArray.push(insertInfo1.insertedId.toString());
 
     const insertInfo2 = await relationshipsCollection.insertOne(relationship2);
-    if(!insertInfo2.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
         throw "Could not insert relationship 2";
     }
     returnArray.push(insertInfo2.insertedId.toString());
 
     const insertInfo3 = await relationshipsCollection.insertOne(relationship3);
-    if(!insertInfo3.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo3.acknowledged || !insertInfo3.insertedId){
         throw "Could not insert relationship 3";
     }
     returnArray.push(insertInfo3.insertedId.toString());
 
     const insertInfo4 = await relationshipsCollection.insertOne(relationship4);
-    if(!insertInfo4.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo4.acknowledged || !insertInfo4.insertedId){
         throw "Could not insert relationship 4";
     }
     returnArray.push(insertInfo4.insertedId.toString());
 
     const insertInfo5 = await relationshipsCollection.insertOne(relationship5);
-    if(!insertInfo5.acknowledged || !insertInfo.insertedId){
+    if(!insertInfo5.acknowledged || !insertInfo5.insertedId){
         throw "Could not insert relationship 5";
     }
     returnArray.push(insertInfo5.insertedId.toString());
@@ -389,7 +384,7 @@ async function clearRelationships(){
     }
 
     for(let i = 0; i < relationshipsArray.length; i++){
-        let deletionInfo = await relationshipsCollection.deleteOne({relationshipId: relationshipsArray[i]});
+        let deletionInfo = await relationshipsCollection.deleteOne({relationshipId: relationshipsArray[i]["relationshipId"]});
         if(deletionInfo.deletedCount === 0){
             console.log("clearRelationships() couldn't delete a relationship");
         }
@@ -398,7 +393,21 @@ async function clearRelationships(){
 
 // Clears chats database
 async function clearChats(){
-    // Implement
+    const chatsCollection = await chatsCol();
+    
+    let chatsList = [];
+    try{
+        chatsList = await chatsCollection.find({}).toArray();
+    } catch (e) {
+        console.log("clearChats couldn't get the chats from the database");
+    }
+
+    for(let i = 0; i < chatsList.length; i++){
+        const chatInfo = await chatsCollection.deleteOne({ channelId: chatsList[i]["channelId"] });
+        if(chatInfo.deletedCount === 0){
+            console.log("clearChats: Could not delete a chat");
+        }
+    }
 }
 
 // Clears users database
@@ -409,63 +418,170 @@ async function clearUsers(){
     try{
         usersList = await usersCollection.find({}).toArray();
     } catch (e) {
-        throw e;
+        console.log("clearUsers couldn't get the users from the database");
     }
 
     for(let i = 0; i < usersList.length; i++){
         const userInfo = await usersCollection.deleteOne({ userId: usersList[i]["userId"] });
-        if(userInfo.deletedCound === 0){
-            throw "clearUsers: Could not delete a user";
+        if(userInfo.deletedCount === 0){
+            console.log("clearUsers: Could not delete a user");
         }
     }
 }
 
-// Test cases for newMessage()
+// Test cases for newMessage(sender, relationship, message)
 async function testNewMessage(){
+    console.log("--- Test Cases for newMessage(sender, relationship, message) ---");
+    
+    // base case 1
+    try{
+        let retVal = chatData.newMessage(usersArray[0], relationshipsArray[0], "Base Case 1 Message");
+        console.log("GOOD: newMessage passed base case 1. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: newMessage failed base case 1. Error below:");
+        console.log(e);
+    }
+    // base case 2
+    try{
+        let retVal = chatData.newMessage(usersArray[2], relationshipsArray[3], "Base Case 2 Message");
+        console.log("GOOD: newMessage passed base case 2. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: newMessage failed base case 2. Error below:");
+        console.log(e);
+    }
+    // base case 3
+    try{
+        let retVal = chatData.newMessage(usersArray[3], relationshipsArray[1], "Base Case 3 Message");
+        console.log("GOOD: newMessage passed base case 3. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: newMessage failed base case 3. Error below:");
+        console.log(e);
+    }
+    // no-sender case
+    try{
+        let retVal = chatData.newMessage();
+        console.log("BAD: newMessage passed the no-sender case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the no-sender case. Error below:");
+        console.log(e);
+    }
+    // no-relationship case
+    try{
+        let retVal = chatData.newMessage(usersArray[4]);
+        console.log("BAD: newMessage passed the no-relationship case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the no-relationship case. Error below:");
+        console.log(e);
+    }
+    // no-message case
+    try{
+        let retVal = chatData.newMessage(usersArray[4], relationshipArray[4]);
+        console.log("BAD: newMessage passed the no-message case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the no-message case. Error below:");
+        console.log(e);
+    }
+    // wrong-type sender case
+    try{
+        let retVal = chatData.newMessage(546, relationshipsArray[0], "Message");
+        console.log("BAD: newMessage passed the wrong-type sender case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the wrong-type sender case. Error below:");
+        console.log(e);
+    }
+    // invalid ObjectId sender case
+    try{
+        let retVal = chatData.newMessage("546", relationshipsArray[0], "Message");
+        console.log("BAD: newMessage passed the invalid ObjectId sender case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the invalid ObjectId sender case. Error below:");
+        console.log(e);
+    }
+    // nonexistent sender case
+    
+    // wrong-type relationship case
+    // invalid ObjectId relationship case
+    // nonexistent relationship case
+    // wrong-type message case
+    // empty-string message case
+    // just-spaces message case
+    // non-aligning sender and relationship case
+
     // Implement
 }
 
-// Test cases for getChatByChannel()
+// Test cases for getChatByChannel(channelId)
 async function testGetChatByChannel(){
+    console.log("--- Test Cases for getChatByChannel(channelId) ---");
+
+    // base case 1
+    // base case 2
+    // base case 3
+    // no-channelId case
+    // wrong-type channelId case
+    // invalid ObjectId channelId case
+    // nonexistent channel case
+
     // Implement
 }
 
-// Test cases for updateStatus()
+// Test cases for updateStatus(relationshipId, newStatus)
 async function testUpdateStatus(){
+    console.log("--- Test Cases for updateStatus(relationshipId, newStatus) ---");
+
+    // base case 1
+    // base case 2
+    // base case 3
+    // no-relationshipId case
+    // no-newStatus case
+    // wrong-type relationshipId case
+    // invalid ObjectId relationshipId case
+    // nonexistent relationship case
+    // wrong-type newStatus case
+    // invalid status newStatus case
+
     // Implement
 }
 
 // Test cases for newChannel()
 async function testNewChannel(){
+    console.log("--- Test Cases for newChannel() ---");
+
+    // base case
+
     // Implement
 }
 
 
 async function main(){
-    console.log("Starting");
 
     // Seed data into database
     try{
-        await seedUsers();
+        usersArray = await seedUsers();
     } catch (e) {
         console.log("seedUsers failed. Result below:");
         console.log(e);
     }
-    console.log("seedUsers() finished");
     try{
-        await seedRelationships();
+        relationshipsArray = await seedRelationships();
     } catch (e) {
         console.log("seedRelationships failed. Result below:");
         console.log(e);
     }
-    console.log("seedRelationships() finished");
     try{
-        await seedChats();
+        chatsArray = await seedChats();
     } catch (e) {
         console.log("seedChats failed. Result below:");
         console.log(e);
     }
-    console.log("seedChats() finished");
 
     // Test data functions
     try{
@@ -474,28 +590,24 @@ async function main(){
         console.log("testNewMessage failed. Result below:");
         console.log(e);
     }
-    console.log("testNewMessage() finished");
     try{
         await testGetChatByChannel();
     } catch (e) {
         console.log("testGetChatByChannel failed. Result below:");
         console.log(e);
     }
-    console.log("testGetChatByChannel() finished");
     try{
         await testUpdateStatus();
     } catch (e) {
         console.log("testUpdateStatus failed. Result below:");
         console.log(e);
     }
-    console.log("testUpdateStatus() finished");
     try{
         await testNewChannel();
     } catch (e) {
         console.log("testNewChannel failed. Result below:");
         console.log(e);
     }
-    console.log("testNewChannel() finished");
 
     // Clear data from database
     try{
@@ -504,21 +616,18 @@ async function main(){
         console.log("clearUsers failed. Result below:");
         console.log(e);
     }
-    console.log("clearUsers() finished");
     try{
         await clearRelationships();
     } catch (e) {
         console.log("clearRelationships failed. Result below:");
         console.log(e);
     }
-    console.log("clearRelationships() finished");
     try{
         await clearChats();
     } catch (e) {
         console.log("clearChats failed. Result below:");
         console.log(e);
     }
-    console.log("clearChats() finished");
 }
 
 main();
