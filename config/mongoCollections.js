@@ -19,4 +19,5 @@ module.exports = {
     // Add collections here as needed
     users: getCollectionFn('users')
     , relationships: getCollectionFn('relationships')
+    , posts: getCollectionFn('posts')
 };

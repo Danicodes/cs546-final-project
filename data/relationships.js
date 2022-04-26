@@ -129,11 +129,10 @@ const validate = require('../validations/data');
     });
 
     let filteredRelationshipList = [];
-    relationshipList.map((relationshipId) => {
-       let relationshipObj = await getRelationshipById(relationshipId);
+    for(let relationshipId of relationshipList) {
+        let relationshipObj = await getRelationshipById(relationshipId);
        if (relationshipObj.status === statusFilter) filteredRelationshipList.push(relationshipObj._id);
-    });
-
+    }
    return filteredRelationshipList;
  }
 
