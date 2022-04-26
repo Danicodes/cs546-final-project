@@ -30,7 +30,7 @@ module.exports = {
         if(!ObjectId.isValid(sender)) throw "newMessage: sender must be a valid ObjectId";
         // Check that sender exists in the database
         const usersCollection = await usersCol();
-        const senderUser = usersCollection.findOne({ userId: ObjectId(sender) });
+        const senderUser = await usersCollection.findOne({ userId: ObjectId(sender) });
         if(senderUser === null) throw "newMessage: sender must be an existing user";
         // Check that relationship is provided
         if(!relationship) throw "newMessage: relationship must be provided";
@@ -44,10 +44,10 @@ module.exports = {
         if(messageRelationship === null) throw "newMessage: relationship must be an existing relationship";
         // Check that relationship includes the sender
         let found = false;
-        if(messageRelationship["mentor"] === sender || messageRelationship["mentee"] === sender) found = true;
+        if(messageRelationship["mentor"].toString().localeCompare(sender) === 0 || messageRelationship["mentee"].toString().localeCompare(sender) === 0) found = true;
         if(!found) throw "newMessage: relationship must include sender";
         // Check that message is provided
-        if(!message) throw "newMessage: message must be provided";
+        if(typeof message === "undefined") throw "newMessage: message must be provided";
         // Check that message is a string
         if(typeof message !== "string") throw "newMessage: message must be a string";
         // Check that message isn't empty
@@ -64,12 +64,13 @@ module.exports = {
         let createdMessage = {
             "author": sender,
             "message": message,
-            "Datetime": "PLACEHOLDER" // PLACEHOLDER
+            "Datetime": new Date()
         };
 
         const channelId = messageRelationship["chatChannel"];
 
         // Insert the object into the database and make sure it was inserted correctly
+        const chatsCollection = await chatsCol();
         const updatedInfo = await chatsCollection.updateOne({"channelId": channelId}, {"$push": {"messages": createdMessage}});
         if(!updatedInfo.acknowledged){
             throw "newMessage() could not insert the newly created chat message into the database";
