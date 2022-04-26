@@ -93,7 +93,7 @@ module.exports = {
         if(!ObjectId.isValid(channelId)) throw "getChatByChannel: channelId must be a valid ObjectId";
         // Check that channelId is in the database
         const chatsCollection = await chatsCol();
-        const foundChannel = chatsCollection.findOne({ channelId: ObjectId(channelId) });
+        const foundChannel = await chatsCollection.findOne({ channelId: ObjectId(channelId) });
         if(foundChannel === null) throw "getChatByChannel: channelId must be the id of an existing channel";
 
         // </ERROR CHECKING>

@@ -161,62 +161,62 @@ async function seedChats(){
     let chatObj11 = {
         "author": usersArray[0]["userId"],
         "message": "Chat 1, Message 1, User 1",
-        "Datetime": "2022-03-10T11:14:37.337Z"
+        "Datetime": new Date()
     };
     let chatObj12 = {
         "author": usersArray[1]["userId"],
         "message": "Chat 1, Message 2, User 2",
-        "Datetime": "2022-03-10T11:14:37.537Z"
+        "Datetime": new Date()
     };
     let chatObj21 = {
         "author": usersArray[2]["userId"],
         "message": "Chat 2, Message 1, User 3",
-        "Datetime": "2022-03-10T11:14:37.337Z"
+        "Datetime": new Date()
     };
     let chatObj22 = {
         "author": usersArray[2]["userId"],
         "message": "Chat 2, Message 2, User 3",
-        "Datetime": "2022-03-10T11:15:37.337Z"
+        "Datetime": new Date()
     };
     let chatObj23 = {
         "author": usersArray[2]["userId"],
         "message": "Chat 2, Message 3, User 3",
-        "Datetime": "2022-03-10T11:17:37.337Z"
+        "Datetime": new Date()
     };
     let chatObj31 = {
         "author": usersArray[4]["userId"],
         "message": "Chat 3, Message 1, User 5",
-        "Datetime": "2022-03-10T11:14:37.347Z"
+        "Datetime": new Date()
     };
     let chatObj32 = {
         "author": usersArray[4]["userId"],
         "message": "Chat 3, Message 2, User 5",
-        "Datetime": "2022-03-10T11:14:47.347Z"
+        "Datetime": new Date()
     };
     let chatObj41 = {
         "author": usersArray[1]["userId"],
         "message": "Chat 4, Message 1, User 2",
-        "Datetime": "2022-03-10T11:14:47.347Z"
+        "Datetime": new Date()
     };
     let chatObj42 = {
         "author": usersArray[1]["userId"],
         "message": "Chat 4, Message 2, User 2",
-        "Datetime": "2022-03-10T11:15:47.347Z"
+        "Datetime": new Date()
     };
     let chatObj43 = {
         "author": usersArray[2]["userId"],
         "message": "Chat 4, Message 3, User 3",
-        "Datetime": "2022-03-10T11:16:47.347Z"
+        "Datetime": new Date()
     };
     let chatObj44 = {
         "author": usersArray[2]["userId"],
         "message": "Chat 4, Message 4, User 3",
-        "Datetime": "2022-03-10T11:17:47.347Z"
+        "Datetime": new Date()
     };
     let chatObj45 = {
         "author": usersArray[1]["userId"],
         "message": "Chat 4, Message 5, User 2",
-        "Datetime": "2022-03-10T11:18:47.347Z"
+        "Datetime": new Date()
     };
 
     chat1["messages"].push(chatObj11);
@@ -667,7 +667,7 @@ async function testGetChatByChannel(){
     // invalid ObjectId channelId case
     console.log("");
     try{
-        let retVal = await chatData.getChatByChannel("dsafdssadfsa");
+        let retVal = await chatData.getChatByChannel("dumb string");
         console.log("BAD: getChatByChannel() passed the invalid ObjectId channelId case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -757,13 +757,13 @@ async function main(){
 
     // Test data functions
     try{
-        await testNewMessage();
+        //await testNewMessage();
     } catch (e) {
         console.log("testNewMessage failed. Result below:");
         console.log(e);
     }
     try{
-        //await testGetChatByChannel();
+        await testGetChatByChannel();
     } catch (e) {
         console.log("testGetChatByChannel failed. Result below:");
         console.log(e);
