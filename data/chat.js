@@ -40,13 +40,11 @@ module.exports = {
         if(!ObjectId.isValid(relationship)) throw "newMessage: relationship must be a valid ObjectId";
         // Check that relationship can be found in the database
         const relationshipsCollection = await relationshipsCol();
-        const messageRelationship = relationshipsCollection.findOne({ relationshipId: ObjectId(relationship) });
+        const messageRelationship = await relationshipsCollection.findOne({ "relationshipId": ObjectId(relationship) });
         if(messageRelationship === null) throw "newMessage: relationship must be an existing relationship";
         // Check that relationship includes the sender
         let found = false;
-        if(messageRelationship[mentor] === sender || messageRelationship[mentee] === sender){
-            found = true;
-        }
+        if(messageRelationship["mentor"] === sender || messageRelationship["mentee"] === sender) found = true;
         if(!found) throw "newMessage: relationship must include sender";
         // Check that message is provided
         if(!message) throw "newMessage: message must be provided";
@@ -95,7 +93,7 @@ module.exports = {
         // Check that channelId is in the database
         const chatsCollection = await chatsCol();
         const foundChannel = chatsCollection.findOne({ channelId: ObjectId(channelId) });
-        if(chatChannel === null) throw "getChatByChannel: channelId must be the id of an existing channel";
+        if(foundChannel === null) throw "getChatByChannel: channelId must be the id of an existing channel";
 
         // </ERROR CHECKING>
 
