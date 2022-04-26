@@ -112,8 +112,13 @@ module.exports = {
         // Check that relationshipId is a valid ObjectId
         if(!ObjectId.isValid(relationshipId)) throw "updateStatus: relationshipId must be a valid ObjectId";
         // Check that relationshipId is in the database
+        const relationshipsCollection = await relationshipsCol();
+        let foundRelationship = await relationshipsCollection.findOne({"relationshipId": ObjectId(relationshipId)});
+        if(foundRelationship === null) throw "updateStatus: relationshipId must by the id of an existing relationship";
         // Check that newStatus is provided
         if(!newStatus) throw "updateStatus: newStatus must be provided";
+        // Check that newStatus is a string
+        if(typeof newStatus !== "string") throw "updateStatus: newStatus must be a string";
         // Check that newStatus is a valid status
         let validStatus = false;
         for(let i = 0; i < statusStates.length; i++){
@@ -126,7 +131,6 @@ module.exports = {
 
         // </ERROR CHECKING>
 
-        const relationshipsCollection = await relationshipsCol();
         let updatedInfo = await relationshipsCollection.updateOne({"relationshipId": relationshipId}, {"$set": {"status": newStatus}});
         if(!updatedInfo.acknowledged){
             throw "updateStatus() could not update the status";
@@ -144,7 +148,7 @@ module.exports = {
         }
 
         const chatsCollection = await chatsCol();
-        const insertedInfo = await chatsCollection.insertOne(newChat);
+        const insertInfo = await chatsCollection.insertOne(newChat);
         if(!insertInfo.acknowledged || !insertInfo.insertedId){
             throw "newChannel: Could not add a chat channel to the database";
         }

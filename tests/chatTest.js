@@ -332,7 +332,7 @@ async function seedRelationships(){
         "mentor": usersArray[1]["userId"],
         "mentee": usersArray[2]["userId"],
         "workspace": new ObjectId(),
-        "status": "ACTIVE",
+        "status": "COMPLETED",
         "createdOn": new Date(),
         "updatedOn": new Date(),
         "chatChannel": chatsArray[3]["channelId"]
@@ -344,7 +344,7 @@ async function seedRelationships(){
         "mentor": usersArray[1]["userId"],
         "mentee": usersArray[4]["userId"],
         "workspace": new ObjectId(),
-        "status": "ACTIVE",
+        "status": "PENDING",
         "createdOn": new Date(),
         "updatedOn": new Date(),
         "chatChannel": chatsArray[4]["channelId"]
@@ -691,15 +691,105 @@ async function testUpdateStatus(){
     console.log("--- Test Cases for updateStatus(relationshipId, newStatus) ---");
 
     // base case 1
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(relationshipsArray[0], "COMPLETED");
+        console.log("GOOD: updateStatus() passed base case 1. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: updateStatus() failed base case 1. Error below:");
+        console.log(e);
+    }
     // base case 2
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(relationshipsArray[4], "ACTIVE");
+        console.log("GOOD: updateStatus() passed base case 2. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: updateStatus() failed base case 2. Error below:");
+        console.log(e);
+    }
     // base case 3
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(relationshipsArray[1], "REJECTED");
+        console.log("GOOD: updateStatus() passed base case 3. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: updateStatus() failed base case 3. Error below:");
+        console.log(e);
+    }
     // no-relationshipId case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus();
+        console.log("BAD: updateStatus() passed the no-relationshipId case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the no-relationshipId case. Error below:");
+        console.log(e);
+    }
     // no-newStatus case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(relationshipsArray[0]);
+        console.log("BAD: updateStatus() passed the no-newStatus case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the no-newStatus case. Error below:");
+        console.log(e);
+    }
     // wrong-type relationshipId case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(600, "ACTIVE");
+        console.log("BAD: updateStatus() passed the wrong-type relationshipId case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the wrong-type relationshipId case. Error below:");
+        console.log(e);
+    }
     // invalid ObjectId relationshipId case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus("dumb string", "ACTIVE");
+        console.log("BAD: updateStatus() passed the invalid ObjectId relationshipId case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the invalid ObjectId relationshipId case. Error below:");
+        console.log(e);
+    }
     // nonexistent relationship case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(usersArray[0], "ACTIVE");
+        console.log("BAD: updateStatus() passed the nonexistent relationship case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the nonexistent relationship case. Error below:");
+        console.log(e);
+    }
     // wrong-type newStatus case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(relationshipsArray[0], 22);
+        console.log("BAD: updateStatus() passed the wrong-type newStatus case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the wrong-type newStatus case. Error below:");
+        console.log(e);
+    }
     // invalid status newStatus case
+    console.log("");
+    try{
+        let retVal = await chatData.updateStatus(relationshipsArray[0], "bad status");
+        console.log("BAD: updateStatus() passed the invalid status newStatus case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: updateStatus() failed the invalid status newStatus case. Error below:");
+        console.log(e);
+    }
 
     // Implement
 }
@@ -709,8 +799,14 @@ async function testNewChannel(){
     console.log("--- Test Cases for newChannel() ---");
 
     // base case
-
-    // Implement
+    try{
+        let retVal = await chatData.newChannel();
+        console.log("GOOD: newChannel() passed the base case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: newChannel() failed the base case. Error below:");
+        console.log(e);
+    }
 }
 
 async function printSeededData(){
@@ -763,7 +859,7 @@ async function main(){
         console.log(e);
     }
     try{
-        await testGetChatByChannel();
+        //await testGetChatByChannel();
     } catch (e) {
         console.log("testGetChatByChannel failed. Result below:");
         console.log(e);
@@ -775,7 +871,7 @@ async function main(){
         console.log(e);
     }
     try{
-        //await testNewChannel();
+        await testNewChannel();
     } catch (e) {
         console.log("testNewChannel failed. Result below:");
         console.log(e);
