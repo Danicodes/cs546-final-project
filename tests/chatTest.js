@@ -19,6 +19,17 @@ let relationshipsArray = [];
 let chatsArray = [];
 
 
+/*
+
+Seeded Relationships:
+1: 1 mentoring 2, both users chat
+2: 3 mentoring 4, only user 3 chats
+3: 1 mentoring 5, only user 5 chats
+4: 2 mentoring 3, both users chat
+5: 2 mentoring 5, empty chat
+
+*/
+
 // Seeds users database
 async function seedUsers(){
 

@@ -39,4 +39,17 @@ router
         console.log("POST /relationships/:id/status");
     })
 
+
+router
+    .route("/")
+    .get(async (req, res) => {
+        // Placeholder for testing
+        console.log("GET /relationships route");
+    })
+    .post(async (req, res) => {
+        // Placeholder for testing
+        console.log("POST /relationships route");
+    })
+
+
 module.exports = router;
