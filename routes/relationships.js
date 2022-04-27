@@ -86,11 +86,20 @@ async function postNewRelationship(req, res){
         mentorId = validate.convertID(req.body.mentorId); 
         menteeId = validate.convertID(req.body.menteeId);
         validate.checkIsEmptyString(req.body.relationshipCategory);
+
         enums.categories.get(req.body.relationshipCategory); // will throw an error if the category is not in the list
     }
     catch(e) {
         //res.status(400).render('frames/error', {layout: 'profile', error: e});
         res.status(400).json({error:e});
+        return;
+    }
+
+    try {
+        if ((userId.toString() !== mentorId.toString()) || (userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
+    }
+    catch(e){
+        res.status(403).json({error: e});
         return;
     }
 
@@ -121,7 +130,7 @@ async function getRelationshipByStatus(req, res){
 
     try {
         userId = validate.convertID(req.params.userId);
-        if (!(req.params.status instanceof data.status)) throw `Error: Must provide a status enum`;
+        enums.status.get(req.body.status);
         // TODO: if in mentor view, show all your mentees
         let menteeList = await users.getMenteeList(userId);
         returnList = await relationships.filterRelationshipsByStatus(menteeList, req.params.status);
@@ -202,18 +211,19 @@ async function getMentees(req, res){
 
 /**
  * TODO: Define a route for this function
- * Update relationship object 
+ * Update relationship status for a given relationship ID
  * Needs the relationshipID, and new status
  * @param {Object} req - request object
  * @param {Object} res - response object
  */
- async function postRelationshipUpdate(req, res){
+ async function postRelationshipStatusUpdate(req, res){
     let relationshipID;
     let userId;
 
     try {
+        req.params.relationshipID
         userId = validate.convertID(req.params.userId);
-        relationshipID = validate.convertID(req.body.relationshipID); // Changed to get value from body
+        relationshipID = validate.convertID(req.params.relationshipID); // Changed to get value from body
         enums.status.get(req.body.status); // will throw an error if status is invalid
     }    
     catch(e) {
@@ -222,15 +232,24 @@ async function getMentees(req, res){
         return;
     }
 
+    let updatedRelationship;
     try {
-        let updatedRelationship = await relationships.updateRelationshipStatus(relationshipID, req.params.status);
-        //return relationship objects
-        //res.render('frames/relationships', {layout: 'profile', relationship: updatedRelationship});
-        res.status(200).json({success: true, updatedRelationship: updatedRelationship});
+        updatedRelationship = await relationships.updateRelationshipStatus(relationshipID, req.params.status);
     }
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
         res.status(500).json({error:e});
+    }
+
+    try {
+        //return relationship objects
+        //res.render('frames/relationships', {layout: 'profile', relationship: updatedRelationship});
+        let updatedUser = await users.updateUserRelationships(userId, updatedRelationship); 
+        res.status(200).json({success: true, updatedRelationship: updatedRelationship, updatedUser: updatedUser});
+    }
+    catch(e){
+        //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
+        res.status(403).json({error:e});
     }
 };
 
@@ -239,6 +258,9 @@ async function getMentees(req, res){
 router.route('/:userId')
 .get(getAllRelationships)
 .post(postNewRelationship);
+
+route.route('/:userId/:relationshipID/:status')
+.post(postRelationshipStatusUpdate);
 
 router.route('/:status')
 .get(getRelationshipByStatus);

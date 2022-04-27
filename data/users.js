@@ -66,9 +66,13 @@ async function getUserRelationships(userId){
  */
 async function updateUserRelationships(userId, relationshipObj){
     validate.checkArgLength(arguments, 2);
+    validate.checkIsEmptyString(userId);
+
     let mentorId = validate.convertID(relationshipObj.mentor);
     let menteeId = validate.convertID(relationshipObj.mentee);
-    
+
+    if ((userId.toString() !== mentorId.toString()) || (userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
+
     let usersDB = await getUsersCollection();
     //let userObj = await usersDB.findOne({_id: userId});
     
