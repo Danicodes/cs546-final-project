@@ -5,13 +5,15 @@
   "main": "app.js",
   "scripts": {
     "test": "node tests/chatTest.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "seed": "node tasks/seed.js"
   },
   "author": "Danielle Williams, Ethan Grzeda, Yash Kosambia, Sai Harish Kumar Vitta, Brendan Murray",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.3",
     "express-handlebars": "^6.0.4",
-    "mongodb": "^4.5.0"
+    "mongodb": "^4.5.0",
+    "mongo": "^0.1.0"
   }
 }
