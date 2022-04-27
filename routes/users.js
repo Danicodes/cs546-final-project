@@ -9,7 +9,7 @@ router.get('/users/:userid', async (req, res) => {
         if (req.session.username){
             const id = req.params['userid'];
             const ret = await userData.getPersonById(id);
-            res.render('/private', ret);
+            res.render(ret);
         }
     }
     catch(e){
