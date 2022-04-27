@@ -96,7 +96,7 @@ async function postNewRelationship(req, res){
     }
 
     try {
-        if ((userId.toString() !== mentorId.toString()) || (userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
+        if ((userId.toString() !== mentorId.toString()) && (userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
     }
     catch(e){
         res.status(403).json({error: e});
@@ -130,7 +130,7 @@ async function getRelationshipByStatus(req, res){
 
     try {
         userId = validate.convertID(req.params.userId);
-        enums.status.get(req.body.status);
+        enums.status.get(req.params.status);
         // TODO: if in mentor view, show all your mentees
         let menteeList = await users.getMenteeList(userId);
         returnList = await relationships.filterRelationshipsByStatus(menteeList, req.params.status);
@@ -146,7 +146,7 @@ async function getRelationshipByStatus(req, res){
         //return relationship objects
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
 
-        res.status(200).json({success: true, relationships: returnObjects});
+        res.status(200).json({success: true, relationships: relationshipObjects});
     }
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
@@ -221,10 +221,10 @@ async function getMentees(req, res){
     let userId;
 
     try {
-        req.params.relationshipID
         userId = validate.convertID(req.params.userId);
         relationshipID = validate.convertID(req.params.relationshipID); // Changed to get value from body
-        enums.status.get(req.body.status); // will throw an error if status is invalid
+        validate.checkIsEmptyString(req.params.status);
+        enums.status.get(req.params.status); // will throw an error if status is invalid
     }    
     catch(e) {
         //res.status(400).render('frames/error', {layout: 'profile', error: "Internal server error"});
@@ -255,14 +255,14 @@ async function getMentees(req, res){
 
 
 // Routes
-router.route('/:userId')
+router.route('/:userId/:relationshipID/:status')
+.post(postRelationshipStatusUpdate);
+
+router.route('/:userId$') // this works!
 .get(getAllRelationships)
 .post(postNewRelationship);
 
-route.route('/:userId/:relationshipID/:status')
-.post(postRelationshipStatusUpdate);
-
-router.route('/:status')
+router.route('/:userId/:status')
 .get(getRelationshipByStatus);
 
 router.route('/mentors')

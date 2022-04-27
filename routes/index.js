@@ -6,7 +6,7 @@ function constructRoutes(app){
     app.use('/posts', postsRoutes);
     app.use('/relationships', relationships);
     app.use('*', (req, res) => {
-        res.status(404).render('page/error', { error: 'Page not found, sorry' });
+        res.status(404).json({error: 'Page not found, sorry' });
       });
 }
 
