@@ -1,5 +1,5 @@
-//const users = require('./users');
+const chat = require('./chat');
 
 module.exports = {
-    //example users: users
+    chat: chat
 };
