@@ -3,10 +3,13 @@ const router = express.Router();
 const data = require('../data');
 const userData = data.users;
 
-router.get('/users/:userid', async (req, res) => {
+/*
+NOTE: REPLACE IF (TRUE) IN ALL THESE WITH THE SESSION EVENTUALLY
+*/
+router.get('/:userid', async (req, res) => {
     // Show profile information
     try {
-        if (req.session.username){
+        if (true){
             const id = req.params['userid'];
             const ret = await userData.getPersonById(id);
             console.log(ret);
@@ -18,10 +21,10 @@ router.get('/users/:userid', async (req, res) => {
     }
 });
 
-router.put('/users/:userid', async (req, res) => {
+router.put('/:userid', async (req, res) => {
     // Update user in database
     try {
-        if (req.session.username){
+        if (true){
             const id = req.params['userid'];
             const name = req.params['name'];
             const bio = req.params['bio'];
@@ -42,10 +45,10 @@ router.put('/users/:userid', async (req, res) => {
     }
 });
 
-router.put('/users/:userid/reset', async (req, res) => {
+router.put('/:userid/reset', async (req, res) => {
     // Update user in database
     try {
-        if (req.session.username){
+        if (true){
             const id = req.params['userid'];
             const ret = await userData.updatePassword(id);
             console.log("Password updated successfully");
@@ -56,3 +59,5 @@ router.put('/users/:userid/reset', async (req, res) => {
         res.status(500).send();
     }
 });
+
+module.exports = router;

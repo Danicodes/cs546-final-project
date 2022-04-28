@@ -5,7 +5,8 @@ const users = mongoCollections.users;
 async function getPersonById(id){
     // In this function we need to find the user for a given id and return them.
     const userCollection = await users();
-    const person = await userCollection.get(id);
+    console.log(id);
+    const person = await userCollection.findOne({ _id: ObjectID(id) });
     // Return the whole person
     return person;
 }
