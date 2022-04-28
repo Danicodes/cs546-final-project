@@ -28,14 +28,16 @@ async function updateUser(id, name, bio, age, searchTags, mentorRelations, mente
         menteeRelations : menteeRelations,
         myPosts : myPosts
     };
+    let userCollection = await users();
     const updated = await userCollection.updateOne(
         { _id : ObjectID(id) },
         {$set : updateduser}
     );
     if (updated.modifiedCount == 0){
-        throw "Error: no band to modify for that id."
+        throw "Error: no user to modify for that id."
     }
-    return await get(id);
+    const ret = await userCollection.findOne({_id : ObjectID(id)});
+    return ret;
 }
 
 async function updatePassword(id, password){

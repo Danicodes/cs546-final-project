@@ -25,14 +25,16 @@ router.put('/:userid', async (req, res) => {
     // Update user in database
     try {
         if (true){
+            console.log(req.body);
             const id = req.params['userid'];
-            const name = req.params['name'];
-            const bio = req.params['bio'];
-            const age = req.params['age'];
-            const searchTags = req.params['searchTags'];
-            const mentorRelations = req.params['mentorRelations'];
-            const menteeRelations = req.params['menteeRelations'];
-            const myPosts = req.params['myPosts'];
+            const name = req.body['name'];
+            console.log(name);
+            const bio = req.body['bio'];
+            const age = req.body['age'];
+            const searchTags = req.body['searchTags'];
+            const mentorRelations = req.body['mentorRelations'];
+            const menteeRelations = req.body['menteeRelations'];
+            const myPosts = req.body['myPosts'];
             // Get all the information out of the id to pass to updateUser
             const ret = await userData.updateUser(id, name, bio ,age, searchTags, mentorRelations, menteeRelations, myPosts);
             // Return the updated collection? (To html page?)
