@@ -1,6 +1,7 @@
 const { ObjectID } = require('bson');
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
+const bcrypt = require('bcrypt');
 
 async function getPersonById(id){
     // In this function we need to find the user for a given id and return them.
@@ -41,15 +42,17 @@ async function updateUser(id, name, bio, age, searchTags, mentorRelations, mente
 }
 
 async function updatePassword(id, password){
-
+    let hashedpassword = await bcrypt.hash(password, 8);
+    const userCollection = await users();
     const updated = await userCollection.updateOne(
-        { _id : ObjectID(id) },
-        {password : password}
+        { _id : ObjectID(id)},
+        {$set: {password : hashedpassword} }
     );
     if (updated.modifiedCount == 0){
         throw "Error: could not update password."
     }
-    return await get(id);
+    const ret = await userCollection.findOne({_id : ObjectID(id)});
+    return ret;
 }
 
 

@@ -5,6 +5,7 @@ const userData = data.users;
 
 /*
 NOTE: REPLACE IF (TRUE) IN ALL THESE WITH THE SESSION EVENTUALLY
+ALSO DO ERROR CHECKING IN EVERY FUNCTION
 */
 router.get('/:userid', async (req, res) => {
     // Show profile information
@@ -25,10 +26,8 @@ router.put('/:userid', async (req, res) => {
     // Update user in database
     try {
         if (true){
-            console.log(req.body);
             const id = req.params['userid'];
             const name = req.body['name'];
-            console.log(name);
             const bio = req.body['bio'];
             const age = req.body['age'];
             const searchTags = req.body['searchTags'];
@@ -52,8 +51,10 @@ router.put('/:userid/reset', async (req, res) => {
     try {
         if (true){
             const id = req.params['userid'];
-            const ret = await userData.updatePassword(id);
+            const password = req.body['password'];
+            const ret = await userData.updatePassword(id, password);
             console.log("Password updated successfully");
+            console.log(ret);
         }
     }
     catch(e){
