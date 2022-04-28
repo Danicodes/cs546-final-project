@@ -7,8 +7,8 @@ let newUsers = async function (shouldDrop) {
     let userIds = [];
     let usersCollection = await getUsersCollection();
 
-    if(shouldDrop)
-        await usersCollection.drop();
+    //if(shouldDrop)
+        //await usersCollection.drop();
 
     let users = [
         {_id: new ObjectId(), name: "Sai Harish Kumar Vitta", username: "svitta", password: "$2a$06$ZM6n9pBr0Kqi7xTbpEKQh.Bnzg2G6rlJ8iGJy70KGPc5T/OZlNkUS", bio: "Masters Student", age: 25, searchTags: ["Teammate1"], mentorRelationships: [], menteeRelationships: [], myPosts: []},

@@ -1,6 +1,4 @@
 const { ObjectID } = require('bson');
-const { users } = require('.');
-const { get } = require('../../../lab6/lab6/routes/bands');
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 
@@ -51,7 +49,7 @@ async function updatePassword(id, password){
     return await get(id);
 }
 
-const mongoCollections = require('../config/mongoCollections');
+
 const getUsersCollection = mongoCollections.users;
 const validations = require("../validations/validations");
 const {ObjectId} = require("mongodb");
