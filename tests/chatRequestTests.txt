@@ -1,0 +1,177 @@
+chatRequestTests.txt
+
+This document contains test cases for the routes in /routes/chat.js
+
+
+ === GET /relationship/:id/messages ===
+
+ -- Base Case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - timestamp: [later timestamp]
+
+ -- Invalid ObjectId id case --
+Request Type: GET
+URL: http://localhost:3000/relationship/dumbstring/messages
+Request Body:
+ - timestamp: [later timestamp]
+
+ -- Nonexistent relationship case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[Nonexistent id]/messages
+Request Body:
+ - timestamp: [later timestamp]
+
+ -- No-timestamp case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - timestamp: [later timestamp]
+
+ -- Invalid timestamp case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - timestamp: "dumbstring"
+
+ -- Too-early timestamp case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - timestamp: "5"
+
+ === POST /relationship/:id/messages ===
+
+ -- Base Case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp: [later timestamp]
+ - message: "Test message"
+
+ -- Invalid ObjectId id case --
+Request Type: POST
+URL: http://localhost:3000/relationship/dumbstring/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp: [later timestamp]
+ - message: "Test message"
+
+ -- Nonexistent relationship case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[Nonexistent id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp: [later timestamp]
+ - message: "Test message"
+
+ -- No-author case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - timestamp: [later timestamp]
+ - message: "Test message"
+
+ -- Invalid ObjectId author case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: "dumb string"
+ - timestamp: [later timestamp]
+ - message: "Test message"
+
+ -- Nonexistent author case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [Nonexistent id]
+ - timestamp: [later timestamp]
+ - message: "Test message"
+
+ -- No-timestamp case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - message: "Test message"
+
+ -- Invalid timestamp case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp: "dumbstring"
+ - message: "Test message"
+
+ -- Too-early timestamp case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp: 5
+ - message: "Test message"
+
+ -- No-message case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp [later timestamp]
+
+ -- Just-spaces message case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp [later timestamp]
+ - message: "     "
+
+ -- Too-long message case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/messages
+Request Body:
+ - author: [userId of user in relationship]
+ - timestamp [later timestamp]
+ - message: "Test message that is way too long for the chat because we are setting a limit on the length of a message. aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+
+ === GET /relationship/:id/status ===
+
+ -- Base Case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[id]/status
+
+ -- Invalid ObjectId id case --
+Request Type: GET
+URL: http://localhost:3000/relationship/dumbstring/status
+
+ -- Nonexistent relationship case --
+Request Type: GET
+URL: http://localhost:3000/relationship/[Nonexistent id]/status
+
+ === POST /relationship/:id/status ===
+
+ -- Base Case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/status
+Request Body:
+ - newStatus: "COMPLETED"
+
+ -- Invalid ObjectId id case --
+Request Type: POST
+URL: http://localhost:3000/relationship/dumbstring/status
+Request Body:
+ - newStatus: "COMPLETED"
+
+ -- Nonexistent relationship case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[Nonexistent id]/status
+Request Body:
+ - newStatus: "COMPLETED"
+
+ -- Invalid newStatus case --
+Request Type: POST
+URL: http://localhost:3000/relationship/[id]/status
+Request Body:
+ - newStatus: "invalid status string here"

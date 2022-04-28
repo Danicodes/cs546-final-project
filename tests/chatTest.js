@@ -22,20 +22,18 @@ let chatsArray = [];
 /*
 
 Seeded Relationships:
-1: 1 mentoring 2, both users chat
-2: 3 mentoring 4, only user 3 chats
-3: 1 mentoring 5, only user 5 chats
-4: 2 mentoring 3, both users chat
-5: 2 mentoring 5, empty chat
+1: 1 mentoring 2, both users chat       ACTIVE
+2: 3 mentoring 4, only user 3 chats     ACTIVE
+3: 1 mentoring 5, only user 5 chats     ACTIVE
+4: 2 mentoring 3, both users chat       COMPLETED
+5: 2 mentoring 5, empty chat            PENDING
 
 */
 
 // Seeds users database
 async function seedUsers(){
 
-    let uid1 = new ObjectId();
     let user1 = {
-        "userId": uid1,
         "name": "Sai Harish Kumar Vitta",
         "userName": "svitta",
         "password": "xxxxxxxxxx",
@@ -46,9 +44,7 @@ async function seedUsers(){
         "menteeRelations": [],
         "myPosts": []
     };
-    let uid2 = new ObjectId();
     let user2 = {
-        "userId": uid2,
         "name": "Danielle Williams",
         "userName": "dwillia8",
         "password": "xxxxxxxxxx",
@@ -59,9 +55,7 @@ async function seedUsers(){
         "menteeRelationships": [],
         "myPosts": []
     };
-    let uid3 = new ObjectId();
     let user3 = {
-        "userId": uid3,
         "name": "Ethan Grzeda",
         "userName": "egrzeda",
         "password": "xxxxxxxxxxxxxxxxxxxxxxx",
@@ -72,9 +66,7 @@ async function seedUsers(){
         "menteeRelationships": [],
         "myPosts": []
     };
-    let uid4 = new ObjectId();
     let user4 = {
-        "userId": uid4,
         "name": "Brendan Murray",
         "userName": "BMurray",
         "password": "xxxxxxxxx",
@@ -85,9 +77,7 @@ async function seedUsers(){
         "menteeRelations": [],
         "myPosts": []
     };
-    let uid5 = new ObjectId();
     let user5 = {
-        "userId": uid5,
         "name": "Yash Kosambia",
         "userName": "YKosambia",
         "password": "xxxxxxxxxx",
@@ -106,31 +96,31 @@ async function seedUsers(){
     if(!insertInfo1.acknowledged || !insertInfo1.insertedId){
         throw "Could not insert user 1";
     }
-    returnArray.push(uid1.toString());
+    returnArray.push(insertInfo1.insertedId.toString());
 
     const insertInfo2 = await usersCollection.insertOne(user2);
     if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
         throw "Could not insert user 2";
     }
-    returnArray.push(uid2.toString());
+    returnArray.push(insertInfo2.insertedId.toString());
 
     const insertInfo3 = await usersCollection.insertOne(user3);
     if(!insertInfo3.acknowledged || !insertInfo3.insertedId){
         throw "Could not insert user 3";
     }
-    returnArray.push(uid3.toString());
+    returnArray.push(insertInfo3.insertedId.toString());
 
     const insertInfo4 = await usersCollection.insertOne(user4);
     if(!insertInfo4.acknowledged || !insertInfo4.insertedId){
         throw "Could not insert user 4";
     }
-    returnArray.push(uid4.toString());
+    returnArray.push(insertInfo4.insertedId.toString());
 
     const insertInfo5 = await usersCollection.insertOne(user5);
     if(!insertInfo5.acknowledged || !insertInfo5.insertedId){
         throw "Could not insert user 5";
     }
-    returnArray.push(uid5.toString());
+    returnArray.push(insertInfo5.insertedId.toString());
 
     return returnArray;
 }
@@ -142,90 +132,80 @@ async function seedChats(){
     let usersArray = await usersCollection.find({}).toArray();
 
     // Create the chat objects
-    let cid1 = new ObjectId();
     let chat1 = { // 1 -> 2
-        "channelId": cid1,
         "messages": []
     }
-    let cid2 = new ObjectId();
     let chat2 = { // 3 -> 4
-        "channelId": cid2,
         "messages": []
     }
-    let cid3 = new ObjectId();
     let chat3 = { // 1 -> 5
-        "channelId": cid3,
         "messages": []
     }
-    let cid4 = new ObjectId();
     let chat4 = { // 2 -> 3
-        "channelId": cid4,
         "messages": []
     }
-    let cid5 = new ObjectId();
     let chat5 = { // 2 -> 5
-        "channelId": cid5,
         "messages": []
     }
 
     // Put chat messages in chat objects
     let chatObj11 = {
-        "author": usersArray[0]["userId"],
+        "author": usersArray[0]["_id"],
         "message": "Chat 1, Message 1, User 1",
         "Datetime": new Date()
     };
     let chatObj12 = {
-        "author": usersArray[1]["userId"],
+        "author": usersArray[1]["_id"],
         "message": "Chat 1, Message 2, User 2",
         "Datetime": new Date()
     };
     let chatObj21 = {
-        "author": usersArray[2]["userId"],
+        "author": usersArray[2]["_id"],
         "message": "Chat 2, Message 1, User 3",
         "Datetime": new Date()
     };
     let chatObj22 = {
-        "author": usersArray[2]["userId"],
+        "author": usersArray[2]["_id"],
         "message": "Chat 2, Message 2, User 3",
         "Datetime": new Date()
     };
     let chatObj23 = {
-        "author": usersArray[2]["userId"],
+        "author": usersArray[2]["_id"],
         "message": "Chat 2, Message 3, User 3",
         "Datetime": new Date()
     };
     let chatObj31 = {
-        "author": usersArray[4]["userId"],
+        "author": usersArray[4]["_id"],
         "message": "Chat 3, Message 1, User 5",
         "Datetime": new Date()
     };
     let chatObj32 = {
-        "author": usersArray[4]["userId"],
+        "author": usersArray[4]["_id"],
         "message": "Chat 3, Message 2, User 5",
         "Datetime": new Date()
     };
     let chatObj41 = {
-        "author": usersArray[1]["userId"],
+        "author": usersArray[1]["_id"],
         "message": "Chat 4, Message 1, User 2",
         "Datetime": new Date()
     };
     let chatObj42 = {
-        "author": usersArray[1]["userId"],
+        "author": usersArray[1]["_id"],
         "message": "Chat 4, Message 2, User 2",
         "Datetime": new Date()
     };
     let chatObj43 = {
-        "author": usersArray[2]["userId"],
+        "author": usersArray[2]["_id"],
         "message": "Chat 4, Message 3, User 3",
         "Datetime": new Date()
     };
     let chatObj44 = {
-        "author": usersArray[2]["userId"],
+        "author": usersArray[2]["_id"],
         "message": "Chat 4, Message 4, User 3",
         "Datetime": new Date()
     };
     let chatObj45 = {
-        "author": usersArray[1]["userId"],
+        "author": usersArray[1]["_id"],
         "message": "Chat 4, Message 5, User 2",
         "Datetime": new Date()
     };
@@ -251,31 +231,31 @@ async function seedChats(){
     if(!insertInfo1.acknowledged || !insertInfo1.insertedId){
         throw "Could not insert chat 1";
     }
-    returnArray.push(cid1.toString());
+    returnArray.push(insertInfo1.insertedId.toString());
 
     const insertInfo2 = await chatsCollection.insertOne(chat2);
     if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
         throw "Could not insert chat 2";
     }
-    returnArray.push(cid2.toString());
+    returnArray.push(insertInfo2.insertedId.toString());
 
     const insertInfo3 = await chatsCollection.insertOne(chat3);
     if(!insertInfo3.acknowledged || !insertInfo3.insertedId){
         throw "Could not insert chat 3";
     }
-    returnArray.push(cid3.toString());
+    returnArray.push(insertInfo3.insertedId.toString());
 
     const insertInfo4 = await chatsCollection.insertOne(chat4);
     if(!insertInfo4.acknowledged || !insertInfo4.insertedId){
         throw "Could not insert chat 4";
     }
-    returnArray.push(cid4.toString());
+    returnArray.push(insertInfo4.insertedId.toString());
 
     const insertInfo5 = await chatsCollection.insertOne(chat5);
     if(!insertInfo5.acknowledged || !insertInfo5.insertedId){
         throw "Could not insert chat 5";
     }
-    returnArray.push(cid5.toString());
+    returnArray.push(insertInfo5.insertedId.toString());
 
     return returnArray;
 }
@@ -300,65 +280,55 @@ async function seedRelationships(){
     }
 
     // Create relationship objects
-    let relId1 = new ObjectId();
     let relationship1 = {
-        "relationshipId": relId1,
         "relationshipDescription": "Relationship 1",
-        "mentor": usersArray[0]["userId"],
-        "mentee": usersArray[1]["userId"],
-        "workspace": new ObjectId(),
+        "mentor": usersArray[0]["_id"],
+        "mentee": usersArray[1]["_id"],
+        "workspace": new ObjectId(), // Placeholder
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatsArray[0]["channelId"]
+        "chatChannel": chatsArray[0]["_id"]
     }
-    let relId2 = new ObjectId();
     let relationship2 = {
-        "relationshipId": relId2,
         "relationshipDescription": "Relationship 2",
-        "mentor": usersArray[2]["userId"],
-        "mentee": usersArray[3]["userId"],
-        "workspace": new ObjectId(),
+        "mentor": usersArray[2]["_id"],
+        "mentee": usersArray[3]["_id"],
+        "workspace": new ObjectId(), // Placeholder
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatsArray[1]["channelId"]
+        "chatChannel": chatsArray[1]["_id"]
     }
-    let relId3 = new ObjectId();
     let relationship3 = {
-        "relationshipId": relId3,
         "relationshipDescription": "Relationship 3",
-        "mentor": usersArray[0]["userId"],
-        "mentee": usersArray[4]["userId"],
-        "workspace": new ObjectId(),
+        "mentor": usersArray[0]["_id"],
+        "mentee": usersArray[4]["_id"],
+        "workspace": new ObjectId(), // Placeholder
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatsArray[2]["channelId"]
+        "chatChannel": chatsArray[2]["_id"]
     }
-    let relId4 = new ObjectId();
     let relationship4 = {
-        "relationshipId": relId4,
         "relationshipDescription": "Relationship 4",
-        "mentor": usersArray[1]["userId"],
-        "mentee": usersArray[2]["userId"],
-        "workspace": new ObjectId(),
+        "mentor": usersArray[1]["_id"],
+        "mentee": usersArray[2]["_id"],
+        "workspace": new ObjectId(), // Placeholder
         "status": "COMPLETED",
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatsArray[3]["channelId"]
+        "chatChannel": chatsArray[3]["_id"]
     }
-    let relId5 = new ObjectId();
     let relationship5 = {
-        "relationshipId": relId5,
         "relationshipDescription": "Relationship 5",
-        "mentor": usersArray[1]["userId"],
-        "mentee": usersArray[4]["userId"],
-        "workspace": new ObjectId(),
+        "mentor": usersArray[1]["_id"],
+        "mentee": usersArray[4]["_id"],
+        "workspace": new ObjectId(), // Placeholder
         "status": "PENDING",
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatsArray[4]["channelId"]
+        "chatChannel": chatsArray[4]["_id"]
     }
 
     // Put data into database
@@ -369,31 +339,31 @@ async function seedRelationships(){
     if(!insertInfo1.acknowledged || !insertInfo1.insertedId){
         throw "Could not insert relationship 1";
     }
-    returnArray.push(relId1.toString());
+    returnArray.push(insertInfo1.insertedId.toString());
 
     const insertInfo2 = await relationshipsCollection.insertOne(relationship2);
     if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
         throw "Could not insert relationship 2";
     }
-    returnArray.push(relId2.toString());
+    returnArray.push(insertInfo2.insertedId.toString());
 
     const insertInfo3 = await relationshipsCollection.insertOne(relationship3);
     if(!insertInfo3.acknowledged || !insertInfo3.insertedId){
         throw "Could not insert relationship 3";
     }
-    returnArray.push(relId3.toString());
+    returnArray.push(insertInfo3.insertedId.toString());
 
     const insertInfo4 = await relationshipsCollection.insertOne(relationship4);
     if(!insertInfo4.acknowledged || !insertInfo4.insertedId){
         throw "Could not insert relationship 4";
     }
-    returnArray.push(relId4.toString());
+    returnArray.push(insertInfo4.insertedId.toString());
 
     const insertInfo5 = await relationshipsCollection.insertOne(relationship5);
     if(!insertInfo5.acknowledged || !insertInfo5.insertedId){
         throw "Could not insert relationship 5";
     }
-    returnArray.push(relId5.toString());
+    returnArray.push(insertInfo5.insertedId.toString());
 
     return returnArray;
 }
@@ -410,7 +380,7 @@ async function clearRelationships(){
     }
 
     for(let i = 0; i < relationshipsArray.length; i++){
-        let deletionInfo = await relationshipsCollection.deleteOne({relationshipId: relationshipsArray[i]["relationshipId"]});
+        let deletionInfo = await relationshipsCollection.deleteOne({"_id": relationshipsArray[i]["_id"]});
         if(deletionInfo.deletedCount === 0){
             console.log("clearRelationships() couldn't delete a relationship");
         }
@@ -429,7 +399,7 @@ async function clearChats(){
     }
 
     for(let i = 0; i < chatsList.length; i++){
-        const chatInfo = await chatsCollection.deleteOne({ channelId: chatsList[i]["channelId"] });
+        const chatInfo = await chatsCollection.deleteOne({ "_id": chatsList[i]["_id"] });
         if(chatInfo.deletedCount === 0){
             console.log("clearChats: Could not delete a chat");
         }
@@ -448,7 +418,7 @@ async function clearUsers(){
     }
 
     for(let i = 0; i < usersList.length; i++){
-        const userInfo = await usersCollection.deleteOne({ userId: usersList[i]["userId"] });
+        const userInfo = await usersCollection.deleteOne({ "_id": usersList[i]["_id"] });
         if(userInfo.deletedCount === 0){
             console.log("clearUsers: Could not delete a user");
         }
@@ -820,6 +790,169 @@ async function testNewChannel(){
     }
 }
 
+// Test cases for getChatWithTimestamp(channelId, timestamp)
+async function testGetChatWithTimestamp(){
+    console.log("--- Test Cases for getChatWithTimestamp(channelId, timestamp) ---");
+
+    // base case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp(chatsArray[0], 1751360700610);
+        console.log("GOOD: getChatWithTimestamp passed the base case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: getChatWithTimestamp failed the base case. Error below:");
+        console.log(e);
+    }
+    // no-channelId case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp();
+        console.log("BAD: getChatWithTimestamp passed the no-channelId case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the no-channelId case. Error below:");
+        console.log(e);
+    }
+    // wrong-type channelId case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp(2, 1751360700610);
+        console.log("BAD: getChatWithTimestamp passed the wrong-type channelId case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the wrong-type channelId case. Error below:");
+        console.log(e);
+    }
+    // invalid ObjectId channelId case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp("dumb string", 1751360700610);
+        console.log("BAD: getChatWithTimestamp passed the invalid ObjectId channelId case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the invalid ObjectId channelId case. Error below:");
+        console.log(e);
+    }
+    // nonexistent channel case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp("626d9398e945d50eafd0af70", 1751360700610);
+        console.log("BAD: getChatWithTimestamp passed the nonexistent channel case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the nonexistent channel case. Error below:");
+        console.log(e);
+    }
+    // no-timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp(chatsArray[0]);
+        console.log("BAD: getChatWithTimestamp passed the no-timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the no-timestamp case. Error below:");
+        console.log(e);
+    }
+    // wrong-type timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp(chatsArray[0], "wrong type string");
+        console.log("BAD: getChatWithTimestamp passed the wrong-type timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the wrong-type timestamp case. Error below:");
+        console.log(e);
+    }
+    // invalid timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.getChatWithTimestamp(chatsArray[0], -3);
+        console.log("BAD: getChatWithTimestamp passed the invalid timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getChatWithTimestamp failed the invalid timestamp case. Error below:");
+        console.log(e);
+    }
+}
+
+// Test cases for getStatus(relationship)
+async function testGetStatus(){
+    console.log("--- Test cases for getStatus(relationship) ---");
+
+    // base case 1
+    console.log("");
+    try{
+        let retVal = await chatData.getStatus(relationshipsArray[0]);
+        console.log("GOOD: getStatus() passed base case 1. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: getStatus() failed base case 1. Error below:");
+        console.log(e);
+    }
+    // base case 2
+    console.log("");
+    try{
+        let retVal = await chatData.getStatus(relationshipsArray[2]);
+        console.log("GOOD: getStatus() passed base case 2. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: getStatus() failed base case 2. Error below:");
+        console.log(e);
+    }
+    // base case 3
+    console.log("");
+    try{
+        let retVal = await chatData.getStatus(relationshipsArray[4]);
+        console.log("GOOD: getStatus() passed base case 3. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("BAD: getStatus() failed base case 3. Error below:");
+        console.log(e);
+    }
+    // no-relationship case
+    console.log("");
+    try{
+        let retVal = await chatData.getStatus();
+        console.log("BAD: getStatus() passed the no-relationship case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getStatus() failed the no-relationship case. Error below:");
+        console.log(e);
+    }
+    // wrong-type relationship case
+    console.log("");
+    try{
+        let retVal = await chatData.getStatus(2);
+        console.log("BAD: getStatus() passed the wrong-type relationship case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getStatus() failed the wrong-type relationship case. Error below:");
+        console.log(e);
+    }
+    // invalid ObjectId relationship case
+    console.log("");
+    try{
+        let retVal = await chatData.getStatus("dumb string");
+        console.log("BAD: getStatus() passed the invalid ObjectId relationship case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getStatus() failed the invalid ObjectId relationship case. Error below:");
+        console.log(e);
+    }
+    // nonexistent relationship case
+    console.log("");
+    try{
+        let randomId = new ObjectId().toString();
+        let retVal = await chatData.getStatus(randomId);
+        console.log("BAD: getStatus() passed the nonexistent relationship case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: getStatus() failed the nonexistent relationship case. Error below:");
+        console.log(e);
+    }
+}
+
 async function printSeededData(){
     const relationshipsCollection = await relationshipsCol();
     let seededRelationships = await relationshipsCollection.find({}).toArray();
@@ -837,7 +970,7 @@ async function printSeededData(){
     console.log(seededChats);
 }
 
-
+// The functions inside can be commented and uncommented depending on what needs testing
 async function main(){
 
     // Seed data into database
@@ -860,53 +993,74 @@ async function main(){
         console.log(e);
     }
     
-    //await printSeededData();
+    
+    await printSeededData();
+    console.log("Current Time:");
+    let currentTime = new Date();
+    console.log(currentTime.getTime());
+    
 
     // Test data functions
     try{
         //await testNewMessage();
     } catch (e) {
-        console.log("testNewMessage failed. Result below:");
+        console.log("testNewMessage failed. Error below:");
         console.log(e);
     }
     try{
         //await testGetChatByChannel();
     } catch (e) {
-        console.log("testGetChatByChannel failed. Result below:");
+        console.log("testGetChatByChannel failed. Error below:");
         console.log(e);
     }
     try{
         //await testUpdateStatus();
     } catch (e) {
-        console.log("testUpdateStatus failed. Result below:");
+        console.log("testUpdateStatus failed. Error below:");
         console.log(e);
     }
     try{
-        await testNewChannel();
+        //await testNewChannel();
     } catch (e) {
-        console.log("testNewChannel failed. Result below:");
+        console.log("testNewChannel failed. Error below:");
+        console.log(e);
+    }
+    try{
+        //await testGetStatus();
+    } catch (e) {
+        console.log("testGetStatus failed. Error below:");
+        console.log(e);
+    }
+    try{
+        //await testGetChatWithTimestamp();
+    } catch (e) {
+        console.log("testGetChatWithTimestamp failed. Error below:");
         console.log(e);
     }
 
+
+
     // Clear data from database
     try{
-        await clearRelationships();
+        //await clearRelationships();
     } catch (e) {
         console.log("clearRelationships failed. Result below:");
         console.log(e);
     }
     try{
-        await clearChats();
+        //await clearChats();
     } catch (e) {
         console.log("clearChats failed. Result below:");
         console.log(e);
     }
     try{
-        await clearUsers();
+        //await clearUsers();
     } catch (e) {
         console.log("clearUsers failed. Result below:");
         console.log(e);
     }
+
+    console.log("\nTest Script Finished");
 }
 
 main();
