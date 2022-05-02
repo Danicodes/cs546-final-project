@@ -13,6 +13,7 @@ async function getPersonById(id){
 }
 
 async function updateUser(id, name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
+    checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
     // In this function we need to update the information for a user corresponding to the given id.
     let person = getPersonById(id);
     let username = person.username;
@@ -112,6 +113,38 @@ let isValidUser = async function(userId) {
         return true;
 };
 
+const checks = function checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
+    if (!(typeof name == 'string') || (name == '')){
+        throw new Error("name needs to be a non-zero string");
+    }
+    if (!(typeof bio == 'string')){
+        throw new Error("bio needs to be a string");
+    }
+    if (!(typeof age == 'number') || (age > 100) || (age < 0)){
+        throw new Error("age must be a number between 0 and 100");
+    }
+    if (!Array.isArray(searchTags)){
+        throw new Error("searchTags must be an array of strings");
+    }
+    let flag = false;
+    for (let i = 0; i < searchTags.length; i++){
+        if (typeof searchTags[i] != 'string'){
+            flag = true;
+        }
+    }
+    if (flag){
+        throw new Error("searchTags must contain strings");
+    }
+    if (!Array.isArray(mentorRelations)){
+        throw new Error("mentorRelations must be an array");
+    }
+    if (!Array.isArray(menteeRelations)){
+        throw new Error("menteeRelations must be an array");
+    }
+    if (!Array.isArray(myPosts)){
+        throw new Error("myPosts must be an array");
+    }
+}
 
 module.exports = {
     addToMyPosts: addToMyPosts,
