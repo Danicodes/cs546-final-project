@@ -1,0 +1,19 @@
+<section>
+	<button>Back to Main Page</button>
+	<button>Back to Relationship Page</button>
+	<h2>Chat with {{otherUser}}</h2>
+	<ul class="message-list">
+		{{#each messages}}
+			<li>
+				<p class="{{this.author}}">{{this.message}}</p>
+			</li>
+		{{/each}}
+	</ul>
+	<form id="message-form" class="message-form" method="post" action="/relationship/{{relationshipId}}/messages">
+        <label for="message"></label>
+        <input type="text" id="message" name="message">
+        <button type="submit">Submit</button>
+    </form>
+	<p class="hidden error-message" id="error-message"></p>
+	<button>Refresh</button>
+</section>
