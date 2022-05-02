@@ -128,10 +128,12 @@ const validate = require('../validations/data');
          relationshipId = validate.convertID(relationshipId);
     });
 
+    statusFilter = status.get(statusFilter);
+
     let filteredRelationshipList = [];
     for(let relationshipId of relationshipList) {
         let relationshipObj = await getRelationshipById(relationshipId);
-       if (relationshipObj.status === statusFilter) filteredRelationshipList.push(relationshipObj._id);
+       if (relationshipObj.status.name === statusFilter.name) filteredRelationshipList.push(relationshipObj._id);
     }
    return filteredRelationshipList;
  }
