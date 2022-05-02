@@ -2,6 +2,7 @@ const mongoCollections = require("../config/mongoCollections");
 let { ObjectId } = require("mongodb");
 const users = mongoCollections.users;
 const bcrypt = require("bcryptjs");
+const login_validations = require("../validations/login_validations");
 
 let count = 10;
 
@@ -27,8 +28,13 @@ async function checkInput(username, password) {
     throw { code: 400, error: `Password must be at least 6 characters long` };
 }
 
-const createUsers = async function createUsers(username, password) {
-  await checkInput(username, password);
+const createUsers = async function createUsers(
+  username,
+  password,
+  firstName,
+  lastName
+) {
+  await login_validations.checkInput(username, password);
   const userDatabase = await users();
   username = username.toLowerCase();
   let getUser = await userDatabase.findOne({ username: username });
@@ -37,9 +43,11 @@ const createUsers = async function createUsers(username, password) {
   }
   hashedPassword = await bcrypt.hash(password, count);
   let newUser = {
-    _id: new ObjectId(),
+    _id: ObjectId(),
     username: username,
     password: hashedPassword,
+    firstName: firstName,
+    lastName: lastName,
   };
   let insertedUser = await userDatabase.insertOne(newUser);
   if (insertedUser.insertedCount == 0) {

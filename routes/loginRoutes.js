@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { login_users } = require("../data/index");
+const login_validations = require("../validations/login_validations");
 
 // ERROR CHECKING STARTS
 async function typeCheck(username, password) {
@@ -24,6 +25,19 @@ async function typeCheck(username, password) {
   if (password.length < 6)
     throw { code: 400, error: `Password must be at least 4 characters long` };
 }
+
+async function checkNames(firstName, lastName) {
+  if (!firstName || typeof firstName != "string")
+    throw { code: 400, error: "Names cam only be strings" };
+  if (!lastName || typeof lastName != "string")
+    throw { code: 400, error: "Names cam only be strings" };
+  let myFirstName = firstName.split(" ");
+  let myLastName = lastName.split(" ");
+  if (myFirstName.length > 1 || myLastName.length > 1)
+    throw { code: 400, error: `Name cannot have spaces` };
+  if (/[^\w\s]/.test(firstName && lastName))
+    throw { code: 400, error: `Name can only be alphanumeric characters` };
+}
 // ERROR CHECKING ENDS
 
 router.get("/", async (req, res) => {
@@ -45,9 +59,22 @@ router.get("/signup", async (req, res) => {
 router.post("/signup", async (req, res) => {
   let signUpDetails = req.body;
   let { username, password } = signUpDetails;
+  let confirm_password = signUpDetails.password2;
+  let firstName = signUpDetails.firstName;
+  let lastName = signUpDetails.lastName;
+
   try {
-    await typeCheck(username, password);
-    let result = await login_users.createUsers(username, password);
+    await login_validations.typeCheck(username, password);
+    await checkNames(firstName, lastName);
+    if (confirm_password !== password)
+      throw { code: 400, error: `Passwords didn't match` };
+
+    let result = await login_users.createUsers(
+      username,
+      password,
+      firstName,
+      lastName
+    );
     res.redirect("/");
   } catch (e) {
     if (e.code) {
