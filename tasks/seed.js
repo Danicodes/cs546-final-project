@@ -9,11 +9,11 @@ const usersSeed = require("./users");
  *      True cannot be used for that collection
  */
 let main = async function(){
-    let userIds = await usersSeed(true);
+    let userIds = await usersSeed(false);
     console.log("Created Users : " + userIds);
-    let postIds = await postsSeed(userIds, true);
+    let postIds = await postsSeed(userIds, false);
     console.log(postIds);
-    let relationshipsCreated = await relationships(userIds, true);
+    let relationshipsCreated = await relationships(userIds, false);
     console.log(relationshipsCreated);
 };
 

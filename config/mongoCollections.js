@@ -20,4 +20,5 @@ module.exports = {
     users: getCollectionFn('users')
     , relationships: getCollectionFn('relationships')
     , posts: getCollectionFn('posts')
+    , chats: getCollectionFn('chats')
 };
