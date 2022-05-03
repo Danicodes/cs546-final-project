@@ -1,5 +1,5 @@
 ﻿Routes for Mentorship Application
-Updated: APR/05/2022
+Updated: APR/08/2022
 Doubts:
 Routes should have username or userId or none
 
@@ -7,14 +7,14 @@ Routes should have username or userId or none
 
 
 Miscellaneous:
-/signup: (Brenden)
+/signup: (Brendan)
         POST: 
                 ReqBody: All the mandatory fields of the User Record
                 Res: Return the added User without password
                 Description: Validate all the credentials necessary and add the User record into the database.
 
 
-/login: (Brenden)
+/login: (Brendan)
         POST:
                 ReqBody: Username and Password provided during the signup 
                 Res: return true or false
@@ -22,7 +22,7 @@ Miscellaneous:
 
 
 Users: All the routes in this URL will have a middleware function where we verify if the user has valid session. If not, respond with unauthorized status code
-/users/{userId}: (Brenden)
+/users/{userId}: (Brendan)
         GET:
                 ReqBody: None
                 Res: User fields that are taken during the signup process (except password)

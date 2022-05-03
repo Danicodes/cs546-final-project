@@ -37,7 +37,7 @@ router
     .get(async (req, res) => {
 
         try{
-            console.log("GET /relationships/:id/messages route"); // debug
+            //console.log("GET /chats/:id/messages route"); // debug
 
             // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
 
@@ -70,9 +70,6 @@ router
             // Check that timestamp is provided, it is a valid timestamp, it is not for a time before the relationship was created, and the chat for the relationship can be found
             if(!errorFlag && !timestamp){
                 errorFlag = true;
-                for (var key in req.params){
-                    console.log( key + ": " + req.params[key]);
-                }
                 res.render('frames/400error', {errorMessage: "timestamp must be provided"});
                 //res.status(400).json("GET /relationship/:id/messages: timestamp must be provided");
             }
@@ -119,8 +116,8 @@ router
                 res.json(chatMessages);
             }
         } catch (e) {
-            console.log("Error in GET /relationships/:id/messages route:"); // 500
-            console.log(e); // debug
+            //console.log("Error in GET /relationships/:id/messages route:"); // 500
+            //console.log(e); // debug
             res.render('frames/500error');
             //res.status(500).json(e);
         }
@@ -135,7 +132,7 @@ router
         // I don't quite understand why we're returning the relationship status at the end of this one, but I implemented it nonetheless
 
         try{
-            console.log("POST /relationships/:id/messages route"); // debug
+            //console.log("POST /chats/:id/messages route"); // debug
 
             // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
 
@@ -261,8 +258,8 @@ router
                 res.json(await chatData.getStatus(id));
             }
         } catch (e) {
-            console.log("Error in POST /relationships/:id/messages route:"); // 500
-            console.log(e); // debug
+            //console.log("Error in POST /relationships/:id/messages route:"); // 500
+            //console.log(e); // debug
             res.render('frames/500error');
             //res.status(500).json(e);
         }
@@ -378,8 +375,8 @@ router
                 res.json(await chatData.getStatus(id));
             }
         } catch (e) {
-            console.log("Error in POST /relationships/:id/status route:"); // 500
-            console.log(e); // debug
+            //console.log("Error in POST /relationships/:id/status route:"); // 500
+            //console.log(e); // debug
             res.render('frames/500error');
             //res.status(500).json(e);
         }
