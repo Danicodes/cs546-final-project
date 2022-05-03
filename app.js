@@ -29,7 +29,7 @@ app.use("/private", (req, res, next) => {
   if (!req.session.login) {
     return res
       .status(403)
-      .render("pages/errors", { notLogged: true, title: "403: Forbidden" });
+      .render("frames/errors", { notLogged: true, title: "403: Forbidden" });
   }
   // res.render('users/private')
   next();

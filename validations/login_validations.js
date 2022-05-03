@@ -30,7 +30,7 @@ async function typeCheck(username, password) {
   let myUsername = username.split(" ");
   if (myUsername.length > 1)
     throw { code: 400, error: `Username cannot have spaces` };
-  if (/[^\w\s]/.test(username))
+  if (/[^\w]/.test(username))
     throw { code: 400, error: `Username can only be alphanumeric characters` };
   if (username.length < 4)
     throw { code: 400, error: `Username must be at least 4 characters long` };
