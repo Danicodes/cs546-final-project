@@ -1,4 +1,3 @@
-const { ObjectID } = require('bson');
 const mongoCollections = require('../config/mongoCollections');
 const users = mongoCollections.users;
 const bcrypt = require('bcrypt');
@@ -10,23 +9,17 @@ const validate = require('../validations/data');
 async function getPersonById(id){
     // In this function we need to find the user for a given id and return them.
     const userCollection = await users();
-    console.log(id);
-    const person = await userCollection.findOne({ _id: ObjectID(id) });
+    const person = await userCollection.findOne({ _id: ObjectId(id) });
     // Return the whole person
+    console.log(person);
     return person;
 }
 
 async function updateUser(id, name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
-    checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
-    // In this function we need to update the information for a user corresponding to the given id.
-    let person = getPersonById(id);
-    let username = person.username;
-    let password = person.password;
+    validate.checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
     // I need to get the password/username for the given id to put in updateduser here
     const updateduser = {
         name : name,
-        username : username,
-        password : password,
         bio : bio,
         age : age,
         searchTags: searchTags,
@@ -36,13 +29,13 @@ async function updateUser(id, name, bio, age, searchTags, mentorRelations, mente
     };
     let userCollection = await users();
     const updated = await userCollection.updateOne(
-        { _id : ObjectID(id) },
+        { _id : ObjectId(id) },
         {$set : updateduser}
     );
     if (updated.modifiedCount == 0){
-        throw "Error: no user to modify for that id."
+        throw "Error: nothing to be updated."
     }
-    const ret = await userCollection.findOne({_id : ObjectID(id)});
+    const ret = await userCollection.findOne({_id : ObjectId(id)});
     return ret;
 }
 
@@ -50,13 +43,13 @@ async function updatePassword(id, password){
     let hashedpassword = await bcrypt.hash(password, 8);
     const userCollection = await users();
     const updated = await userCollection.updateOne(
-        { _id : ObjectID(id)},
+        { _id : ObjectId(id)},
         {$set: {password : hashedpassword} }
     );
     if (updated.modifiedCount == 0){
         throw "Error: could not update password."
     }
-    const ret = await userCollection.findOne({_id : ObjectID(id)});
+    const ret = await userCollection.findOne({_id : ObjectId(id)});
     return ret;
 }
 
@@ -220,38 +213,6 @@ let isValidUser = async function(userId) {
         return true;
 };
 
-const checks = function checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
-    if (!(typeof name == 'string') || (name == '')){
-        throw new Error("name needs to be a non-zero string");
-    }
-    if (!(typeof bio == 'string')){
-        throw new Error("bio needs to be a string");
-    }
-    if (!(typeof age == 'number') || (age > 100) || (age < 0)){
-        throw new Error("age must be a number between 0 and 100");
-    }
-    if (!Array.isArray(searchTags)){
-        throw new Error("searchTags must be an array of strings");
-    }
-    let flag = false;
-    for (let i = 0; i < searchTags.length; i++){
-        if (typeof searchTags[i] != 'string'){
-            flag = true;
-        }
-    }
-    if (flag){
-        throw new Error("searchTags must contain strings");
-    }
-    if (!Array.isArray(mentorRelations)){
-        throw new Error("mentorRelations must be an array");
-    }
-    if (!Array.isArray(menteeRelations)){
-        throw new Error("menteeRelations must be an array");
-    }
-    if (!Array.isArray(myPosts)){
-        throw new Error("myPosts must be an array");
-    }
-}
 
 module.exports = {
     addToMyPosts: addToMyPosts,
