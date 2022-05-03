@@ -35,7 +35,7 @@ const createUsers = async function createUsers(
 };
 
 const checkUser = async function checkUser(username, password) {
-  await checkInput(username, password);
+  await login_validations.checkInput(username, password);
   const userDatabase = await users();
   username = username.toLowerCase();
   let getUser = await userDatabase.findOne({ username: username });

@@ -57,7 +57,7 @@ router.post("/login", async (req, res) => {
   let loginDetails = req.body;
   let { username, password } = loginDetails;
   try {
-    await typeCheck(username, password);
+    await login_validations.typeCheck(username, password);
     let result = await login_users.checkUser(username, password);
     req.session.login = result;
     req.session.username = username;
