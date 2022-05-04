@@ -1,5 +1,14 @@
 const express = require('express');
 const router = express.Router();
+const xss = require('xss');
+const { ObjectId } = require("mongodb");
+const mongoCollections = require("./../config/mongoCollections");
+
+const statusStates = ["PENDING", "ACTIVE", "REJECTED", "COMPLETED"];
+
+const usersCol = mongoCollections.users;
+const relationshipsCol = mongoCollections.relationships;
+const chatsCol = mongoCollections.chats;
 
 const validate = require('../validations/data');
 const enums = require('../enums/');
@@ -7,6 +16,7 @@ const data = require('../data');
 
 const relationships = data.relationships;
 const users = data.users;
+const chatData = data.chat;
 
 
 // TODO: I thought if this worked it would be convenient to have, will test when we have a session object to work with
@@ -255,6 +265,114 @@ async function getMentees(req, res){
 
 
 // Routes
+
+router
+    .route("/:id/status")
+    // Optional
+    // When the status of a relationship needs to be retrieved periodically
+    // Response: Latest status of relationship
+    .get(async (req, res) => {
+        try{
+            //console.log("GET /relationships/:id/status"); // debug
+
+            // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
+
+            let id = xss(req.params.id);
+
+            let errorFlag = false;
+
+            // Check that id is provided, it is a valid ObjectId, and that it corresponds to an existing relationship
+            if(!errorFlag && !id){
+                errorFlag = true;
+                res.status(400).json("GET /relationships/:id/status: id must be provided");
+            }
+            if(!errorFlag && !ObjectId.isValid(id)){
+                errorFlag = true;
+                res.status(400).json("GET /relationships/:id/status: id must be a valid ObjectId");
+            }
+            if(!errorFlag){
+                const relationshipsCollection = await relationshipsCol();
+                const foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
+                if(foundRelationship === null){
+                    errorFlag = true;
+                    res.status(404).json("GET /relationships/:id/status: could not find a relationship with the given id");
+                }
+            }
+
+            // </ERROR CHECKING>
+
+            if(!errorFlag){
+                res.json(await chatData.getStatus(id));
+            }
+        } catch (e) {
+            //console.log("Error in GET /relationships/:id/status route:"); // 500
+            //console.log(e); // debug
+            res.status(500).json(e);
+        }
+    })
+    // When a user performs an action for a relationship and status needs to be updated
+    // ReqBody: newStatus
+    // Response: Updated status of relationship
+    .post(async (req, res) => {
+        try{
+            //console.log("POST /relationships/:id/status"); // debug
+
+            // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
+
+            let id = xss(req.params.id);
+            let newStatus = xss(req.body.newStatus);
+
+            let errorFlag = false;
+
+            // Check that id is provided, it is a valid ObjectId, and it corresponds to an existing relationship
+            if(!errorFlag && !id){
+                errorFlag = true;
+                res.status(400).json("POST /relationships/:id/status: id must be provided");
+            }
+            if(!errorFlag && !ObjectId.isValid(id)){
+                errorFlag = true;
+                res.status(400).json("POST /relationships/:id/status: id must be a valid ObjectId");
+            }
+            if(!errorFlag){
+                const relationshipsCollection = await relationshipsCol();
+                const foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
+                if(foundRelationship === null){
+                    errorFlag = true;
+                    res.status(404).json("POST /chats/:id/status: could not find a relationship with the given id");
+                }
+            }
+            // Check that newStatus is provided, and that it is a valid status string
+            if(!errorFlag && !newStatus){
+                errorFlag = true;
+                res.status(400).json("POST /relationships/:id/status: newStatus must be provided");
+            }
+            if(!errorFlag){
+                let validStatus = false;
+                for(let i = 0; i < statusStates.length; i++){
+                    if(statusStates[i].localeCompare(newStatus) === 0){
+                        validStatus = true;
+                        break;
+                    }
+                }
+                if(!validStatus){
+                    errorFlag = true;
+                    res.status(400).json("POST /relationships/:id/status: newStatus must be a valid status string");
+                }
+            }
+
+            // </ERROR CHECKING>
+
+            if(!errorFlag){
+                await chatData.updateStatus(id, newStatus);
+                res.json(await chatData.getStatus(id));
+            }
+        } catch (e) {
+            //console.log("Error in POST /relationships/:id/status route:"); // 500
+            //console.log(e); // debug
+            res.status(500).json(e);
+        }
+    })
+
 router.route('/:userId/:relationshipID/:status')
 .post(postRelationshipStatusUpdate);
 
@@ -270,5 +388,7 @@ router.route('/mentors')
 
 router.route('/mentees')
 .get(getMentees);
+
+
 
 module.exports = router;
