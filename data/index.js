@@ -5,9 +5,9 @@ const chat = require('./chat');
 const login_users = require("./loginUsers");
 
 module.exports = {
+    users : users,
     relationships: relationships,
     posts: postsData,
-    users: users,
     chat: chat,
     login_users: login_users,
 };
