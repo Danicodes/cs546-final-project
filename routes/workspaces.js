@@ -4,6 +4,7 @@ const router = express.Router();
 const validate = require('../validations/data');
 const enums = require('../enums/');
 const data = require('../data');
+const { route } = require('./chat');
 
 const relationships = data.relationships;
 const users = data.users;
@@ -24,30 +25,17 @@ async function getWorkspaceLandingPage(req, res){
         mentorList = await users.getMentorList(userId);
         mentorList = await relationships.filterRelationshipsByStatus(mentorList, "approved");
 
-        let placeholderUserObj = {
-            username: "mentorusername",
-            userId: 123,
-            name: "Mentor Name Here"
-        }
-        // show only active relationships here
         let mentorObjects = [];
         for (let relationshipId of mentorList){
             let relationshipObj = await relationships.getRelationshipById(relationshipId);
-            //relationshipObj.mentorObj = await users.getPersonById(relationshiopObj.mentor);
-            relationshipObj.mentorObj = placeholderUserObj;
+            relationshipObj.mentorObj = await users.getPersonById(relationshipObj.mentor);
             mentorObjects.push(relationshipObj);
         };
 
-        placeholderUserObj = {
-            username: "menteeusername",
-            userId: 123,
-            name: "Mentee Name Here"
-        }
         let menteeObjects = [];
         for (let relationshipId of menteeList){
             let relationshipObj = await relationships.getRelationshipById(relationshipId);
-            //relationshipObj.menteeObj = await users.getPersonById(relationshiopObj.mentee);
-            relationshipObj.menteeObj = placeholderUserObj;
+            relationshipObj.menteeObj = await users.getPersonById(relationshipObj.mentee);
             menteeObjects.push(relationshipObj);
         };
         
@@ -67,26 +55,37 @@ async function getWorkspaceRelationship(req, res){
     //validate relationshipId, userId
     let relationshipId = req.params.relationshipId;
     let relationshipObject;
+    let otherUser;
     try {
         validate.checkIsEmptyString(relationshipId);
 
+        // check if I am mentor or mentee
         relationshipObject = await relationships.getRelationshipById(relationshipId);
+        
+        if ('62695d62726569197b9820f5' === relationshipObject.mentor.toString()){
+            // then retrieve info of mentee
+            otherUser = relationshipObject.mentee;
+        }
+        else {
+            otherUser = relationshipObject.mentor;
+        }
+
         // workspaceId contains files
         let workspace = relationshipObject.workspaceId;// get workspace function to get files
         let chat = relationshipObject.chatId; // get chat info 
-        //let userObj = users.getUserObj(); // pretend this exists right now
-        let fakeuserObj = {
-            username: "Fake user name",
-            cloutscore: 100
-        } ;
+
+        otherUser = await users.getPersonById(otherUser);
+        // let userObj = { // define the relevant info to return? or return whole object? 
+        //     username: otherUser.username
+        // };
 
         res.render('partials/relationships', {
                                             layout: 'workspaces', 
                                             relationship: relationshipObject,
-                                            user: fakeuserObj,
+                                            user: otherUser,
                                             chatChannel: chat,
                                             workspace: workspace,
-                                            myId: '62695d62726569197b9820f5'//userId
+                                            myId: '62695d62726569197b9820f5'
                                             });
 
     }
@@ -96,8 +95,36 @@ async function getWorkspaceRelationship(req, res){
 
 }
 
+/**
+ * 
+ */
+async function getMentors(req, res){
+    let mentors;
+    try {
+        mentors = await relationships.getMentorList(req.params.userid);
+    }
+    catch(e){
+        res.send(400).json({error: e});
+        return;
+    }
 
-router.route('/:userId')
+    try {
+        for (let mentor of mentors){
+            let user = await users.getPersonById(mentor);
+            mentors.push(user);
+        }
+        res.status(200).json({mentors: mentors});
+    }
+    catch(e){
+        res.send(500).json({error: e});
+        return;
+    }
+}
+
+router.route('/:userId/getMentors')
+.get(getMentors); // API enpoint, if this is in users url, redirect to workspaces
+
+router.route('/:userId$')
 .get(getWorkspaceLandingPage);
 
 router.route('/relationships/:relationshipId')

@@ -7,9 +7,9 @@ body {
     width: 100vw;
     height: 100vh;  
     
-    /* Specifies a grid layout 3x3*/
+    /* Specifies a grid layout 3x4*/
     display: grid;
-
+    grid-auto-flow: column;
     grid-template-columns: 1fr 1fr 1fr; /*3 columns each 1 fraction of the total available space, also repear(3, 1fr) works here*/
     grid-template-rows: 50px 75px 1fr 50px; /* first row is 50px, 2nd row is 75px, 3rd 1 fraction, 4rd row is 50px */
     gap: 5px; /*Gap between each cell of the grid*/
@@ -36,21 +36,31 @@ body {
     grid-row: 3;
 }
 
-.container header {
-    /*grid-area: "header-name";*/
-    grid-column-start: 2;
-    grid-column-end: 4;
+#workspace-div {
+    grid-column-end: 2;
 }
 
+.container header {
+    /*grid-area: "header-name";*/
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+
 header h1 {
-    text-align: center;
+    text-align: left;
 }
 
 .nav-bar-area {
+    min-height: 75px;
+    max-height: 75px;
     background-color: rgb(85, 85, 85);
     grid-column-start: 1;
     grid-column-end: 4;
-    grid-row: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
 }
 
 #main-nav-bar{
@@ -67,12 +77,27 @@ header h1 {
     grid-auto-flow: column;
 } */
 
+.workspace-content-area {
+    justify-self: stretch;
+    grid-column-start: 2;
+    grid-column-end: col4-end;
+
+    grid-row-start: 3;
+    grid-row-end: 4;
+}
+
+.workspace-content-placeholder {
+    grid-column-start: 2;
+    grid-row-start: 3;
+}
+
+
 .tablink {
     background-color: rgb(85, 85, 85);
     color: white;
     float: left;
     border: none;
-    padding: 14px 16px;
+    padding: 23px 16px;
     outline: none;
     cursor: pointer;
     font-size: 17px;

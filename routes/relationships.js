@@ -13,6 +13,7 @@ const chatsCol = mongoCollections.chats;
 const validate = require('../validations/data');
 const enums = require('../enums/');
 const data = require('../data');
+const { route } = require('./chat');
 
 const relationships = data.relationships;
 const users = data.users;
@@ -72,8 +73,8 @@ async function getAllRelationships(req, res){
         };
 
         // TODO: Not set on any of these layouts/frames being rendered since we're not yet sure exactly where these routes will be used
-       // res.render('frames/relationships', {layout: 'profile', relationships: returnList}); 
-       res.status(200).json(jsonObj);
+       res.render('partials/relationships', {layout: 'workspaces', relationships: returnList}); 
+       //res.status(200).json(jsonObj);
     }
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
@@ -137,7 +138,7 @@ async function getRelationshipByStatus(req, res){
     // Show only the relationships in requested status
     let returnList;
     let userId;
-
+    // if req.session.view == mentor/mentee
     try {
         userId = validate.convertID(req.params.userId);
         enums.status.get(req.params.status);
@@ -151,11 +152,19 @@ async function getRelationshipByStatus(req, res){
         
         let relationshipObjects = []
         for (let relationshipId of returnList){
-            relationshipObjects.push(await relationships.getRelationshipById(relationshipId));
+            let relationshipObject = await relationships.getRelationshipById(relationshipId);
+            
+            let mentorObject = await users.getPersonById(relationshipObject.mentor);
+            let menteeObject = await users.getPersonById(relationshipObject.mentee);
+            
+            relationshipObject.mentor = mentorObject;
+            relationshipObject.mentee = menteeObject;
+
+            relationshipObjects.push(relationshipObject);
         };
         //return relationship objects
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
-
+        console.log("success");
         res.status(200).json({success: true, relationships: relationshipObjects});
     }
     catch(e) {
@@ -181,6 +190,12 @@ async function getMentors(req, res){
         for (let relationshipId of mentorRelationships){
             relationshipObjects.push(await relationships.getRelationshipById(relationshipId));
         };
+
+        for (let relationship of relationshipObjects){
+            let mentoruserId = relationship.mentor;
+            let mentor = await users.getPersonById(mentoruserId);
+            relationship.mentor = mentor;
+        }
         //return relationship objects
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
         res.status(200).json({success: true, relationships: relationshipObjects});
@@ -203,10 +218,17 @@ async function getMentees(req, res){
     try {
         userId = validate.convertID(req.params.userId);
         let menteeRelationships = await users.getMenteeList(userId);
+
         let relationshipObjects = []
         for (let relationshipId of menteeRelationships){
             relationshipObjects.push(await relationships.getRelationshipById(relationshipId));
         };
+
+        for (let relationship of relationshipObjects){
+            let menteeuserId = relationship.mentee;
+            let mentee = await users.getPersonById(menteeuserId);
+            relationship.mentee = mentee;
+        }
         //return relationship objects
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
 
@@ -249,6 +271,7 @@ async function getMentees(req, res){
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
         res.status(500).json({error:e});
+        return;
     }
 
     try {
@@ -380,14 +403,14 @@ router.route('/:userId$') // this works!
 .get(getAllRelationships)
 .post(postNewRelationship);
 
-router.route('/:userId/:status')
-.get(getRelationshipByStatus);
-
-router.route('/mentors')
+router.route('/:userId/mentors')
 .get(getMentors);
 
-router.route('/mentees')
+router.route('/:userId/mentees')
 .get(getMentees);
+
+router.route('/:userId/:status')
+.get(getRelationshipByStatus);
 
 
 
