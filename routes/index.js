@@ -8,7 +8,11 @@ function constructRoutes(app) {
   // Example: app.use('/', <middleware name or router name>); // Mounts router or other middleware at path '/'
   app.use("/posts", postsRoutes);
   app.use("/relationships", relationships);
+<<<<<<< HEAD
   app.use("/workspaces", workspaces);
+=======
+  app.use('/users', usersRoutes);
+>>>>>>> dev
   app.use("/chats", chatRoutes);
   app.use("/", loginRoutes);
   app.use("*", (req, res) => {
