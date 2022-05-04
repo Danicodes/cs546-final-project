@@ -25,6 +25,7 @@ app.use(
 );
 
 // AUTHENTICATION MIDDLEWARE
+/*
 app.use("/private", (req, res, next) => {
   if (!req.session.login) {
     return res
@@ -34,6 +35,7 @@ app.use("/private", (req, res, next) => {
   // res.render('users/private')
   next();
 });
+*/
 
 // LOGGING MIDDLEWARE
 app.use((req, res, next) => {

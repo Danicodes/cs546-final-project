@@ -273,7 +273,7 @@ router
     // Response: Latest status of relationship
     .get(async (req, res) => {
         try{
-            //console.log("GET /relationships/:id/status"); // debug
+            console.log("GET /relationships/:id/status"); // debug
 
             // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
 
@@ -315,7 +315,7 @@ router
     // Response: Updated status of relationship
     .post(async (req, res) => {
         try{
-            //console.log("POST /relationships/:id/status"); // debug
+            console.log("POST /relationships/:id/status"); // debug
 
             // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
 
