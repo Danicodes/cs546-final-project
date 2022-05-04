@@ -1,0 +1,81 @@
+body {
+    margin: 0;
+}
+
+/*Main container for the site*/
+.container {
+    width: 100vw;
+    height: 100vh;  
+    
+    /* Specifies a grid layout 3x3*/
+    display: grid;
+
+    grid-template-columns: 1fr 1fr 1fr; /*3 columns each 1 fraction of the total available space, also repear(3, 1fr) works here*/
+    grid-template-rows: 50px 75px 1fr 50px; /* first row is 50px, 2nd row is 75px, 3rd 1 fraction, 4rd row is 50px */
+    gap: 5px; /*Gap between each cell of the grid*/
+    /* grid-template-areas:
+        "header-name header-name login"
+        "nav nav nav"
+        "menu content content"
+        "footer footer footer"; */
+
+    padding: 5px;
+    /* box-sizing: border-box; */
+}
+
+/* .container div {
+    padding: 10px;
+    border: 1px solid black;
+} */
+
+.main-content {
+    
+    grid-column-start: 1;
+    grid-column-end: 4;
+
+    grid-row: 3;
+}
+
+.container header {
+    /*grid-area: "header-name";*/
+    grid-column-start: 2;
+    grid-column-end: 4;
+}
+
+header h1 {
+    text-align: center;
+}
+
+.nav-bar-area {
+    background-color: rgb(85, 85, 85);
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row: 2;
+}
+
+#main-nav-bar{
+    background-color: rgb(85, 85, 85);
+
+}
+    /*grid-area: "nav";
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row: 2;
+}
+
+/* #main-nav-bar button{
+    grid-auto-flow: column;
+} */
+
+.tablink {
+    background-color: rgb(85, 85, 85);
+    color: white;
+    float: left;
+    border: none;
+    padding: 14px 16px;
+    outline: none;
+    cursor: pointer;
+    font-size: 17px;
+    width: auto;
+    column-span: all;
+  }
