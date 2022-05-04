@@ -37,7 +37,7 @@ router
     .get(async (req, res) => {
 
         try{
-            console.log("GET /chats/:id/messages route"); // debug
+            //console.log("GET /chats/:id/messages route"); // debug
 
             // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
 
@@ -49,12 +49,12 @@ router
             // Check that id is provided, it is a valid ObjectId, and that it corresponds to an existing relationship
             if(!errorFlag && !id){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "id must be provided"});
+                res.render('frames/400error', {layout: null, errorMessage: "id must be provided", title: "Chat"});
                 //res.status(400).json("GET /relationship/:id/messages: id must be provided");
             }
             if(!errorFlag && !ObjectId.isValid(id)){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "id must be a valid ObjectId"});
+                res.render('frames/400error', {layout: null, errorMessage: "id must be a valid ObjectId", title: "Chat"}); 
                 //res.status(400).json("GET /relationship/:id/messages: id must be a valid ObjectId");
             }
             let foundRelationship = null;
@@ -63,14 +63,14 @@ router
                 foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
                 if(foundRelationship === null){
                     errorFlag = true;
-                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a relationship with the given id"});
+                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a relationship with the given id", title: "Chat"}); 
                     //res.status(404).json("GET /relationship/:id/messages: could not find a relationship with the given id");
                 }
             }
             // Check that timestamp is provided, it is a valid timestamp, it is not for a time before the relationship was created, and the chat for the relationship can be found
             if(!errorFlag && !timestamp){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be provided"});
+                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be provided", title: "Chat"});
                 //res.status(400).json("GET /relationship/:id/messages: timestamp must be provided");
             }
             // I used this webpage to learn more about the Javascript Date object:
@@ -80,13 +80,13 @@ router
                 timestamp = parseInt(timestamp);
                 if(isNaN(timestamp)){
                     errorFlag = true;
-                    res.render('frames/400error', {layout: null, errorMessage: "timestamp must be an integer"});
+                    res.render('frames/400error', {layout: null, errorMessage: "timestamp must be an integer", title: "Chat"});
                     //res.status(400).json("GET /relationship/:id/messages: timestamp must be an integer");
                 }
             }
             if(!errorFlag && timestamp < 0){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be nonnegative"});
+                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be nonnegative", title: "Chat"});
                 //res.status(400).json("GET /relationship/:id/messages: timestamp must be nonnegative");
             }
             let foundChat = null;
@@ -95,7 +95,7 @@ router
                 foundChat = await chatsCollection.findOne({"_id": foundRelationship["chatChannel"]});
                 if(foundChat === null){
                     errorFlag = true;
-                    res.render('frames/404error', {layout: null, errorMessage: "We could not find the chat channel for the relationship"});
+                    res.render('frames/404error', {layout: null, errorMessage: "We could not find the chat channel for the relationship", title: "Chat"});
                     //res.status(404).json("GET /relationship/:id/messages: could not find the chat channel for the relationship");
                 }
             }
@@ -104,7 +104,7 @@ router
                 chatCreated = chatCreated.getTime();
                 if(chatCreated > timestamp){
                     errorFlag = true;
-                    res.render('frames/400error', {layout: null, errorMessage: "timestamp given must be after the relationship was created"});
+                    res.render('frames/400error', {layout: null, errorMessage: "timestamp given must be after the relationship was created", title: "Chat"});
                     //res.status(400).json("GET /relationship/:id/messages: timestamp given must be after the relationship was created");
                 }
             }
@@ -130,13 +130,12 @@ router
                         chatMessages[i]["author"] = "Other User"; // Default case for if some wrong data gets into the database
                     }
                 }
-
-                res.render('frames/chatMessages', {layout: null, messages: chatMessages});
+                res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat"});
             }
         } catch (e) {
             //console.log("Error in GET /relationships/:id/messages route:"); // 500
             //console.log(e); // debug
-            res.render('frames/500error', {layout: null});
+            res.render('frames/500error', {layout: null, title: "Chat"});
             //res.status(500).json(e);
         }
         
@@ -164,12 +163,12 @@ router
             // Check that id is provided, it is a valid ObjectId, and that it corresponds to an existing relationship
             if(!errorFlag && !id){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "id must be provided"});
+                res.render('frames/400error', {layout: null, errorMessage: "id must be provided", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: id must be provided");
             }
             if(!errorFlag && !ObjectId.isValid(id)){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "id must be a valid ObjectId"});
+                res.render('frames/400error', {layout: null, errorMessage: "id must be a valid ObjectId", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: id must be a valid ObjectId");
             }
             let foundRelationship = null;
@@ -178,19 +177,19 @@ router
                 foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
                 if(foundRelationship === null){
                     errorFlag = true;
-                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a relationship with the given id"});
+                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a relationship with the given id", title: "Chat"});
                     //res.status(404).json("POST /relationships/:id/messages: could not find a relationship with the given id");
                 }
             }
             // Check that author is provided, it is a valid ObjectId, it exists in the database, and it is part of the relationship
             if(!errorFlag && !author){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "author must be provided"});
+                res.render('frames/400error', {layout: null, errorMessage: "author must be provided", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: author must be provided");
             }
             if(!errorFlag && !ObjectId.isValid(author)){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "author must be a valid ObjectId"});
+                res.render('frames/400error', {layout: null, errorMessage: "author must be a valid ObjectId", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: author must be a valid ObjectId");
             }
             if(!errorFlag){
@@ -198,32 +197,32 @@ router
                 const foundUser = await usersCollection.findOne({"_id": ObjectId(author)});
                 if(!errorFlag && foundUser === null){
                     errorFlag = true;
-                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a user with the given user id"});
+                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a user with the given user id", title: "Chat"});
                     //res.status(404).json("POST /relationships/:id/messages: could not find an a user with the given author id");
                 }
             }
             if(!errorFlag && foundRelationship["mentor"].toString().localeCompare(author) !== 0 && foundRelationship["mentee"].toString().localeCompare(author) !== 0){
                 errorFlag = true;
-                res.render('frames/404error', {layout: null, errorMessage: "We could not find the given author in the given relationship"});
+                res.render('frames/404error', {layout: null, errorMessage: "We could not find the given author in the given relationship", title: "Chat"});
                 //res.status(404).json("POST /relationships/:id/messages: could not find the given author in the given relationship");
             }
             // Check that timestamp is provided, it is a valid timestamp, it's not before the chat was created, and that the chat for the relationship can be found
             if(!errorFlag && !timestamp){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be provided"});
+                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be provided", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: timestamp must be provided");
             }
             if(!errorFlag){
                 timestamp = parseInt(timestamp);
                 if(isNaN(timestamp)){
                     errorFlag = true;
-                    res.render('frames/400error', {layout: null, errorMessage: "timestamp must be a number"});
+                    res.render('frames/400error', {layout: null, errorMessage: "timestamp must be a number", title: "Chat"});
                     //res.status(400).json("POST /relationships/:id/messages: timestamp must be a number");
                 }
             }
             if(!errorFlag && timestamp < 0){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be nonnegative"});
+                res.render('frames/400error', {layout: null, errorMessage: "timestamp must be nonnegative", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: timestamp must be nonnegative");
             }
             if(!errorFlag){
@@ -231,7 +230,7 @@ router
                 const foundChat = await chatsCollection.findOne({"_id": foundRelationship["chatChannel"]});
                 if(foundChat === null){
                     errorFlag = true;
-                    res.render('frames/404error', {errorMessage: "We could not find a chat channel for the given relationship"});
+                    res.render('frames/404error', {layout: null, errorMessage: "We could not find a chat channel for the given relationship", title: "Chat"});
                     //res.status(404).json("POST /relationship/:id/messages: could not find a chat channel for the given relationship");
                 }
             }
@@ -240,31 +239,31 @@ router
                 relationshipCreated = relationshipCreated.getTime();
                 if(relationshipCreated > timestamp){
                     errorFlag = true;
-                    res.render('frames/400error', {layout: null, errorMessage: "timestamp given must be after the chat was created"});
+                    res.render('frames/400error', {layout: null, errorMessage: "timestamp given must be after the chat was created", title: "Chat"});
                     //res.status(400).json("POST /relationship/:id/messages: timestamp given must be after the chat was created");
                 }
             }
             // Check that message is provided, it is not empty, it is not just spaces, and that it is not longer than the maximum message length
             if(!errorFlag && !message){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "message must be provided"});
+                res.render('frames/400error', {layout: null, errorMessage: "message must be provided", title: "Chat"});
                 //res.status(400).json("POST /relationship/:id/messages: message must be provided");
             }
             if(!errorFlag && message === ""){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "message must not be empty"});
+                res.render('frames/400error', {layout: null, errorMessage: "message must not be empty", title: "Chat"});
                 //res.status(400).json("POST /relationship/:id/messages: message must not be empty");
             }
             if(!errorFlag && message.trim() === ""){
                 errorFlag = true;
-                res.render('frames/400error', {layout: null, errorMessage: "message must not be just spaces"});
+                res.render('frames/400error', {layout: null, errorMessage: "message must not be just spaces", title: "Chat"});
                 //res.status(400).json("POST /relationship/:id/messages: message must not be just spaces");
             }
             if(!errorFlag){
                 message = message.trim();
                 if(message.length > MAX_MESSAGE_LENGTH){
                     errorFlag = true;
-                    res.render('frames/400error', {layout: null, errorMessage: "message must not be longer than the maximum message length"});
+                    res.render('frames/400error', {layout: null, errorMessage: "message must not be longer than the maximum message length", title: "Chat"});
                     //res.status(400).json("POST /relationship/:id/messages: message must not be longer than the maximum message length");
                 }
             }
@@ -273,12 +272,34 @@ router
 
             if(!errorFlag){
                 await chatData.newMessage(author, id, message);
-                res.json(await chatData.getStatus(id));
+                
+                // Display chats, just like it's done with the GET /messages route
+                let chatMessages = await chatData.getChatByChannel(foundRelationship["chatChannel"].toString());
+
+                // Get the ids of the mentor and the mentee
+                let mentorId = foundRelationship["mentor"].toString();
+                let menteeId = foundRelationship["mentee"].toString();
+
+                for(let i = 0; i < chatMessages.length; i++){
+                    let messageAuthor = chatMessages[i]["author"].toString();
+                    if(messageAuthor.localeCompare(mentorId) === 0){
+                        chatMessages[i]["author"] = "Mentor";
+                    }
+                    else if(messageAuthor.localeCompare(menteeId) === 0){
+                        chatMessages[i]["author"] = "Mentee";
+                    }
+                    else{
+                        chatMessages[i]["author"] = "Other User"; // Default case for if some wrong data gets into the database
+                    }
+                }
+                res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat"});
+
+                //res.json(await chatData.getStatus(id));
             }
         } catch (e) {
             //console.log("Error in POST /relationships/:id/messages route:"); // 500
             //console.log(e); // debug
-            res.render('frames/500error', {layout: null});
+            res.render('frames/500error', {layout: null, title: "Chat"});
             //res.status(500).json(e);
         }
     })
@@ -286,6 +307,7 @@ router
 
 
 // Placeholder routes for testing
+/*
 router
     .route("/")
     .get(async (req, res) => {
@@ -294,6 +316,7 @@ router
     .post(async (req, res) => {
         console.log("POST /relationships route"); // debug
     })
+*/
 
 
 module.exports = router;

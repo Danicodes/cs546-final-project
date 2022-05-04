@@ -2,6 +2,8 @@ const chatRoutes = require("./chat");
 const relationships = require("./relationships");
 const postsRoutes = require("./posts");
 const loginRoutes = require("./loginRoutes");
+const usersRoutes = require("./users");
+
 function constructRoutes(app) {
   // Example: app.use('/', <middleware name or router name>); // Mounts router or other middleware at path '/'
   app.use("/posts", postsRoutes);

@@ -131,6 +131,10 @@ module.exports = {
         for(let i = 0; i < allMessages.length; i++){
             let currentTimestamp = allMessages[i]["Datetime"];
             let currentNumber = currentTimestamp.getTime();
+            //console.log("currentNumber:"); // debug
+            //console.log(currentNumber); // debug
+            //console.log("timestamp"); // debug
+            //console.log(timestamp); // debug
             if(currentNumber <= timestamp){
                 filteredMessages.push(allMessages[i]);
             }

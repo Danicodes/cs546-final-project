@@ -967,7 +967,10 @@ async function printSeededData(){
     const chatsCollection = await chatsCol();
     let seededChats = await chatsCollection.find({}).toArray();
     console.log("Chats in Database");
-    console.log(seededChats);
+    for(let i = 0; i < seededChats.length; i++){
+        console.log(seededChats[i]);
+    }
+    //console.log(seededChats);
 }
 
 // The functions inside can be commented and uncommented depending on what needs testing
@@ -975,26 +978,26 @@ async function main(){
 
     // Seed data into database
     try{
-        usersArray = await seedUsers();
+        //usersArray = await seedUsers();
     } catch (e) {
         console.log("seedUsers failed. Result below:");
         console.log(e);
     }
     try{
-        chatsArray = await seedChats();
+        //chatsArray = await seedChats();
     } catch (e) {
         console.log("seedChats failed. Result below:");
         console.log(e);
     }
     try{
-        relationshipsArray = await seedRelationships();
+        //relationshipsArray = await seedRelationships();
     } catch (e) {
         console.log("seedRelationships failed. Result below:");
         console.log(e);
     }
     
     
-    await printSeededData();
+    //await printSeededData();
     console.log("Current Time:");
     let currentTime = new Date();
     console.log(currentTime.getTime());
