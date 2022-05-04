@@ -973,24 +973,30 @@ async function printSeededData(){
     //console.log(seededChats);
 }
 
+function printCurrentTime(){
+    console.log("Current Time:");
+    let currentTime = new Date();
+    console.log(currentTime.getTime());
+}
+
 // The functions inside can be commented and uncommented depending on what needs testing
 async function main(){
 
     // Seed data into database
     try{
-        //usersArray = await seedUsers();
+        usersArray = await seedUsers();
     } catch (e) {
         console.log("seedUsers failed. Result below:");
         console.log(e);
     }
     try{
-        //chatsArray = await seedChats();
+        chatsArray = await seedChats();
     } catch (e) {
         console.log("seedChats failed. Result below:");
         console.log(e);
     }
     try{
-        //relationshipsArray = await seedRelationships();
+        relationshipsArray = await seedRelationships();
     } catch (e) {
         console.log("seedRelationships failed. Result below:");
         console.log(e);
@@ -998,14 +1004,12 @@ async function main(){
     
     
     //await printSeededData();
-    console.log("Current Time:");
-    let currentTime = new Date();
-    console.log(currentTime.getTime());
+    //printCurrentTime();
     
 
     // Test data functions
     try{
-        //await testNewMessage();
+        await testNewMessage();
     } catch (e) {
         console.log("testNewMessage failed. Error below:");
         console.log(e);
@@ -1045,19 +1049,19 @@ async function main(){
 
     // Clear data from database
     try{
-        //await clearRelationships();
+        await clearRelationships();
     } catch (e) {
         console.log("clearRelationships failed. Result below:");
         console.log(e);
     }
     try{
-        //await clearChats();
+        await clearChats();
     } catch (e) {
         console.log("clearChats failed. Result below:");
         console.log(e);
     }
     try{
-        //await clearUsers();
+        await clearUsers();
     } catch (e) {
         console.log("clearUsers failed. Result below:");
         console.log(e);
