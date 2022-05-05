@@ -62,8 +62,6 @@
                 // Create a timestamp
                 let datetime = new Date();
                 datetime = datetime.getTime();
-
-                datetime = "1651785991509"; // Placeholder value that works for testing
             
                 // Get user id of current user (change this later so that it gets this from the user session)
                 let userId = "62744107aeb4a6dfa2e1bfe5"; // A placeholder value that works for testing
@@ -97,8 +95,6 @@
             // Create a timestamp
             let datetime = new Date();
             datetime = datetime.getTime();
-
-            datetime = "1751785991509"; // Placeholder value that works for testing
 
             // Send a "GET /chats/:id/messages" request to server, then display the updated chat messages page
             var requestConfig = {

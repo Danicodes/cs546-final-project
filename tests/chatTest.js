@@ -985,6 +985,8 @@ async function addMessage(){
     let relationship = "62744107aeb4a6dfa2e1bff4";
     let message = "Message added by the addMessage() function";
     await chatData.newMessage(sender, relationship, message);
+    console.log("");
+    console.log("Added a message to the first chat channel");
 }
 
 // The functions inside can be commented and uncommented depending on what needs testing
