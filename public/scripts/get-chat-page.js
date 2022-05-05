@@ -22,7 +22,7 @@
             datetime = datetime.getTime();
             
             // Get user id of current user (change this later so that it gets this from the user session)
-            let relationshipId = "6273eda70e9866f8270a3859"; // A placeholder value that works for testing
+            let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
 
             // Send a POST "/chats/:id/messages" request to server, then display updated message page
             var requestConfig = {
@@ -30,8 +30,7 @@
                 url: "/chats/" + relationshipId + "/messages",
                 contentType: 'application/json',
                 data: {
-                    timestamp: datetime,
-                    testParam: "testParamText"
+                    timestamp: datetime
                 }
             };
 

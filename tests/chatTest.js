@@ -979,6 +979,14 @@ function printCurrentTime(){
     console.log(currentTime.getTime());
 }
 
+// Adds a new message to the first chat
+async function addMessage(){
+    let sender = "62744107aeb4a6dfa2e1bfe5"; // Placeholder value for testing
+    let relationship = "62744107aeb4a6dfa2e1bff4";
+    let message = "Message added by the addMessage() function";
+    await chatData.newMessage(sender, relationship, message);
+}
+
 // The functions inside can be commented and uncommented depending on what needs testing
 async function main(){
 
@@ -1004,7 +1012,10 @@ async function main(){
     
     
     //await printSeededData();
-    //printCurrentTime();
+    
+    await addMessage();
+
+    printCurrentTime();
     
 
     // Test data functions
@@ -1049,19 +1060,19 @@ async function main(){
 
     // Clear data from database
     try{
-        await clearRelationships();
+        //await clearRelationships();
     } catch (e) {
         console.log("clearRelationships failed. Result below:");
         console.log(e);
     }
     try{
-        await clearChats();
+        //await clearChats();
     } catch (e) {
         console.log("clearChats failed. Result below:");
         console.log(e);
     }
     try{
-        await clearUsers();
+        //await clearUsers();
     } catch (e) {
         console.log("clearUsers failed. Result below:");
         console.log(e);

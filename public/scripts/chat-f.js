@@ -13,13 +13,12 @@
     const messageForm = document.getElementById('message-form');
     if(messageForm){
         // Get elements
-        //const messageInput = document.getElementById('message');
         let messageInput = $('#message');
-        //console.log("messageValue: " + messageValue);
         const errorElement = document.getElementById('error-message');
         const chatSection = document.getElementById('chat-section');
+        let refreshButton = document.getElementById("refresh");
 
-        // Add event listener that does error checking
+        // Add event listener for the message input form that does error checking
         messageForm.addEventListener('submit', (event) => {
             event.preventDefault();
 
@@ -57,13 +56,13 @@
             let datetime = new Date();
             datetime = datetime.getTime();
 
-            datetime = "1651782831157"; // Placeholder value that works for testing
+            datetime = "1651785991509"; // Placeholder value that works for testing
             
             // Get user id of current user (change this later so that it gets this from the user session)
-            let userId = "6273eda70e9866f8270a384a"; // A placeholder value that works for testing
-            let relationshipId = "6273eda70e9866f8270a3859"; // A placeholder value that works for testing
+            let userId = "62744107aeb4a6dfa2e1bfe5"; // A placeholder value that works for testing
+            let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
 
-            // Send a POST "/chats/:id/messages" request to server, then display updated message page
+            // Send a "POST /chats/:id/messages" request to server, then display updated message page
             var requestConfig = {
                 method: "POST",
                 url: "/chats/" + relationshipId + "/messages",
@@ -73,6 +72,35 @@
                     message: messageValue
                 }
             };
+
+            $.ajax(requestConfig).then(function (responseMessage) {
+                var newElement = $(responseMessage);
+                //console.log(responseMessage); // debug
+                $("#chat-section").replaceWith(newElement);
+            })
+        });
+
+        // Add event listener to "Refresh Messages" button that refreshes chat messages without reloading the whole page
+        refreshButton.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
+
+            // Create a timestamp
+            let datetime = new Date();
+            datetime = datetime.getTime();
+
+            datetime = "1751785991509"; // Placeholder value that works for testing
+
+            // Send a "GET /chats/:id/messages" request to server, then display the updated chat messages page
+            var requestConfig = {
+                method: "GET",
+                url: "/chats/" + relationshipId + "/messages",
+                contentType: 'application/json',
+                data: {
+                    timestamp: datetime
+                }
+            }
 
             $.ajax(requestConfig).then(function (responseMessage) {
                 var newElement = $(responseMessage);
