@@ -1,0 +1,50 @@
+<div class="input-group">
+  <div class="form-outline">
+    <form method="POST" action="/search/" id="searchForm">
+        <input type="search" id="searchFormInput" class="form-control" name="searchTerm"/>
+        <label class="form-label" for="searchFormInput">Search</label> <!--label for should match input id-->  
+    </form> 
+    <input type="radio" id="searchRadioOption1" class="search-type-select" name="searchType" value="users">
+    <label for="searchRadioOption1">Search users</label>
+    
+    <input type="radio" id="searchRadioOption2" class="search-type-select" name="searchType" value="posts">
+    <label for="searchRadioOption2">Search posts</label>
+
+  </div>
+  <button type="submit" form="searchForm" class="btn btn-primary">
+      >
+    <i class="fas fa-search"></i>
+  </button>
+</div>
+
+<div class="users-search-div">
+    {{#if results.length}}
+        <ul class="users-search-results">
+            {{#each results}}
+                <li>
+                    {{this.username}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p class="users-not-found">
+            Sorry but no users were found with that search term
+        </p>        
+    {{/if}}
+</div>
+
+<div class="posts-search-div">
+    {{#if results.length}}
+        <ul class="posts-search-results">
+            {{#each results}}
+                <li>
+                    {{this.content}}
+                </li>
+            {{/each}}
+        </ul>
+    {{else}}
+        <p class="posts-not-found">
+            Sorry but no posts were found using that search term
+        </p>        
+    {{/if}}
+</div>

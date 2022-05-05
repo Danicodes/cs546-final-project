@@ -1,6 +1,7 @@
 const relationships = require('./relationships');
 const postsSeed = require("./posts");
 const usersSeed = require("./users");
+const indexSeed = require("./indexes");
 
 /**
  * True in every call represents - drop the collection before creating
@@ -15,6 +16,9 @@ let main = async function(){
     console.log(postIds);
     let relationshipsCreated = await relationships(userIds, true);
     console.log(relationshipsCreated);
+
+    let indexes_added = await indexSeed();
+    console.log(indexes_added.success);
 };
 
 main();
