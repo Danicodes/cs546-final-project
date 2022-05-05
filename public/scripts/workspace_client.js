@@ -42,7 +42,6 @@ console.log("AJAX HAPPENS HERE");
                 let element = document.createElement('li');
                 element.innerHTML = `<a href="/workspaces/relationships/${mentorRel._id}">${mentorRel.mentor.name}</a>`;
                 bindDisplayWorkspaceEvent(element);
-                //element.innerHTML = mentorRel.mentor.name;
                 mentorUl.append(element);
             }
         });
@@ -60,15 +59,12 @@ console.log("AJAX HAPPENS HERE");
                 let element = document.createElement('li');
                 element.innerHTML = `<a href="/workspaces/relationships/${menteeRel._id}">${menteeRel.mentee.name}</a>`;
                 bindDisplayWorkspaceEvent(element);
-                //element.innerHTML = menteeRel.mentee.name;
                 menteeUl.append(element);
             }
         });
 
 
-        relationshipsDiv.append($(`<h2>All Relationships</h2>`)); // TODO: Improve by making these collapsable
-       // relationshipsDiv.addClass('collapse');
-        //relationshipsDiv.collapse({toggle: false});
+        relationshipsDiv.append($(`<h2>All Relationships</h2>`)); // TODO: Improve by making these collapsable or otherwise hide-able somehow
 
         // Display the rest of the relationships based on status
         let statuses = ['pending', 'rejected', 'completed'];
@@ -104,8 +100,8 @@ console.log("AJAX HAPPENS HERE");
 
     function getWorkSpaceDataCallback(res){
         let chat = res.chatChannel;
-        let workspace = res.workspace;
-        let chatWindow, workspaceWindow;
+        let files = res.files;
+        let chatWindow, fileWindow;
 
         if (chat == null){ // null or undefined
             // When there is no chat yet
@@ -115,12 +111,12 @@ console.log("AJAX HAPPENS HERE");
             chatWindow = $(`<p class='chat-window'>${chat.toString()}</p>`); // placeholder
         }
 
-        if (workspace == null){
+        if (files == null){
             //when there are no files yet
-            workspaceWindow = $(`<p class='file-window'>No files to display yet</p>`);
+            fileWindow = $(`<p class='file-window'>No files to display yet</p>`);
         }
         else {
-            workspaceWindow = $(`<p class='file-window'>${workspace.toString()}</p>`);
+            fileWindow = $(`<p class='file-window'>${files.toString()}</p>`);
         }
 
         singleWorkspaceDiv.append(chatWindow);
@@ -149,18 +145,10 @@ console.log("AJAX HAPPENS HERE");
 
             var currentLink = $(this).attr("href"); // workspaces/relationships/:relationshipID
             
-            let chat, workspace;
             // Do things to display a single workspace
             let res = getWorkSpaceData(currentLink, getWorkSpaceDataCallback);
-            
-            // TODO: DOESN'T ENTER THIS REQUEST, chat, workspace always null right now
-            // $.getJSON(currentLink).then(function(res) {
-            //     chat = res.chatChannel; // returns chat id
-            //     workspace = res.workspace; // returns workspace id
-            //     relationshipsWorkspaceDiv.append($(`<h2>${res.user.name}</h2>`));
-            // });
 
-            // TODO: Display workspace
+            // TODO: Display chat
             // TODO: Display files
 
         });

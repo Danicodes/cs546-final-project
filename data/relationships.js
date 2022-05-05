@@ -11,7 +11,6 @@ const chat = require('./chat');
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 
-
 /**
  * Insert a new relationship into the relationships collection
  * All new relationships will be created with a status of PENDING
