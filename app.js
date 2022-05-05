@@ -21,9 +21,10 @@ app.set("view engine", "handlebars");
 app.use(
   session({
     name: "AuthCookie",
-    secret: "some secret string!",
+    secret: "dakjsfgokj34io2j3i2hjr8h0d9hadjaf!!a11213", // some difficult to decode string
     resave: false,
     saveUninitialized: true,
+    cookie: {maxAge: 120000} // two minutes
   })
 );
 
