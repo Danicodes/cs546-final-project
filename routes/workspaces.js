@@ -14,7 +14,16 @@ const users = data.users;
 async function getWorkspaceLandingPage(req, res){ 
     // Check that user is auth'd and get the userId
     // Right now user is coming from params
-    let userId = req.params.userId;
+    let userId;
+    // TODO: add 'view' to session obj
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
+    
     let mentorList, menteeList;
     try {
         validate.checkIsEmptyString(userId);
@@ -53,6 +62,15 @@ async function getWorkspaceLandingPage(req, res){
  */
 async function getWorkspaceRelationship(req, res){
     //validate relationshipId, userId
+    let userId;
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
+
     let relationshipId = req.params.relationshipId;
     let relationshipObject;
     let otherUser;
@@ -62,22 +80,28 @@ async function getWorkspaceRelationship(req, res){
         // check if I am mentor or mentee
         relationshipObject = await relationships.getRelationshipById(relationshipId);
         
-        if ('62695d62726569197b9820f5' === relationshipObject.mentor.toString()){
+        if (userId.toString() === relationshipObject.mentor.toString()){
             // then retrieve info of mentee
             otherUser = relationshipObject.mentee;
         }
-        else {
+        else if (userId.toString() === relationshipObject.mentee.toString()) {
             otherUser = relationshipObject.mentor;
         }
+        else {
+            throw `Error: Unauthorized`
+        }
+    }
+    catch(e){
+        res.status(403).json({error: e});
+        return;
+    }
 
+    try {
         // workspaceId contains files
         let workspace = relationshipObject.workspaceId;// get workspace function to get files
         let chat = relationshipObject.chatId; // get chat info 
 
         otherUser = await users.getPersonById(otherUser);
-        // let userObj = { // define the relevant info to return? or return whole object? 
-        //     username: otherUser.username
-        // };
 
         //res.render('partials/relationships', 
         res.status(200).json({
@@ -85,8 +109,7 @@ async function getWorkspaceRelationship(req, res){
                             relationship: relationshipObject,
                             user: otherUser,
                             chatChannel: chat,
-                            workspace: workspace,
-                            myId: '62695d62726569197b9820f5'
+                            workspace: workspace
                             });
 
     }
@@ -122,10 +145,10 @@ async function getMentors(req, res){
     }
 }
 
-router.route('/:userId/getMentors')
+router.route('/getMentors')
 .get(getMentors); // API enpoint, if this is in users url, redirect to workspaces
 
-router.route('/:userId$')
+router.route('/$')
 .get(getWorkspaceLandingPage);
 
 router.route('/relationships/:relationshipId')
