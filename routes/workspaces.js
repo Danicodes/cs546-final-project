@@ -79,14 +79,15 @@ async function getWorkspaceRelationship(req, res){
         //     username: otherUser.username
         // };
 
-        res.render('partials/relationships', {
-                                            layout: 'workspaces', 
-                                            relationship: relationshipObject,
-                                            user: otherUser,
-                                            chatChannel: chat,
-                                            workspace: workspace,
-                                            myId: '62695d62726569197b9820f5'
-                                            });
+        //res.render('partials/relationships', 
+        res.status(200).json({
+                            layout: 'workspaces', 
+                            relationship: relationshipObject,
+                            user: otherUser,
+                            chatChannel: chat,
+                            workspace: workspace,
+                            myId: '62695d62726569197b9820f5'
+                            });
 
     }
     catch(e){

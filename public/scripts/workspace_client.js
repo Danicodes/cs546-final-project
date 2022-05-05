@@ -103,11 +103,34 @@ console.log("AJAX HAPPENS HERE");
     }
 
     function getWorkSpaceDataCallback(res){
-        return res;
+        let chat = res.chatChannel;
+        let workspace = res.workspace;
+        let chatWindow, workspaceWindow;
+
+        if (chat == null){ // null or undefined
+            // When there is no chat yet
+            chatWindow = $("<p class='chat-window'>No chat to display yet</p>");
+        }
+        else {
+            chatWindow = $(`<p class='chat-window'>${chat.toString()}</p>`); // placeholder
+        }
+
+        if (workspace == null){
+            //when there are no files yet
+            workspaceWindow = $(`<p class='file-window'>No files to display yet</p>`);
+        }
+        else {
+            workspaceWindow = $(`<p class='file-window'>${workspace.toString()}</p>`);
+        }
+
+        singleWorkspaceDiv.append(chatWindow);
+        singleWorkspaceDiv.append(workspaceWindow);
     }
 
     function getWorkSpaceData(url, callback) {
-        $.getJSON(url).then(callback);
+        $.getJSON(url,callback).fail(function(error) {
+            console.log(error);
+        });
     }
 
     function bindDisplayWorkspaceEvent(listItem) {
@@ -129,11 +152,6 @@ console.log("AJAX HAPPENS HERE");
             let chat, workspace;
             // Do things to display a single workspace
             let res = getWorkSpaceData(currentLink, getWorkSpaceDataCallback);
-            if (res){
-                chat = res.chatChannel;
-                //$("#chatDiv").load(url, data, function(response)) -- load the html directly
-                workspace = res.workspace;
-            }
             
             // TODO: DOESN'T ENTER THIS REQUEST, chat, workspace always null right now
             // $.getJSON(currentLink).then(function(res) {
@@ -144,25 +162,7 @@ console.log("AJAX HAPPENS HERE");
 
             // TODO: Display workspace
             // TODO: Display files
-            let chatWindow, workspaceWindow;
-            if (chat == null){ // null or undefined
-                // When there is no chat yet
-                chatWindow = $("<p class='chat-window'>No chat to display yet</p>");
-            }
-            else {
-                chatWindow = $(`<p class='chat-window'>${chat.toString()}</p>`); // placeholder
-            }
 
-            if (workspace == null){
-                //when there are no files yet
-                workspaceWindow = $(`<p class='file-window'>No files to display yet</p>`);
-            }
-            else {
-                workspaceWindow = $(`<p class='file-window'>${workspace.toString()}</p>`);
-            }
-
-            singleWorkspaceDiv.append(chatWindow);
-            singleWorkspaceDiv.append(workspaceWindow);
         });
     }
 
