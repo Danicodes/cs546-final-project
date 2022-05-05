@@ -4,10 +4,12 @@ const static = express.static(__dirname + "/public");
 const configRoutes = require("./routes");
 const { engine } = require("express-handlebars");
 const session = require("express-session");
+const fileUpload = require("express-fileupload")
 
 app.use("/public", static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload());
 
 app.engine(
   "handlebars",
