@@ -16,6 +16,7 @@
         const messageInput = document.getElementById('message');
         let messageValue = messageInput.value;
         const errorElement = document.getElementById('error-message');
+        const chatSection = document.getElementById('chat-section');
 
         // Add event listener that does error checking
         messageForm.addEventListener('submit', (event) => {
@@ -46,8 +47,29 @@
             // </ERROR CHECKING>
 
             errorElement.setAttribute('class', "hidden");
-            // Send a POST "/chats/:id/messages" request to server
-            // Get response back and display updated messages page
+
+            // Create a timestamp
+            let datetime = new Date();
+            datetime = datetime.getTime();
+            
+            // Get user id of current user (change this later so that it gets this from the user session)
+            let userId = "6273eda70e9866f8270a384a"; // A placeholder value that works for testing
+
+            // Send a POST "/chats/:id/messages" request to server, then display updated message page
+            var requestConfig = {
+                method: "POST",
+                url: "/chats/" + userId + "/messages",
+                data: JSON.stringify({
+                    timestamp: datetime,
+                    author: userId,
+                    message: messageValue
+                })
+            };
+
+            $.ajax(requestConfig).then(function (responseMessage) {
+                console.log(responseMessage); // debug
+                // Implement what happens after getting response from server
+            })
         });
     }
 })();

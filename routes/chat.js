@@ -42,7 +42,7 @@ router
             // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
 
             let id = xss(req.params.id);
-            let timestamp = xss(req.body.timestamp);
+            let timestamp = xss(req.query.timestamp);
 
             let errorFlag = false;
 
@@ -70,6 +70,9 @@ router
             // Check that timestamp is provided, it is a valid timestamp, it is not for a time before the relationship was created, and the chat for the relationship can be found
             if(!errorFlag && !timestamp){
                 errorFlag = true;
+                console.log(req.query.timestamp); // debug
+                //console.log(req.body); // debug
+                //console.log(req.params); // debug
                 res.render('frames/400error', {layout: null, errorMessage: "Missing timestamp.", title: "Chat"});
                 //res.status(400).json("GET /relationship/:id/messages: timestamp must be provided");
             }
@@ -130,7 +133,7 @@ router
                         chatMessages[i]["author"] = "Other User"; // Default case for if some wrong data gets into the database
                     }
                 }
-                res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat"});
+                res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat", relationshipId: id});
             }
         } catch (e) {
             //console.log("Error in GET /relationships/:id/messages route:"); // 500

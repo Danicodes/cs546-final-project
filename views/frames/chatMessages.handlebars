@@ -1,17 +1,19 @@
-<section>
+<section id="chat-section">
 	<h2>Chat</h2>
 	<ul class="message-list">
-		{{#each messages}}
-			<li>
-				<p class="{{this.author}}">{{this.message}}</p>
-			</li>
-		{{/each}}
+		<li>
+			<p class="Mentor">Chat 1, Message 1, User 1</p>
+		</li>
+		<li>
+			<p class="Mentee">Chat 1, Message 2, User 2</p>
+		</li>
 	</ul>
-	<form id="message-form" class="message-form" method="post" action="/relationship/{{relationshipId}}/messages">
-        <label for="message">Type a Message Here</label>
-        <input type="text" id="message" name="message">
-        <button type="submit">Submit</button>
-    </form>
+	<form id="message-form" class="message-form" method="post" action="/relationship/6273eda70e9866f8270a3859/messages">
+		<label for="message">Type a Message Here</label>
+		<input type="text" id="message" name="message">
+		<button type="submit">Submit</button>
+	</form>
 	<p class="hidden" id="error-message"></p>
-	<a id='refresh-link' class='refresh-link'>Refresh Messages</a>
+	<a id='refresh-link' class='refresh-link' href="/chats/6273eda70e9866f8270a3859/messages">Refresh Messages</a>
 </section>
+<script src="/public/scripts/chat-f.js"></script>

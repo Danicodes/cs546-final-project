@@ -984,19 +984,19 @@ async function main(){
 
     // Seed data into database
     try{
-        usersArray = await seedUsers();
+        //usersArray = await seedUsers();
     } catch (e) {
         console.log("seedUsers failed. Result below:");
         console.log(e);
     }
     try{
-        chatsArray = await seedChats();
+        //chatsArray = await seedChats();
     } catch (e) {
         console.log("seedChats failed. Result below:");
         console.log(e);
     }
     try{
-        relationshipsArray = await seedRelationships();
+        //relationshipsArray = await seedRelationships();
     } catch (e) {
         console.log("seedRelationships failed. Result below:");
         console.log(e);
