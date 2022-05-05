@@ -17,6 +17,7 @@
         const errorElement = document.getElementById('error-message');
         const chatSection = document.getElementById('chat-section');
         let refreshButton = document.getElementById("refresh");
+        const MAX_MESSAGE_LENGTH = 256;
 
         // Add event listener for the message input form that does error checking
         messageForm.addEventListener('submit', (event) => {
@@ -31,8 +32,6 @@
             // Check that the message exists, is not empty, and is not just spaces
             if(!errorFlag && !messageValue){
                 errorFlag = true;
-                //console.log("Hello! The message input element is this:"); // debug
-                //console.log(messageInput.val()); // debug
                 errorElement.textContent = "Error: A message must be provided.";
                 errorElement.setAttribute('class', "visible");
             }
@@ -43,41 +42,50 @@
             }
             if(!errorFlag && messageValue.trim() === ""){
                 errorFlag = true;
-                errorElement.textContent = "Error: The message must not be just spaces";
+                errorElement.textContent = "Error: The message must not be just spaces.";
                 errorElement.setAttribute('class', "visible");
             }
-            messageValue = messageValue.trim();
+            if(!errorFlag){
+                messageValue = messageValue.trim();
+            }
+            if(!errorFlag && messageValue.length > MAX_MESSAGE_LENGTH){
+                errorFlag = true;
+                errorElement.textContent = "Error: The message must not be too long.";
+                errorElement.setAttribute('class', "visible");
+            }
 
             // </ERROR CHECKING>
 
-            errorElement.setAttribute('class', "hidden");
+            if(!errorFlag){
+                errorElement.setAttribute('class', "hidden");
 
-            // Create a timestamp
-            let datetime = new Date();
-            datetime = datetime.getTime();
+                // Create a timestamp
+                let datetime = new Date();
+                datetime = datetime.getTime();
 
-            datetime = "1651785991509"; // Placeholder value that works for testing
+                datetime = "1651785991509"; // Placeholder value that works for testing
             
-            // Get user id of current user (change this later so that it gets this from the user session)
-            let userId = "62744107aeb4a6dfa2e1bfe5"; // A placeholder value that works for testing
-            let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
+                // Get user id of current user (change this later so that it gets this from the user session)
+                let userId = "62744107aeb4a6dfa2e1bfe5"; // A placeholder value that works for testing
+                let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
 
-            // Send a "POST /chats/:id/messages" request to server, then display updated message page
-            var requestConfig = {
-                method: "POST",
-                url: "/chats/" + relationshipId + "/messages",
-                data: {
-                    timestamp: datetime,
-                    author: userId,
-                    message: messageValue
-                }
-            };
+                // Send a "POST /chats/:id/messages" request to server, then display updated message page
+                var requestConfig = {
+                    method: "POST",
+                    url: "/chats/" + relationshipId + "/messages",
+                    data: {
+                        timestamp: datetime,
+                        author: userId,
+                        message: messageValue
+                    }
+                };
 
-            $.ajax(requestConfig).then(function (responseMessage) {
-                var newElement = $(responseMessage);
-                //console.log(responseMessage); // debug
-                $("#chat-section").replaceWith(newElement);
-            })
+                $.ajax(requestConfig).then(function (responseMessage) {
+                    var newElement = $(responseMessage);
+                    $("#chat-section").replaceWith(newElement);
+                })
+            }
+            
         });
 
         // Add event listener to "Refresh Messages" button that refreshes chat messages without reloading the whole page
@@ -104,7 +112,6 @@
 
             $.ajax(requestConfig).then(function (responseMessage) {
                 var newElement = $(responseMessage);
-                console.log(responseMessage); // debug
                 $("#chat-section").replaceWith(newElement);
             })
         });
