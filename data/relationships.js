@@ -7,7 +7,7 @@ const enums = require('../enums');
 const status = enums.status;
 const Category = enums.categories;
 const validate = require('../validations/data');
-const UnprocessibleRequest = require('../erros/UnprocessibleRequest');
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 
 
