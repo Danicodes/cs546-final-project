@@ -1,12 +1,11 @@
 <section id="chat-section">
 	<h2>Chat</h2>
-	<ul class="message-list">
+	<ul class="message-list" id="message-list">
+		{{#each messages}}
 		<li>
-			<p class="Mentor">Chat 1, Message 1, User 1</p>
+			<p class="{{this.author}}">{{this.author}}: {{this.message}}</p>
 		</li>
-		<li>
-			<p class="Mentee">Chat 1, Message 2, User 2</p>
-		</li>
+		{{/each}}
 	</ul>
 	<form id="message-form" class="message-form" method="post" action="/relationship/6273eda70e9866f8270a3859/messages">
 		<label for="message">Type a Message Here</label>

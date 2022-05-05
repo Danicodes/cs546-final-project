@@ -187,6 +187,8 @@ router
             // Check that author is provided, it is a valid ObjectId, it exists in the database, and it is part of the relationship
             if(!errorFlag && !author){
                 errorFlag = true;
+                //console.log(); // debug
+                //console.log(req.body.author); // debug
                 res.render('frames/400error', {layout: null, errorMessage: "Missing author.", title: "Chat"});
                 //res.status(400).json("POST /relationships/:id/messages: author must be provided");
             }
@@ -274,10 +276,14 @@ router
             // </ERROR CHECKING>
 
             if(!errorFlag){
+                //console.log(author); // debug
+                //console.log(typeof author); // debug
                 await chatData.newMessage(author, id, message);
                 
                 // Display chats, just like it's done with the GET /messages route
                 let chatMessages = await chatData.getChatByChannel(foundRelationship["chatChannel"].toString());
+
+                console.log(chatMessages); // debug
 
                 // Get the ids of the mentor and the mentee
                 let mentorId = foundRelationship["mentor"].toString();

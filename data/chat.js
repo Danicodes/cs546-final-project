@@ -61,7 +61,7 @@ module.exports = {
 
         // Make the message object
         let createdMessage = {
-            "author": sender,
+            "author": new ObjectId(sender),
             "message": message,
             "Datetime": new Date()
         };

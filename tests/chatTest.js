@@ -1003,8 +1003,8 @@ async function main(){
     }
     
     
-    await printSeededData();
-    printCurrentTime();
+    //await printSeededData();
+    //printCurrentTime();
     
 
     // Test data functions
@@ -1049,19 +1049,19 @@ async function main(){
 
     // Clear data from database
     try{
-        //await clearRelationships();
+        await clearRelationships();
     } catch (e) {
         console.log("clearRelationships failed. Result below:");
         console.log(e);
     }
     try{
-        //await clearChats();
+        await clearChats();
     } catch (e) {
         console.log("clearChats failed. Result below:");
         console.log(e);
     }
     try{
-        //await clearUsers();
+        await clearUsers();
     } catch (e) {
         console.log("clearUsers failed. Result below:");
         console.log(e);

@@ -37,7 +37,7 @@
 
             $.ajax(requestConfig).then(function (responseMessage) {
                 var newElement = $(responseMessage);
-                console.log(responseMessage);
+                //console.log(responseMessage); // debug
                 $("#container").replaceWith(newElement);
             })
         });
