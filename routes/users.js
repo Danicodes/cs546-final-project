@@ -15,7 +15,8 @@ router.get('/:userid', async (req, res) => {
     }
     try {
         const ret = await userData.getPersonById(userId);
-        return res.status(200).json(ret);
+        return res.render('layouts/users', {person : ret});
+        //return res.status(200).json(ret);
     }
     catch(e){
         console.log(e);
@@ -43,7 +44,8 @@ router.put('/:userid', async (req, res) => {
 
     try {
         const ret = await userData.updateUser(userId, name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
-        return res.status(200).json(ret);
+        return res.render('layotus/users', {person, ret});
+        //return res.status(200).json(ret);
     }
     catch(e){
         console.log(e);
