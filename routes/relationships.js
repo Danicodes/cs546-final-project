@@ -13,6 +13,9 @@ const chatsCol = mongoCollections.chats;
 const validate = require('../validations/data');
 const enums = require('../enums/');
 const data = require('../data');
+const path = require("path");
+const constants = require("../constants/constants");
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 const relationships = data.relationships;
 const users = data.users;
@@ -263,6 +266,67 @@ async function getMentees(req, res){
     }
 };
 
+/**
+ * Upload a file into Application
+ * Apppend newFileName to relationship files list
+ * Needs the relationshipID and the file content
+ * @param {Object} req - request object
+ * @param {Object} res - response object
+ */
+let fileUpload = async function(req, res) {
+    let relationshipId = req.params.id;
+    
+    try {
+        relationshipId = validate.convertID(relationshipId);
+        if(!req.files || Object.keys(req.files).length == 0) 
+            throw `File is not uploaded or is of size 0`;
+        if(req.files.uploadfile.size > constants.MAX_FILE_SIZE)
+            throw `File cannot be more than 10MB`;
+    } catch(e) {
+        return res.status(400).json("Error: " + e);
+    }
+    
+    try {
+        const uploadedFile = req.files.uploadfile;
+        let updatedFilesList = await relationships.uploadfile(relationshipId, uploadedFile);
+        return res.status(200).json(updatedFilesList);
+    } catch (err) {
+        if(err instanceof UnprocessibleRequest) 
+            return res.status(err.status).json(err.message);
+        else
+            return res.status(500).json(err);
+    }
+}
+
+/**
+ * Downloads the file into client browser
+ * @param {Object} req 
+ * @param {Object} res 
+ * @returns a file as an attachment incase of success
+ */
+let fileDownload = async function(req, res) {
+    let relationshipId = req.params.id;
+    let filename = req.params.filename;
+    try {
+        relationshipId = validate.convertID(relationshipId);
+        validate.checkIsEmptyString(filename);
+    } catch(e) {
+        return res.status(400).json("Error: " + e);
+    }
+
+    try {
+        let file = await relationships.downloadfile(relationshipId, filename);
+        let absFilePath = path.join(path.resolve(), file);
+        res.setHeader("Content-disposition", `attachment; filename=${filename}`);
+        return res.status(200).sendFile(absFilePath);
+    } catch (err) {
+        if(err instanceof UnprocessibleRequest)     
+            return res.status(err.status).json(err.message);
+        else
+            return res.status(500).json(err);
+    }
+}
+
 
 // Routes
 
@@ -389,6 +453,11 @@ router.route('/mentors')
 router.route('/mentees')
 .get(getMentees);
 
+router.route("/:id/upload")
+.post(fileUpload);
+
+router.route("/:id/download/:filename")
+.get(fileDownload);
 
 
 module.exports = router;
