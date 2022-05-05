@@ -15,7 +15,7 @@ const enums = require('../enums/');
 const data = require('../data');
 const path = require("path");
 const constants = require("../constants/constants");
-const UnprocessibleRequest = require('../erros/UnprocessibleRequest');
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 const relationships = data.relationships;
 const users = data.users;
