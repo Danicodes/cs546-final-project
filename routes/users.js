@@ -16,7 +16,8 @@ router.get('/:userid', async (req, res) => {
     }
     try {
         const ret = await userData.getPersonById(userId);
-        return res.status(200).json(ret);
+        return res.render('layouts/users', {person : ret});
+        //return res.status(200).json(ret);
     }
     catch(e){
         if(e instanceof UnprocessibleRequest)
@@ -43,7 +44,8 @@ router.put('/', async (req, res) => {
 
     try {
         const ret = await userData.updateUser(userId, name, mentorBio, menteeBio, age, myPreferredFeed, searchTags);
-        return res.status(200).json(ret);
+        return res.render('layotus/users', {person, ret});
+        //return res.status(200).json(ret);
     }
     catch(e){
         if(e instanceof UnprocessibleRequest)

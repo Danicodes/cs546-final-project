@@ -1,0 +1,18 @@
+<h1>User Profile</h1>
+<div>
+    <form action="/users/{{person._id}}" method="POST" id="edit-user">
+        <label>Username:
+            <input type="text" name="username" value={{person.username}} readonly>
+        </label>
+            <label>Age:
+            <input type="text" name="age" value={{person.age}}>
+        </label>
+        <label>Name:
+            <input type="text" name="name" value={{person.name}}>
+        </label>
+        <label>Search Tags:
+            <input type="text" name="search tags" value={{person.searchTags}}>
+        </label>
+        <button type="submit" form="edit-user">Submit</button>
+    </form>
+</div>

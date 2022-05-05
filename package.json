@@ -18,6 +18,7 @@
     "express-handlebars": "^6.0.4",
     "file-system": "^1.2.2",
     "fs": "^0.0.1-security",
+    "express-session": "^1.17.2",
     "mongo": "^0.1.0",
     "mongodb": "^4.5.0",
     "xss": "^1.0.11"
