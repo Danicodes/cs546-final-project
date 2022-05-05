@@ -1,12 +1,14 @@
 const mongoCollections = require('../config/mongoCollections');
 const relationshipCollection = mongoCollections.relationships;
 const { ObjectId } = require('mongodb');
+const fs = require('fs');
 
 const enums = require('../enums');
 const status = enums.status;
 const Category = enums.categories;
 const validate = require('../validations/data');
 const chat = require('./chat');
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 
 
@@ -34,7 +36,7 @@ const chat = require('./chat');
 
     let relationshipDB = await relationshipCollection();
 
-    let workspaceId = null;
+    let files = null;
     let chatChannel = null;
 
     let createdOn = new Date(); // a new Date object
@@ -46,7 +48,7 @@ const chat = require('./chat');
         mentor: mentor,
         mentee: mentee,
         status: status.PENDING,
-        workspaceId: workspaceId,
+        files: files,
         createdOn: createdOn,
         updatedOn: updatedOn,
         relationshipCategory: relationshipCategory,
@@ -148,9 +150,66 @@ const chat = require('./chat');
    return filteredRelationshipList;
  }
 
+ /**
+  * If the file is not present in that relation, 
+  *     File is saved to <projectDir>/uploads/<relationshipId>/<filename>
+  *     Filename added to the relationships.files property
+  * @param {string|ObjectId} relationshipId 
+  * @param {file} uploadedFile 
+  * @returns latest list of files in the relationship
+  */
+ async function uploadfile(relationshipId, uploadedFile) {
+    // validations
+    relationshipId = validate.convertID(relationshipId);
+
+    let relationshipDB = await relationshipCollection();
+    let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
+    if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' to update`;
+    if (foundRelationships.length > 1) throw `Error: Database returned multiple relationships`;
+
+     // To save the file to local folder
+     const uploadDir = `uploads/${relationshipId}`;
+     const uploadPath = uploadDir + `/${uploadedFile.name}`;
+     if(fs.existsSync(uploadPath))
+        throw new UnprocessibleRequest("Filename already exist");
+    
+     if(!fs.existsSync(uploadDir))
+        fs.mkdir(uploadDir, { recursive: true }, (error) => console.log(`Directory cannot be created`));
+     uploadedFile.mv(uploadPath, async function (err) {
+        if (err) {
+            throw {"code" : 500, "Error" : "File couldn't be copied to local"};
+        }
+      });
+
+      let updateResult = await relationshipDB.findOneAndUpdate(
+        { _id: relationshipId },
+        { $addToSet: { files: uploadedFile.name } },     // Makes sure the userId is not duplicated
+        {returnDocument: 'after', returnNewDocument: true}         // Options to ensure the function to return updated user Object 
+    );
+
+      return updateResult.value.files;
+ }
+
+ /**
+  * Returns the Path of the file if it exists
+  * @param {string|ObjectId} relationshipId 
+  * @param {string} filename 
+  * @returns 
+  */
+ let downloadfile = async function(relationshipId, filename) {
+    const uploadDir = `uploads/${relationshipId}`;
+    const uploadPath = uploadDir + `/${filename}`;
+    if(!fs.existsSync(uploadPath))
+        throw new UnprocessibleRequest("Mentioned File doesn't exist in this Relationship");
+    else 
+        return uploadPath;
+ }
+
  module.exports = {
     createRelationship,
     getRelationshipById,
     updateRelationshipStatus,
-    filterRelationshipsByStatus
+    filterRelationshipsByStatus,
+    uploadfile,
+    downloadfile
  }
