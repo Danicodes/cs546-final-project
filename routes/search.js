@@ -8,7 +8,7 @@ const search = data.search;
 async function getSearchPage(req, res){
     try {
         res.render('partials/searchbar', {
-            layout: "test"
+            layout: "test" // change to appropriate layout
         });
     }
     catch(e){
@@ -31,7 +31,7 @@ async function searchUsers(req, res){
 
     try{
         let results = await search.searchUsers(searchTerm);
-        res.status(200).render('partials/searchbar', {
+        res.status(200).json({
             layout: 'test',
             results: results
         });
@@ -57,7 +57,7 @@ async function searchPosts(req, res){
 
     try{
         let results = await search.searchPosts(searchTerm);
-        res.status(200).render('partials/searchbar', {
+        res.status(200).json({
             layout: 'test',
             results: results
         });

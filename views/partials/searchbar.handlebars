@@ -1,14 +1,17 @@
 <div class="input-group">
   <div class="form-outline">
-    <form method="POST" action="/search/" id="searchForm">
+    <form method="POST" action="/search/users" id="searchForm">
         <input type="search" id="searchFormInput" class="form-control" name="searchTerm"/>
         <label class="form-label" for="searchFormInput">Search</label> <!--label for should match input id-->  
+
+        <input type="radio" id="searchRadioOption1" class="search-type-select" name="searchType" value="users" 
+        onclick="form.action = '/search/users'"/>
+        <label for="searchRadioOption1" id="searchRadioLabel1">Search users</label>
+        
+        <input type="radio" id="searchRadioOption2" class="search-type-select" name="searchType" value="posts"
+        onclick="form.action = '/search/posts'"/>
+        <label for="searchRadioOption2" id="searchRadioLabel2">Search posts</label>
     </form> 
-    <input type="radio" id="searchRadioOption1" class="search-type-select" name="searchType" value="users">
-    <label for="searchRadioOption1">Search users</label>
-    
-    <input type="radio" id="searchRadioOption2" class="search-type-select" name="searchType" value="posts">
-    <label for="searchRadioOption2">Search posts</label>
 
   </div>
   <button type="submit" form="searchForm" class="btn btn-primary">
@@ -17,7 +20,7 @@
   </button>
 </div>
 
-<div class="users-search-div">
+<div id="users-search-div">
     {{#if results.length}}
         <ul class="users-search-results">
             {{#each results}}
@@ -33,7 +36,7 @@
     {{/if}}
 </div>
 
-<div class="posts-search-div">
+<div id="posts-search-div">
     {{#if results.length}}
         <ul class="posts-search-results">
             {{#each results}}
