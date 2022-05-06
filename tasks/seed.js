@@ -17,8 +17,10 @@ let main = async function(){
     let relationshipsCreated = await relationships(userIds, true);
     console.log(relationshipsCreated);
 
-    let indexes_added = await indexSeed();
-    console.log(indexes_added.success);
+    let dropped = await indexSeed.dropIndexes();
+    console.log("Dropped index " + dropped.success);
+    let indexes_added = await indexSeed.addIndexes();
+    console.log("Added index " + indexes_added.success);
 };
 
 main();

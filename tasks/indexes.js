@@ -8,7 +8,7 @@ async function addIndexes(){
     let usersCollection = await getUsersCollection();
     let indexes = await usersCollection.indexes();
     if (indexes.length === 1) {
-        await usersCollection.createIndex( { searchTags: "text", username: "text" }, { name: "userIndex" } );
+        await usersCollection.createIndex( { searchTags: "text", username: "text", name: "text" }, { name: "userIndex" } );
     }
 
     let postsCollection = await getPostsCollection();
@@ -21,4 +21,17 @@ async function addIndexes(){
     return { success: true }; 
 }
 
-module.exports = addIndexes;
+async function dropIndexes(){
+    let usersCollection = await getUsersCollection();
+    await usersCollection.dropIndexes();
+
+    let postsCollection = await getPostsCollection();
+    await postsCollection.dropIndexes();
+
+    return { success: true };
+}
+
+module.exports = {
+    addIndexes,
+    dropIndexes
+};
