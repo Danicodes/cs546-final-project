@@ -8,8 +8,8 @@ const enums = require('../enums');
 const status = enums.status;
 const Category = enums.categories;
 const validate = require('../validations/data');
+const chat = require('./chat');
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
-
 
 
 /**
@@ -136,6 +136,15 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     delete updateRelationshipObj._id // remove _id property from updateObject
 
     updateRelationshipObj.status = newStatus;
+    if (newStatus === status.APPROVED){
+      // Generate a chat channel and a workspace id
+      let chatChannel = await chat.newChannel();
+      let workspaceId = new ObjectId(); // TODO: update with the actual create workspace function
+
+      updateRelationshipObj.chatChannel = validate.convertID(chatChannel); // convert back to object Id for storage
+      updateRelationshipObj.workspaceId = workspaceId; // where to get files
+    } 
+
     updateRelationshipObj.updatedOn = new Date(); // new date object
 
     let updatedObj = await relationshipDB.replaceOne({ '_id': relationshipId }, updateRelationshipObj);
