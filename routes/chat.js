@@ -262,7 +262,7 @@ router
                         chatMessages[i]["author"] = "Mentee";
                     }
                     else{
-                        chatMessages[i]["author"] = "Other User"; // Default case for if some wrong data gets into the database
+                        chatMessages[i]["author"] = "Other-User"; // Default case for if some wrong data gets into the database
                     }
                 }
                 res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat"});
