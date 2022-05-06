@@ -1,22 +1,24 @@
 <div class="container">
     <h2>Signup</h2>
     <form method="post" id="signup-form">
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" placeholder="Enter your username"><br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" placeholder="Enter your password"><br>
-        <label for="password">Confirm Password:</label>
-        <input type="password" name="password2" id="password2" placeholder="Enter your password"><br>
-        <label for="age">First Name:</label>
-        <input type="text" name="firstName" id="firstName" placeholder="Enter your First name"><br>
-        <label for="age">Last Name:</label>
-        <input type="text" name="lastName" id="lastName" placeholder="Enter Last name "><br>
+        <label for="username-signup-input">Username:</label>
+        <input type="text" name="username" id="username-signup-input" placeholder="Enter your username"><br>
+        <label for="password-signup-input">Password:</label>
+        <input type="password" name="password" id="password-signup-input" placeholder="Enter your password"><br>
+        <label for="password-signup-input">Confirm Password:</label>
+        <input type="password" name="password2" id="password2-signup-input" placeholder="Enter your password"><br>
+        <label for="firstName-signup-input">First Name:</label>
+        <input type="text" name="firstName" id="firstName-signup-input" placeholder="Enter your First name"><br>
+        <label for="lastName-signup-input">Last Name:</label>
+        <input type="text" name="lastName" id="lastName-signup-input" placeholder="Enter Last name "><br>
         {{#if errors}}
             <div class="errorDiv">
                 <p>{{error}}</p>
             </div>
         {{/if}}
+        <p id="signup-error-container" class="error-message"></p>
         <button type="submit" class="submitBtn">Submit</button><br>
         <a href="/">Already have an account? Click here to log-in</a>
     </form>
 </div>
+<script src="/public/scripts/signupScript.js"></script>
