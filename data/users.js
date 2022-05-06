@@ -123,7 +123,7 @@ async function getUserRelationships(userId){
  */
 async function updateUserRelationships(userId, relationshipObj){
     validate.checkArgLength(arguments, 2);
-    userId = validate.convertID();
+    userId = validate.convertID(userId);
 
     let mentorId = validate.convertID(relationshipObj.mentor);
     let menteeId = validate.convertID(relationshipObj.mentee);
