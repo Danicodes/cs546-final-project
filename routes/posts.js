@@ -46,6 +46,10 @@ let addPost = async function(req, res) {
  * @returns in case of success (200) - Returns the list of Posts
  *          in case of invalid parameters (400) - pageNo and limit (optional)
  */
+let getPostsPage = async function(req, res) {
+    return res.status(200).render("frames/feed", {pageTitle: "Feed Page"});
+};
+
 let getPosts = async function(req, res) {
     try{
         let pageNo = req.query.pageNo;
@@ -141,8 +145,8 @@ let addComment = async function(req, res) {
     let message = req.body.message;
     
     try{
-        author = validations.validateId(author, "Author");
-        postId = validations.validateId(postId, "Post ID");
+        validations.validateId(author, "Author");
+        validations.validateId(postId, "Post ID");
         message = validations.validateString(message, "Message");
     } catch (e) {
         return res.status(400).json("addComment - Error: " + (e.stack || e));
@@ -190,6 +194,9 @@ let getComments = async function(req, res) {
 let deleteComments = async function(req, res) {
     // TODO: Need to be implemented!
 };
+
+router.route("/html")
+    .get(getPostsPage);
 
 router.route("/")
 .post(addPost)
