@@ -38,6 +38,19 @@ function convertID(id){
     return id;
 }
 
+function parseTimeInterval(timelineInterval){
+    if (timelineInterval != null) {
+        if (typeof(timelineInterval) === 'string'){
+           timelineInterval = parseInt(timelineInterval);
+        }
+        
+        if (timelineInterval < constants.MIN_CHECKIN_INTERVAL || timelineInterval > constants.MAX_CHECKIN_INTERVAL){
+           throw `Time interval must be between 2 seconds and 10 days`;
+        }
+     }
+     return timelineInterval;
+}
+
 const checks = function checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
     if (!(typeof name == 'string') || (name == '')){
         throw new Error("name needs to be a non-zero string");
@@ -77,5 +90,6 @@ module.exports = {
     checkIsString,
     checkIsEmptyString,
     convertID,
-    checks
+    checks,
+    parseTimeInterval
 }
