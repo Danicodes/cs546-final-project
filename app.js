@@ -5,6 +5,8 @@ const configRoutes = require("./routes");
 const { engine } = require("express-handlebars");
 const session = require("express-session");
 const fileUpload = require("express-fileupload");
+var methodOverride = require('method-override');
+app.use(methodOverride('_method'));
 
 app.use("/public", static);
 app.use(express.json());

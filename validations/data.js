@@ -72,7 +72,6 @@ const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed,
     checkIsEmptyString(mentorBio);
     checkIsEmptyString(menteeBio);
     checkIsEmptyString(myPreferredFeed);
-
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
         throw new Error("age must be a number between 0 and 100");
     }
@@ -82,7 +81,6 @@ const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed,
     }
     for(let searchTag of searchTags) 
         checkIsEmptyString(searchTag);
-    let flag = false;
 }
 
 module.exports = {

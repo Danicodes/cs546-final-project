@@ -1,17 +1,29 @@
 <h1>User Profile</h1>
 <div>
-    <form action="/users/{{person._id}}" method="POST" id="edit-user">
+    <form action="/users/{{person._id}}?_method=PUT" method="POST" id="edit-user">
         <label>Username:
             <input type="text" name="username" value={{person.username}} readonly>
         </label>
             <label>Age:
-            <input type="text" name="age" value={{person.age}}>
+            <input type="number" name="age" value={{person.age}}>
         </label>
         <label>Name:
             <input type="text" name="name" value={{person.name}}>
         </label>
-        <label>Search Tags:
-            <input type="text" name="search tags" value={{person.searchTags}}>
+            <label>Bio:
+            <input type="text" name="bio" value={{person.bio}}>
+        </label>
+        Current Search Tags:
+        <ul>
+            {{#each person.searchTags}}
+                {{#if this}}
+                    <li>{{this}}</li>
+                {{/if}}
+            {{/each}}
+        </ul>
+        <label>
+        Submit New Search Tag:
+            <input type="text" name="searchTag">
         </label>
         <button type="submit" form="edit-user">Submit</button>
     </form>

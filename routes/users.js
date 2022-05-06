@@ -34,16 +34,19 @@ router.put('/', async (req, res) => {
     const menteeBio = req.body['menteeBio'];
     const age = req.body['age'];
     const myPreferredFeed = req.body['myPreferredFeed'];
-    const searchTags = req.body['searchTags'];
     try {
         validations.validateId(userId);
-        validate.checks(name, mentorBio, menteeBio, age, myPreferredFeed, searchTags);
+        const searchTag = req.body['searchTag'];
+        let person = await userData.getPersonById(userId);
+        person.searchTags.push(searchTag);
+        let finalSearchTags = person.searchTags;
+        validate.checks(name, mentorBio, menteeBio, parseInt(age), myPreferredFeed, finalSearchTags);
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
 
     try {
-        const ret = await userData.updateUser(userId, name, mentorBio, menteeBio, age, myPreferredFeed, searchTags);
+        const ret = await userData.updateUser(userId, name, mentorBio, menteeBio, age, myPreferredFeed, finalSearchTags);
         return res.render('layotus/users', {person, ret});
         //return res.status(200).json(ret);
     }

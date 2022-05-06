@@ -47,6 +47,7 @@ async function updateUser(id, name, mentorBio, menteeBio, age, myPreferredFeed, 
     let ret = await userCollection.findOne({_id : ObjectId(id)});
     ret._id = ret._id.toString();
     delete ret.password;
+    console.log("Updated: " + ret);
     return ret;
 }
     
