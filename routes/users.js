@@ -27,24 +27,28 @@ router.get('/:userid', async (req, res) => {
 router.put('/:userid', async (req, res) => {
     // Update user in database
     let userId = req.params['userid'];
-    const id = req.params['userid'];
     const name = req.body['name'];
     const bio = req.body['bio'];
     const age = req.body['age'];
-    const searchTags = req.body['searchTags'];
-    const mentorRelations = req.body['mentorRelationships'];
-    const menteeRelations = req.body['menteeRelationships'];
-    const myPosts = req.body['myPosts'];
+    const searchTag = req.body['searchTag'];
+    let person = await userData.getPersonById(userId);
+    let finalSearchTags = []
+    for (let i = 0; i < person['searchTags'].length; i++){
+        finalSearchTags.push(person['searchTags'][i]);
+    }
+    if(searchTag){
+        finalSearchTags.push(searchTag);
+    }
     try {
         userId = validations.validateId(userId);
-        validate.checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
+        validate.checks(name, bio, parseInt(age), finalSearchTags);
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
 
     try {
-        const ret = await userData.updateUser(userId, name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
-        return res.render('layotus/users', {person, ret});
+        const ret = await userData.updateUser(userId, name, bio, parseInt(age), finalSearchTags);
+        return res.render('layouts/users', {person : ret});
         //return res.status(200).json(ret);
     }
     catch(e){

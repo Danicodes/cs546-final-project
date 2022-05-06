@@ -4,6 +4,8 @@ const static = express.static(__dirname + "/public");
 const configRoutes = require("./routes");
 const { engine } = require("express-handlebars");
 const session = require("express-session");
+var methodOverride = require('method-override');
+app.use(methodOverride('_method'));
 
 app.use("/public", static);
 app.use(express.json());

@@ -12,23 +12,20 @@ async function getPersonById(id){
     const userCollection = await users();
     const person = await userCollection.findOne({ _id: ObjectId(id) });
     // Return the whole person
-    console.log(person);
     person._id = person._id.toString();
     return person;
 }
 
-async function updateUser(id, name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
+async function updateUser(id, name, bio, age, searchTags){
     validations.validateId(id);
-    validate.checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts);
+    currentuser = getPersonById(id);
+    validate.checks(name, bio, age, searchTags);
     // I need to get the password/username for the given id to put in updateduser here
     const updateduser = {
         name : name,
         bio : bio,
         age : age,
         searchTags: searchTags,
-        mentorRelations : mentorRelations,
-        menteeRelations : menteeRelations,
-        myPosts : myPosts
     };
     let userCollection = await users();
     const updated = await userCollection.updateOne(
@@ -40,6 +37,8 @@ async function updateUser(id, name, bio, age, searchTags, mentorRelations, mente
     }
     let ret = await userCollection.findOne({_id : ObjectId(id)});
     ret._id = ret._id.toString();
+    console.log("Updated:");
+    console.log(ret);
     return ret;
 }
     

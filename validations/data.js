@@ -38,7 +38,7 @@ function convertID(id){
     return id;
 }
 
-const checks = function checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
+const checks = function checks(name, bio, age, searchTags){
     if (!(typeof name == 'string') || (name == '')){
         throw new Error("name needs to be a non-zero string");
     }
@@ -59,16 +59,6 @@ const checks = function checks(name, bio, age, searchTags, mentorRelations, ment
     }
     if (flag){
         throw new Error("searchTags must contain strings");
-    }
-    console.log(mentorRelations);
-    if (!Array.isArray(mentorRelations)){
-        throw new Error("mentorRelations must be an array");
-    }
-    if (!Array.isArray(menteeRelations)){
-        throw new Error("menteeRelations must be an array");
-    }
-    if (!Array.isArray(myPosts)){
-        throw new Error("myPosts must be an array");
     }
 }
 
