@@ -1,8 +1,12 @@
+// User Login and sign-up
+
 const mongoCollections = require("../config/mongoCollections");
 let { ObjectId } = require("mongodb");
 const users = mongoCollections.users;
 const bcrypt = require("bcryptjs");
 const login_validations = require("../validations/login_validations");
+
+// Create user function that initiates the user
 
 let count = 10;
 
@@ -21,7 +25,7 @@ const createUsers = async function createUsers(
   }
   hashedPassword = await bcrypt.hash(password, count);
   let newUser = {
-    _id: ObjectId(),
+    _id: ObjectId(), // new user object which includes firstName and lastName [input by user during signup]
     username: username,
     password: hashedPassword,
     firstName: firstName,
@@ -33,6 +37,10 @@ const createUsers = async function createUsers(
   }
   return { insertedUser: true };
 };
+
+// Check User function
+
+// if the user is matched returns authenticated as true
 
 const checkUser = async function checkUser(username, password) {
   await login_validations.checkInput(username, password);
