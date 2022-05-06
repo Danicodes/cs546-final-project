@@ -1,0 +1,42 @@
+<div class="posts-sidebar">
+    <div>
+        <h3> Add a New Post </h3>
+        <form id="post-form">
+            <label for="post-description">post-description
+                <textarea placeholder="Describe the post here" id="post-description" name="post-description"></textarea>
+            </label>
+
+            <label for="post-tags">post-tags
+                <input type="text" placeholder="Tags" id="post-tags" name="post-tags" />
+            </label>
+
+            <label for="visibility">Visibility: 
+                <input type="radio" name="visibility" value="public" checked>Public
+                <input type="radio" name="visibility" value="private">Private
+            </label>
+
+            <button type="submit"> Submit a Post </button>
+        </form>
+    </div>
+</div>
+
+<div class="posts-main">
+    <form id="posts-search-form">
+        <input type="text" placeholder="Search for a post here" id="posts-search-text"/>
+        <label for="my-posts"> MyPosts 
+            <input type="checkbox" id="my-posts" name="my-posts" value="my-posts">
+        </label>
+        <button type="submit"> Search </button>
+    </form>
+
+    <article >
+        <h1> Feed Page Here </h1>
+        <ul id="posts-display">
+            
+        </ul>
+    </article>
+</div>
+
+
+{{!-- Script for reloading and handling the display of posts--}}
+<script src="/public/scripts/posts_page.js"></script>
