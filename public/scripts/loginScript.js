@@ -14,24 +14,44 @@
     loginForm.addEventListener('submit', (event) => {
         
         //console.log("The front-end event listener for login form submission was triggered."); // debug
+
+        let usernameInput = username.value;
+        let passwordInput = password.value;
         
         let errorMessages = [];
-        if(username.value == "" || username.value == null){
+        if(usernameInput == "" || usernameInput == null){
             errorMessages.push("Username is required.");
+            usernameInput = "";
         }
-        if(password.value == "" || password.value == null){
+        if(passwordInput == "" || passwordInput == null){
             errorMessages.push("Password is required.");
+            passwordInput = "";
         }
-        if(username.value.trim() == ""){
-            errorMessages.push("Username must not be just spaces.");
+        let usernameSpacesFlag = false;
+        for(let i = 0; i < usernameInput.length; i++){
+            if(usernameInput[i] === " "){
+                usernameSpacesFlag = true;
+                break;
+            }
         }
-        if(password.value.trim() == ""){
-            errorMessages.push("Password must not be just spaces.");
+        if(usernameSpacesFlag){
+            errorMessages.push("Username must not contain spaces.");
         }
-        if(username.value.length < 4){
+        let passwordSpacesFlag = false;
+        for(let i = 0; i < passwordInput.length; i++){
+            if(passwordInput[i] === " "){
+                passwordSpacesFlag = true;
+                break;
+            }
+        }
+        if(passwordSpacesFlag){
+            errorMessages.push("Password must not contain spaces.");
+        }
+        
+        if(usernameInput.length < 4){
             errorMessages.push("Username must be at least 4 characters long.");
         }
-        if(password.value.length < 6){
+        if(passwordInput.length < 6){
             errorMessages.push("Password must be at least 6 characters long.");
         }
 
