@@ -4,6 +4,7 @@
 
 // THIS SCRIPT IS ONLY FOR TESTING PURPOSES
 // It is designed to test the functionlity of the chat page by displaying it in the browser without the workspaces page
+// Feel free to copy code from this when creating the script that brings the user from a non-chat page to the chat page, however!
 
 (function ($) {
     if(true){
@@ -22,7 +23,7 @@
             datetime = datetime.getTime();
             
             // Get user id of current user (change this later so that it gets this from the user session)
-            let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
+            let relationshipId = "6274764cc51174666940513a"; // A placeholder value that worked for my testing
 
             // Send a POST "/chats/:id/messages" request to server, then display updated message page
             var requestConfig = {
@@ -36,7 +37,6 @@
 
             $.ajax(requestConfig).then(function (responseMessage) {
                 var newElement = $(responseMessage);
-                //console.log(responseMessage); // debug
                 $("#container").replaceWith(newElement);
             })
         });

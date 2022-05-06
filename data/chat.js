@@ -2,6 +2,12 @@
 // Author: Ethan Grzeda
 // I pledge my honor that I have abided by the Stevens Honor System. Ethan Grzeda
 
+
+// Sources
+// I brushed up on the return value of updateOne() here:
+// https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/
+
+
 // Constants
 const MAX_MESSAGE_LENGTH = 256;
 const statusStates = ["PENDING", "ACTIVE", "REJECTED", "COMPLETED"];
@@ -27,7 +33,7 @@ module.exports = {
     *  - relationship       string form of a relationship's _id
     *  - message            string
     */
-    newMessage: async (sender, relationship, message) => {
+    newMessage: async (sender, relationship, message, timestamp) => {
         // <ERROR CHECKING>
 
         // Check that sender is provided, it is a string, it is valid ObjectId, and that it exists in the database
@@ -57,13 +63,20 @@ module.exports = {
         if(message.length === 0) throw "newMessage: message must not be just spaces";
         if(message.length > MAX_MESSAGE_LENGTH) throw "newMessage: message must not be too long";
 
+        // Check that timestamp is provided, it is a number, it is valid, and it is not before the start of the relationship
+        if(!timestamp) throw "newMessage: timestamp must be provided";
+        if(typeof timestamp !== "number") throw "newMessage: timestamp must be a number";
+        if(timestamp < 0) throw "newMessage: timestamp must not be negative";
+        let relationshipStart = messageRelationship["createdOn"].getTime();
+        if(timestamp < relationshipStart) throw "newMessage: timestamp must not be before the relationship was started";
+
         // </ERROR CHECKING>
 
         // Make the message object
         let createdMessage = {
             "author": new ObjectId(sender),
             "message": message,
-            "Datetime": new Date()
+            "Datetime": new Date(timestamp)
         };
 
         const channelId = messageRelationship["chatChannel"];
@@ -74,8 +87,6 @@ module.exports = {
         if(!updatedInfo.acknowledged){
             throw "newMessage() could not insert the newly created chat message into the database";
         }
-        // I brushed up on the return value of updateOne() here:
-        // https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/
 
         return createdMessage;
     },
@@ -132,10 +143,6 @@ module.exports = {
         for(let i = 0; i < allMessages.length; i++){
             let currentTimestamp = allMessages[i]["Datetime"];
             let currentNumber = currentTimestamp.getTime();
-            //console.log("currentNumber:"); // debug
-            //console.log(currentNumber); // debug
-            //console.log("timestamp"); // debug
-            //console.log(timestamp); // debug
             if(currentNumber <= timestamp){
                 filteredMessages.push(allMessages[i]);
             }

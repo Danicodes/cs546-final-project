@@ -4,9 +4,8 @@
 
 /*
 * I could add an event listener that activates on page load and refreshes the
-* messages periodically by requesting the updated chat messages.
-* 
-* Should I do this?
+* messages periodically by requesting the updated chat messages. This is not
+* strictly necessary, so I have not done it yet.
 */
 
 (function ($) {
@@ -25,7 +24,7 @@
 
             // <ERROR CHECKING>
 
-            let errorFlag = false;
+            let errorFlag = false; // Set to true if any error occurs. Used to prevent multiple errors from triggering and from a faulty message being sent.
 
             let messageValue = messageInput.val();
 
@@ -64,8 +63,8 @@
                 datetime = datetime.getTime();
             
                 // Get user id of current user (change this later so that it gets this from the user session)
-                let userId = "62744107aeb4a6dfa2e1bfe5"; // A placeholder value that works for testing
-                let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
+                let userId = "6274764cc51174666940512b"; // A placeholder value that worked for my testing
+                let relationshipId = "6274764cc51174666940513a"; // A placeholder value that worked for my testing
 
                 // Send a "POST /chats/:id/messages" request to server, then display updated message page
                 var requestConfig = {
@@ -90,7 +89,7 @@
         refreshButton.addEventListener('click', (event) => {
             event.preventDefault();
 
-            let relationshipId = "62744107aeb4a6dfa2e1bff4"; // A placeholder value that works for testing
+            let relationshipId = "6274764cc51174666940513a"; // A placeholder value that worked for my testing
 
             // Create a timestamp
             let datetime = new Date();
