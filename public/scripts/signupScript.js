@@ -15,9 +15,6 @@
     
     if(signupForm){
         signupForm.addEventListener('submit', (event) => {
-            //event.preventDefault();
-
-            //console.log("The front-end listener for signup form submission was triggered.") // debug
 
             let usernameInput = username.value;
             let passwordInput = password.value;

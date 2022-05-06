@@ -12,7 +12,7 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/signup", async (req, res) => {
-  // res.json('signpup page')
+  // res.json('Signup page')
   if (!req.session.login) {
     return res.render("frames/signup", { title: "Signup" });
   }

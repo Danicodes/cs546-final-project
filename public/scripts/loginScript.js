@@ -11,8 +11,6 @@
     const errorContainer = document.getElementById("login-error-container");
 
     loginForm.addEventListener('submit', (event) => {
-        
-        //console.log("The front-end event listener for login form submission was triggered."); // debug
 
         let usernameInput = username.value;
         let passwordInput = password.value;
