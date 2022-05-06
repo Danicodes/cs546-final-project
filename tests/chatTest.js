@@ -425,14 +425,14 @@ async function clearUsers(){
     }
 }
 
-// Test cases for newMessage(sender, relationship, message)
+// Test cases for newMessage(sender, relationship, message, timestamp)
 async function testNewMessage(){
-    console.log("--- Test Cases for newMessage(sender, relationship, message) ---");
+    console.log("--- Test Cases for newMessage(sender, relationship, message, timestamp) ---");
     
     // base case 1
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "Base Case 1 Message");
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "Base Case 1 Message", 1751791897040);
         console.log("GOOD: newMessage passed base case 1. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -442,7 +442,7 @@ async function testNewMessage(){
     // base case 2
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[2], relationshipsArray[3], "Base Case 2 Message");
+        let retVal = await chatData.newMessage(usersArray[2], relationshipsArray[3], "Base Case 2 Message", 1751791897040);
         console.log("GOOD: newMessage passed base case 2. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -452,7 +452,7 @@ async function testNewMessage(){
     // base case 3
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[3], relationshipsArray[1], "Base Case 3 Message");
+        let retVal = await chatData.newMessage(usersArray[3], relationshipsArray[1], "Base Case 3 Message", 1751791897040);
         console.log("GOOD: newMessage passed base case 3. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -489,10 +489,20 @@ async function testNewMessage(){
         console.log("GOOD: newMessage failed the no-message case. Error below:");
         console.log(e);
     }
+    // no-timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.newMessage(usersArray[3], relationshipsArray[1], "Message");
+        console.log("BAD: newMessage passed the no-timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the no-timestamp case. Error below:");
+        console.log(e);
+    }
     // wrong-type sender case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(546, relationshipsArray[0], "Message");
+        let retVal = await chatData.newMessage(546, relationshipsArray[0], "Message", 1751791897040);
         console.log("BAD: newMessage passed the wrong-type sender case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -502,7 +512,7 @@ async function testNewMessage(){
     // invalid ObjectId sender case
     console.log("");
     try{
-        let retVal = await chatData.newMessage("546", relationshipsArray[0], "Message");
+        let retVal = await chatData.newMessage("546", relationshipsArray[0], "Message", 1751791897040);
         console.log("BAD: newMessage passed the invalid ObjectId sender case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -512,7 +522,7 @@ async function testNewMessage(){
     // nonexistent sender case
     console.log("");
     try{
-        let retVal = await chatData.newMessage("76212599bf98e8017007a075", relationshipsArray[0], "Message");
+        let retVal = await chatData.newMessage("76212599bf98e8017007a075", relationshipsArray[0], "Message", 1751791897040);
         console.log("BAD: newMessage passed the nonexistent sender case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -522,7 +532,7 @@ async function testNewMessage(){
     // wrong-type relationship case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], 500, "Message");
+        let retVal = await chatData.newMessage(usersArray[0], 500, "Message", 1751791897040);
         console.log("BAD: newMessage passed the wrong-type relationship case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -532,7 +542,7 @@ async function testNewMessage(){
     // invalid ObjectId relationship case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], "asdfasdf", "Message");
+        let retVal = await chatData.newMessage(usersArray[0], "asdfasdf", "Message", 1751791897040);
         console.log("BAD: newMessage passed the invalid ObjectId relationship case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -542,7 +552,7 @@ async function testNewMessage(){
     // nonexistent relationship case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], "76212599bf98e8017007a075", "Message");
+        let retVal = await chatData.newMessage(usersArray[0], "76212599bf98e8017007a075", "Message", 1751791897040);
         console.log("BAD: newMessage passed the nonexistent relationship case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -552,7 +562,7 @@ async function testNewMessage(){
     // wrong-type message case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], 46);
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], 46, 1751791897040);
         console.log("BAD: newMessage passed the wrong-type message case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -562,7 +572,7 @@ async function testNewMessage(){
     // empty-string message case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "");
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "", 1751791897040);
         console.log("BAD: newMessage passed the empty-string message case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -572,7 +582,7 @@ async function testNewMessage(){
     // just-spaces message case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "      ");
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "      ", 1751791897040);
         console.log("BAD: newMessage passed the just-spaces message case. Return value below:");
         console.log(retVal);
     } catch (e) {
@@ -582,11 +592,41 @@ async function testNewMessage(){
     // non-aligning sender and relationship case
     console.log("");
     try{
-        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[1], "Message");
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[1], "Message", 1751791897040);
         console.log("BAD: newMessage passed the non-aligning sender and relationship case. Return value below:");
         console.log(retVal);
     } catch (e) {
         console.log("GOOD: newMessage failed the non-aligning sender and relationship case. Error below:");
+        console.log(e);
+    }
+    // wrong-type timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "Message", "1751791897040");
+        console.log("BAD: newMessage passed the wrong-type timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the wrong-type timestamp case. Error below:");
+        console.log(e);
+    }
+    // invalid timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "Message", -1);
+        console.log("BAD: newMessage passed the invalid timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the invalid timestamp case. Error below:");
+        console.log(e);
+    }
+    // wrong-type timestamp case
+    console.log("");
+    try{
+        let retVal = await chatData.newMessage(usersArray[0], relationshipsArray[0], "Message", "175179189704");
+        console.log("BAD: newMessage passed the too-early timestamp case. Return value below:");
+        console.log(retVal);
+    } catch (e) {
+        console.log("GOOD: newMessage failed the too-early timestamp case. Error below:");
         console.log(e);
     }
 }
@@ -967,7 +1007,90 @@ async function printSeededData(){
     const chatsCollection = await chatsCol();
     let seededChats = await chatsCollection.find({}).toArray();
     console.log("Chats in Database");
-    console.log(seededChats);
+    for(let i = 0; i < seededChats.length; i++){
+        console.log(seededChats[i]);
+    }
+}
+
+function printCurrentTime(){
+    console.log("Current Time:");
+    let currentTime = new Date();
+    console.log(currentTime.getTime());
+}
+
+// Adds a new message to the first chat, from the mentee
+async function addMessage(){
+    const relationshipsCollection = await relationshipsCol();
+    let seededRelationships = await relationshipsCollection.find({}).toArray();
+
+    let sender = seededRelationships[0]["mentee"].toString();
+    let relationship = seededRelationships[0]["_id"].toString();
+    let message = "Message added by the addMessage() function";
+    let timestamp = new Date();
+    timestamp = timestamp.getTime();
+    await chatData.newMessage(sender, relationship, message, timestamp);
+    console.log("Added a message to the first chat channel");
+}
+
+// Prints the contents of usersArray, relationshipsArray, and chatsArray
+function printArrays(){
+    console.log("usersArray:");
+    console.log(usersArray);
+    console.log("relationshipsArray:");
+    console.log(relationshipsArray);
+    console.log("chatsArray:");
+    console.log(chatsArray);
+}
+
+// Creates a relationship between a given user and the first user in the database.
+// The given user is the mentee, and the relationship status starts as "PENDING"
+async function createRelationship(user){ // Maybe make a function to test this function
+    // <ERROR CHECKING>
+
+    // Check that the user is provided, it is a string, it is a valid ObjectId, and it corresponds to an existing user
+    if(!user) throw "createRelationship: user must be provided";
+    if(typeof user !== "string") throw "createRelationship: user must be a string";
+    if(!ObjectId.isValid(user)) throw "createRelationship: user must be a valid ObjectId";
+    const usersCollection = await usersCol();
+    let foundUser = await usersCollection.findOne({"_id" : user});
+    if(!foundUser) throw "createRelationship: user must correspond to an existing user";
+
+    // Maybe add error checks here that make sure the first user can be found and that they don't already have a relationship with the given user
+    
+    // </ERROR CHECKING>
+
+    const relationshipsCollection = await relationshipsCol();
+    const chatsCollection = await chatsCol();
+
+    let firstUser = await usersCollection.find({}).toArray()[0];
+
+    let newChat = {
+        "messages": []
+    }
+
+    const insertInfo = await chatsCollection.insertOne(newChat);
+    if(!insertInfo.acknowledged || !insertInfo.insertedId){
+        throw "createRelationship: could not insert chat";
+    }
+    let newChatId = insertInfo.insertedId;
+
+    let newRelationship = {
+        "relationshipDescription": "Relationship between first user and specified user. Set up by createRelationship()",
+        "mentor": firstUser["_id"],
+        "mentee": foundUser["_id"],
+        "workspace": new ObjectId(), // Placeholder
+        "status": "PENDING",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+        "chatChannel": newChatId
+    };
+
+    const insertInfo2 = relationshipsCollection.insertOne(newRelationship);
+    if(!insertInfo2.acknowledged || !insertInfo2.insertedId){
+        throw "createRelationship: could not insert relationship";
+    }
+
+    console.log("Inserted a relationship between the given user and the first user");
 }
 
 // The functions inside can be commented and uncommented depending on what needs testing
@@ -994,10 +1117,15 @@ async function main(){
     }
     
     
-    await printSeededData();
-    console.log("Current Time:");
-    let currentTime = new Date();
-    console.log(currentTime.getTime());
+    //await printSeededData();
+    
+    await addMessage();
+
+    //printCurrentTime();
+
+    //printArrays();
+
+    //createRelationship(); // I have not yet tested this function, so use it and debug it at your own risk!
     
 
     // Test data functions
