@@ -17,15 +17,13 @@
 
         let usernameInput = username.value;
         let passwordInput = password.value;
-        
+
         let errorMessages = [];
+
+        // Check that username is provided, it does not contain spaces, it is at least 4 characters long, and it only includes alphanumeric characters
         if(usernameInput == "" || usernameInput == null){
             errorMessages.push("Username is required.");
             usernameInput = "";
-        }
-        if(passwordInput == "" || passwordInput == null){
-            errorMessages.push("Password is required.");
-            passwordInput = "";
         }
         let usernameSpacesFlag = false;
         for(let i = 0; i < usernameInput.length; i++){
@@ -37,6 +35,18 @@
         if(usernameSpacesFlag){
             errorMessages.push("Username must not contain spaces.");
         }
+        if(usernameInput.length < 4){
+            errorMessages.push("Username must be at least 4 characters long.");
+        }
+        if (/[^\w]/.test(usernameInput)){
+            errorMessages.push("Username must only contain alphanumeric characters.");
+        }
+
+        // Check that password is provided, it does not contain spaces, it is at least 6 characters long, and it only includes alphanumeric characters
+        if(passwordInput == "" || passwordInput == null){
+            errorMessages.push("Password is required.");
+            passwordInput = "";
+        }
         let passwordSpacesFlag = false;
         for(let i = 0; i < passwordInput.length; i++){
             if(passwordInput[i] === " "){
@@ -47,17 +57,17 @@
         if(passwordSpacesFlag){
             errorMessages.push("Password must not contain spaces.");
         }
-        
-        if(usernameInput.length < 4){
-            errorMessages.push("Username must be at least 4 characters long.");
-        }
         if(passwordInput.length < 6){
             errorMessages.push("Password must be at least 6 characters long.");
         }
-
+        if (/[^\w]/.test(passwordInput)){
+            errorMessages.push("Password must only contain alphanumeric characters.");
+        }
+        
+        // Check whether there any errors. If there are, prevent the sending of a request and display the error(s)
         if(errorMessages.length !== 0) {
             event.preventDefault();
-            // Put error messages in the container, and don't send a request to the server
+            
             let combinedErrorMessage = "";
             for(let i = 0; i < errorMessages.length; i++){
                 if(i === 0){
