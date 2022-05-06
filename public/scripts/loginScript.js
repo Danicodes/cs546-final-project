@@ -12,9 +12,8 @@
     const errorContainer = document.getElementById("login-error-container");
 
     loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
         
-        console.log("The front-end event listener for login form submission was triggered."); // debug
+        //console.log("The front-end event listener for login form submission was triggered."); // debug
         
         let errorMessages = [];
         if(username.value == "" || username.value == null){
@@ -29,19 +28,37 @@
         if(password.value.trim() == ""){
             errorMessages.push("Password must not be just spaces.");
         }
+        if(username.value.length < 4){
+            errorMessages.push("Username must be at least 4 characters long.");
+        }
+        if(password.value.length < 6){
+            errorMessages.push("Password must be at least 6 characters long.");
+        }
 
         if(errorMessages.length !== 0) {
+            event.preventDefault();
             // Put error messages in the container, and don't send a request to the server
             let combinedErrorMessage = "";
             for(let i = 0; i < errorMessages.length; i++){
-                if(i !== 0) combinedErrorMessage += " ";
+                if(i === 0){
+                    if(errorMessages.length === 1){
+                        combinedErrorMessage += "Error: ";
+                    }
+                    else{
+                        combinedErrorMessage += "Errors: ";
+                    }
+                }
+                else{
+                    combinedErrorMessage += " ";
+                }
                 combinedErrorMessage += errorMessages[i];
             }
 
             errorContainer.textContent = combinedErrorMessage;
         }
         else{
-            // Put together a login request to send to the server, then send it
+            errorContainer.textContent = ""; // Clears out any previous errors from this script
+            // Since there's no event.preventDefault() line here, it'll send the request like normal
         }
     });
 })();
