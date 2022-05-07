@@ -25,7 +25,7 @@ async function searchUsers(searchTerm) {
         $search: searchTerm
     }
     // Added score for sorting by best result later
-    let searchResults = await users.find({ $text : searchObj }, { score: { $meta: "textScore" }});
+    let searchResults = await users.find({ $text : searchObj }, { score: { $meta: "textScore" }}).sort({createdOn : -1});
     searchResults = await searchResults.toArray();
 
     return searchResults;

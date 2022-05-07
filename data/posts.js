@@ -168,7 +168,7 @@ let likeAPost = async function(userId, postId) {
     let postsCollection = await getPostsCollection();
     let {value: updatedPost} = await postsCollection.findOneAndUpdate(
         { _id: postId },
-        { $addToSet: { disLikedBy: userId } },     // Makes sure the userId is not duplicated
+        { $addToSet: { dislikedBy: userId } },     // Makes sure the userId is not duplicated
         {returnDocument: 'after', returnNewDocument: true}         // Options to ensure the function to return updated user Object 
     );
     if(updatedPost == null)     // Only if postId is not found
