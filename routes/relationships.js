@@ -6,7 +6,6 @@ const mongoCollections = require("./../config/mongoCollections");
 
 const statusStates = ["PENDING", "ACTIVE", "REJECTED", "COMPLETED"];
 
-const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 
@@ -16,28 +15,11 @@ const data = require('../data');
 const path = require("path");
 const constants = require("../constants/constants");
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
+const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
 const relationships = data.relationships;
 const users = data.users;
 const chatData = data.chat;
-
-
-// TODO: I thought if this worked it would be convenient to have, will test when we have a session object to work with
-// Function that uses session object to validate that the user is logged in.
-// Only an authenticated user can access the following routes
-// async function validateCurrentSession(req, res) {
-// }
-
-// // Checks all requests for the session object
-// router.route('*').get(async(req,res) => {
-//     try {
-//         await validateCurrentSession(req, res);
-//         next();
-//     }
-//     catch(e) {
-//         res.status(400).render('frames/error', {error: e});
-//     }
-// });
 
 /**
  * Retrieve all relationships
@@ -46,17 +28,18 @@ const chatData = data.chat;
  */
 async function getAllRelationships(req, res){
     // No arguments from req params or body
-    // Will updated to get userID from session
+    let user = req.session.user;
     let returnList = [];
-    let userId;
+    let userId = user.id;
     try {
-        userId = validate.convertID(req.params.userId); 
+        userId = validate.convertID(userId); 
     }
     catch(e){
         res.status(400).json({error:e});
         return;
     }
 
+    // TODO: get current 'view'
     try {
         let menteeList = await users.getMenteeList(userId);
         returnList.push(...menteeList);
@@ -93,7 +76,7 @@ async function getAllRelationships(req, res){
 async function postNewRelationship(req, res){
     let menteeId, mentorId, userId, timeline;
     try {
-        userId = validate.convertID(req.params.userId);
+        userId = validate.convertID(req.session.user.id);
        // validate.checkArgLength(req.body, 4);
         validate.checkIsEmptyString(req.body.relationshipDescription);
         mentorId = validate.convertID(req.body.mentorId); 
@@ -222,7 +205,7 @@ async function getRelationshipByStatus(req, res){
     let userId;
     // if req.session.view == mentor/mentee
     try {
-        userId = validate.convertID(req.params.userId);
+        userId = validate.convertID(req.session.user.id);
         enums.status.get(req.params.status);
         // TODO: if in mentor view, show all your mentees
         let menteeList = await users.getMenteeList(userId);
@@ -265,7 +248,7 @@ async function getMentors(req, res){
     let userId;
 
     try {
-        userId = validate.convertID(req.params.userId);
+        userId = validate.convertID(req.session.user.id);
         let mentorRelationships = await users.getMentorList(userId);
         
         let relationshipObjects = []
@@ -298,7 +281,7 @@ async function getMentees(req, res){
     let userId;
 
     try {
-        userId = validate.convertID(req.params.userId);
+        userId = validate.convertID(req.session.user.id);
         let menteeRelationships = await users.getMenteeList(userId);
 
         let relationshipObjects = []
@@ -335,14 +318,17 @@ async function getMentees(req, res){
     let userId;
 
     try {
-        userId = validate.convertID(req.params.userId);
+        userId = validate.convertID(req.session.user.id);
         relationshipID = validate.convertID(req.params.relationshipID); // Changed to get value from body
         validate.checkIsEmptyString(req.params.status);
         enums.status.get(req.params.status); // will throw an error if status is invalid
+        validate.isUserAuthorizedForPost(userId, relationshipID); // User Should be a mentor or mentee of this relationship
     }    
     catch(e) {
+        if(e instanceof UnauthorizedRequest)
+            return res.status(UnauthorizedRequest.status).json({error:UnauthorizedRequest.message});
         //res.status(400).render('frames/error', {layout: 'profile', error: "Internal server error"});
-        res.status(500).json({error:e});
+        res.status(400).json({error:e});
         return;
     }
 
@@ -358,7 +344,6 @@ async function getMentees(req, res){
 
     try {
         //return relationship objects
-        //res.render('frames/relationships', {layout: 'profile', relationship: updatedRelationship});
         let updatedUser = await users.updateUserRelationships(userId, updatedRelationship); 
         res.status(200).json({success: true, updatedRelationship: updatedRelationship, updatedUser: updatedUser});
     }
@@ -384,7 +369,10 @@ let fileUpload = async function(req, res) {
             throw `File is not uploaded or is of size 0`;
         if(req.files.uploadfile.size > constants.MAX_FILE_SIZE)
             throw `File cannot be more than 10MB`;
+        validate.isUserAuthorizedForPost(req.session.user.id, relationshipId);
     } catch(e) {
+        if(e instanceof UnauthorizedRequest)
+            return res.status(UnauthorizedRequest.status).json({error:UnauthorizedRequest.message});
         return res.status(400).json("Error: " + e);
     }
     
@@ -412,7 +400,10 @@ let fileDownload = async function(req, res) {
     try {
         relationshipId = validate.convertID(relationshipId);
         validate.checkIsEmptyString(filename);
+        validate.isUserAuthorizedForPost(req.session.user.id, relationshipId);
     } catch(e) {
+        if(e instanceof UnauthorizedRequest)
+            return res.status(UnauthorizedRequest.status).json({error:UnauthorizedRequest.message});
         return res.status(400).json("Error: " + e);
     }
 
@@ -431,118 +422,52 @@ let fileDownload = async function(req, res) {
 
 
 // Routes
+/**
+ * Optional
+ * When the status of a relationship needs to be retrieved periodically
+ * Response: Latest status of relationship
+ * @param {*} req 
+ * @param {*} res 
+ */
+let getStatusOfRelationship = async function(req, res){
+    try{
+        let id = xss(req.params.id);
+        let errorFlag = false;
 
-router
-    .route("/:id/status")
-    // Optional
-    // When the status of a relationship needs to be retrieved periodically
-    // Response: Latest status of relationship
-    .get(async (req, res) => {
-        try{
-            //console.log("GET /relationships/:id/status"); // debug
-
-            // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
-
-            let id = xss(req.params.id);
-
-            let errorFlag = false;
-
-            // Check that id is provided, it is a valid ObjectId, and that it corresponds to an existing relationship
-            if(!errorFlag && !id){
-                errorFlag = true;
-                res.status(400).json("GET /relationships/:id/status: id must be provided");
-            }
-            if(!errorFlag && !ObjectId.isValid(id)){
-                errorFlag = true;
-                res.status(400).json("GET /relationships/:id/status: id must be a valid ObjectId");
-            }
-            if(!errorFlag){
-                const relationshipsCollection = await relationshipsCol();
-                const foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
-                if(foundRelationship === null){
-                    errorFlag = true;
-                    res.status(404).json("GET /relationships/:id/status: could not find a relationship with the given id");
-                }
-            }
-
-            // </ERROR CHECKING>
-
-            if(!errorFlag){
-                res.json(await chatData.getStatus(id));
-            }
-        } catch (e) {
-            //console.log("Error in GET /relationships/:id/status route:"); // 500
-            //console.log(e); // debug
-            res.status(500).json(e);
+        // Check that id is provided, it is a valid ObjectId, and that it corresponds to an existing relationship
+        if(!errorFlag && !id){
+            errorFlag = true;
+            res.status(400).json("GET /relationships/:id/status: id must be provided");
         }
-    })
-    // When a user performs an action for a relationship and status needs to be updated
-    // ReqBody: newStatus
-    // Response: Updated status of relationship
-    .post(async (req, res) => {
-        try{
-            //console.log("POST /relationships/:id/status"); // debug
-
-            // <ERROR CHECKING> --> CHANGE THESE TO ERROR PAGES ONCE THOSE ARE DONE
-
-            let id = xss(req.params.id);
-            let newStatus = xss(req.body.newStatus);
-
-            let errorFlag = false;
-
-            // Check that id is provided, it is a valid ObjectId, and it corresponds to an existing relationship
-            if(!errorFlag && !id){
-                errorFlag = true;
-                res.status(400).json("POST /relationships/:id/status: id must be provided");
-            }
-            if(!errorFlag && !ObjectId.isValid(id)){
-                errorFlag = true;
-                res.status(400).json("POST /relationships/:id/status: id must be a valid ObjectId");
-            }
-            if(!errorFlag){
-                const relationshipsCollection = await relationshipsCol();
-                const foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
-                if(foundRelationship === null){
-                    errorFlag = true;
-                    res.status(404).json("POST /chats/:id/status: could not find a relationship with the given id");
-                }
-            }
-            // Check that newStatus is provided, and that it is a valid status string
-            if(!errorFlag && !newStatus){
-                errorFlag = true;
-                res.status(400).json("POST /relationships/:id/status: newStatus must be provided");
-            }
-            if(!errorFlag){
-                let validStatus = false;
-                for(let i = 0; i < statusStates.length; i++){
-                    if(statusStates[i].localeCompare(newStatus) === 0){
-                        validStatus = true;
-                        break;
-                    }
-                }
-                if(!validStatus){
-                    errorFlag = true;
-                    res.status(400).json("POST /relationships/:id/status: newStatus must be a valid status string");
-                }
-            }
-
-            // </ERROR CHECKING>
-
-            if(!errorFlag){
-                await chatData.updateStatus(id, newStatus);
-                res.json(await chatData.getStatus(id));
-            }
-        } catch (e) {
-            //console.log("Error in POST /relationships/:id/status route:"); // 500
-            //console.log(e); // debug
-            res.status(500).json(e);
+        if(!errorFlag && !ObjectId.isValid(id)){
+            errorFlag = true;
+            res.status(400).json("GET /relationships/:id/status: id must be a valid ObjectId");
         }
-    })
+        if(!errorFlag){
+            const relationshipsCollection = await relationshipsCol();
+            const foundRelationship = await relationshipsCollection.findOne({"_id": ObjectId(id)});
+            if(foundRelationship === null){
+                errorFlag = true;
+                res.status(404).json("GET /relationships/:id/status: could not find a relationship with the given id");
+            }
+        }
+        if(!errorFlag){
+            res.json(await chatData.getStatus(id));
+        }
+    } catch (e) {
+        //console.log("Error in GET /relationships/:id/status route:"); // 500
+        //console.log(e); // debug
+        res.status(500).json(e);
+    }
+}
 
-router.route('/:userId/:relationshipID/:status')
+router.route("/:id/status")
+.get(getStatusOfRelationship);
+
+router.route('/:relationshipID/:status')
 .post(postRelationshipStatusUpdate);
 
-router.route('/:userId$') // this works!
+router.route('/$')
 .get(getAllRelationships)
 .post(postNewRelationship);
 
@@ -552,7 +477,7 @@ router.route('/:userId/mentors')
 router.route('/:userId/mentees')
 .get(getMentees);
 
-router.route('/:userId/:status')
+router.route('/:status')
 .get(getRelationshipByStatus);
 
 router.route('/:userId/:relationshipId$')

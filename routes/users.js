@@ -8,7 +8,7 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 router.get('/:userid', async (req, res) => {
     // Show profile information
-    let userId = req.params['userid'];
+    let userId = req.params.userid;
     try {
         userId = validations.validateId(userId);
     } catch (e) {
@@ -25,10 +25,9 @@ router.get('/:userid', async (req, res) => {
     }
 });
 
-router.put('/:userid', async (req, res) => {
-    //  TODO: Check if session UserId and provided userId are same
+router.put('/', async (req, res) => {
     // Update user in database
-    const userId = req.params['userid'];
+    let userId = req.session.user.id; 
     const name = req.body['name'];
     const mentorBio = req.body['mentorBio'];
     const menteeBio = req.body['menteeBio'];
@@ -54,20 +53,19 @@ router.put('/:userid', async (req, res) => {
     }
 });
 
-router.put('/:userid/reset', async (req, res) => {
-    //  TODO: Check if session UserId and provided userId are same
+router.put('/reset', async (req, res) => {
     // Update user in database
-    let userId = req.params['userid'];
-    let password = req.body['password'];
+    let userId = req.session.user.id;
+    let newpassword = req.body['password'];
     try {
         userId = validations.validateId(userId);
-        password = validations.validateString(password);
+        newpassword = validations.validateString(newpassword);
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
 
     try {
-        const ret = await userData.updatePassword(userId, password);
+        const ret = await userData.updatePassword(userId, newpassword);
         return res.status(200).json(ret);
     }
     catch(e){

@@ -29,6 +29,8 @@ const mongoCollections = require("./../config/mongoCollections");
 const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
+const validate = require("../validations/data");
+const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
 
 router
@@ -65,6 +67,9 @@ router
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Relationship not found.", title: "Chat"}); 
                 }
+                if(foundRelationship.mentor.toString() !== req.session.user.id
+                    && foundRelationship.mentee.toString() !== req.session.user.id)
+                    return res.status(UnauthorizedRequest.status).json({error: "Unauthorized Access"});
             }
             // Check that timestamp is provided, it is a valid timestamp, it is not for a time before the relationship was created, and the chat for the relationship can be found
             if(!errorFlag && !timestamp){
@@ -102,6 +107,7 @@ router
             }
 
             // </ERROR CHECKING>
+
 
             if(!errorFlag){
                 let chatMessages = await chatData.getChatWithTimestamp(foundRelationship["chatChannel"].toString(), timestamp);
@@ -166,6 +172,9 @@ router
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Relationship not found.", title: "Chat"});
                 }
+                if(foundRelationship.mentor.toString() !== req.session.user.id
+                    && foundRelationship.mentee.toString() !== req.session.user.id)
+                    return res.status(UnauthorizedRequest.status).json({error: "Unauthorized Access"});
             }
             // Check that author is provided, it is a valid ObjectId, it exists in the database, and it is part of the relationship
             if(!errorFlag && !author){

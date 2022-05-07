@@ -11,7 +11,7 @@
     let sessionUserId = $("#user-id").text();
 
 
-    function getUserObject(userId) {
+    async function getUserObject(userId) {
         request = {
             method : "GET",
             url : `http://localhost:3000/users/${userId}`,
@@ -160,12 +160,12 @@
         // If comments-section are visible already
         if($(`#${postId}-comments-section`).is(":visible")) {
             $(`#${postId}-comments`).empty();
-            $(`#${postId}-comments-section`).hide();
+            $(`#${postId}-comments-section`).attr("hidden", true);
             return;
         }
         
         // Else retrieve comments and add event handlers
-        $(`#${postId}-comments-section`).show();
+        $(`#${postId}-comments-section`).removeAttr('hidden');
         request = {
             method : "GET",
             url : `http://localhost:3000/posts/${postId}/comments`,
@@ -189,6 +189,10 @@
         if(!shouldPush)
             postsDiv.empty();
 
+        if(posts.length == 0)
+            postsDiv.append(`<p class="warning"> No Posts Found </p>`);
+        else 
+            postsDiv.find(".warning").remove();
         for(let post of posts) {
             let username = (await getUserObject(post.author)).name;
             let postHtml = 
@@ -201,8 +205,8 @@
                 <p class="card-body">${post.content}</p>
                 <p class="visibility">${post.visibility}</p>
                 <ul class="card-actions">
-                    <li> <a class="post-like" href="/posts/${post._id}/like">Like - ${post.likedBy.length}</a></li>
-                    <li> <a class="post-dislike" href="/posts/${post._id}/dislike">Dislike - ${post.dislikedBy && post.dislikedBy.length}</a></li>
+                    <li> <a class="post-like" href="/posts/${post._id}/like">Likes - ${post.likedBy.length}</a></li>
+                    <li> <a class="post-dislike" href="/posts/${post._id}/dislike">Dislikes - ${post.dislikedBy && post.dislikedBy.length}</a></li>
                     <li> <a class="post-comment" href="/posts/${post._id}/comments">Comments</a></li>
                     <li> <a class="post-report" href="/posts/${post._id}/report">Reports - ${post.reportedBy.length}</a></li>
                 </ul>
@@ -235,10 +239,9 @@
         let request = {}
         if(myPosts) {
             // Hit My Posts URL
-            let userId = "6274526c073570c18813243f";
             request = {
                 method : "GET",
-                url : `http://localhost:3000/posts/user/${userId}` // This UserID will be taken from session in future
+                url : `http://localhost:3000/posts/user` // This UserID will be taken from session in future
             };
         } else if(typeof postSearchText === "string" && postSearchText.length > 0) {
             // Hit search posts URL
@@ -261,8 +264,9 @@
     postSearchForm.submit(function(event) {
         event.preventDefault();
         let postSearchText = postSearchInput.val().trim();
+        myPreferredFeedCheckbox.prop("checked", false);
         try {
-            postSearchText = validateString(postSearchText, "Search Term");
+            postSearchText = validateString(postSearchText, "Search Term", true);
             postSearchForm.find(".error").remove();
             let myPosts = myPostsCheckbox.is(':checked');
             loadPosts(postSearchText, myPosts);
@@ -278,9 +282,17 @@
      * When myPreferredFeedCheckBox is hit
      */
     myPreferredFeedCheckbox.click(async function(event) {
+        // Reset search Posts and my interest feed
+        postSearchInput.val("");
+        myPostsCheckbox.prop("checked", false);
+        if(!myPreferredFeedCheckbox.is(":checked")) {
+            // if Uncheced, load all the posts 
+            loadPosts("", false); 
+            return ;
+        }
+         
         let myUser = await getUserObject(sessionUserId);
         let postSearchText = myUser.myPreferredFeed;
-        myPostsCheckbox.prop("checked", false);
         postSearchInput.val(postSearchText);
         loadPosts(postSearchtext, false);
     });
@@ -298,11 +310,13 @@
         loadPosts(postSearchText, myPosts);
     });
 
-    function validateString(inputStr, varName) {
-        if(!inputStr || typeof(inputStr) != "string" || inputStr.trim().length == 0)
+    function validateString(inputStr, varName, canEmpty) {
+        if(!inputStr || typeof(inputStr) != "string")
             throw `Invalid input for ${varName}`;
-        else
-            return inputStr.trim();
+        inputStr = inputStr.trim();
+        if(!canEmpty && inputStr.length === 0)
+            throw `${varName} Cannot be Empty`;
+        return inputStr.trim();
     }
 
     function validateNewPostForm() {
@@ -333,9 +347,9 @@
             let requestConfig = {
                 method : "POST",
                 url: `http://localhost:3000/posts`,
-                data: {author: "6274526c073570c18813243f", visibility: visibility, content: newPostDesc, searchTags: newPostTags.split(" ")},
+                data: {visibility: visibility, content: newPostDesc, searchTags: newPostTags.split(" ")},
                 success: function(newPost){renderPosts([newPost], true)},
-                error: function(err, exception){throw err;}
+                error: function(err, exception){console.log(exception); throw exception;}
             }
             $.ajax(requestConfig);
             newPostForm.trigger("reset");
@@ -350,5 +364,3 @@
      */
     loadPosts();
 })(window.jQuery);
-
-console.log("Posts.js is hit");
