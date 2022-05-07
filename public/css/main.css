@@ -69,3 +69,7 @@ a{
 .error{
     padding-bottom: 1em;
 }
+
+#div1 {
+    align-self: center;
+}

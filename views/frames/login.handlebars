@@ -2,9 +2,9 @@
     <h2>Login</h2>
     <form action="/login" method="post" id="login-form">
         <label for="username-login-input">Username:</label>
-        <input type="text" name="username" id="username-login-input" placeholder="Enter your username"><br>
+        <input type="text" name="username" id="username-login-input" placeholder="Enter your username" required><br>
         <label for="password-login-input">Password:</label>
-        <input type="password" name="password" id="password-login-input" placeholder="Enter your password"><br>
+        <input type="password" name="password" id="password-login-input" placeholder="Enter your password" required><br>
         {{#if errors}}
             <div class="errorDiv">
                 <p>{{error}}</p>
@@ -16,4 +16,3 @@
     </form>
 </div>
 <script src="/public/scripts/loginScript.js"></script>
-

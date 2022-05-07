@@ -12,6 +12,8 @@ function constructRoutes(app) {
   app.use("/users", usersRoutes);
   app.use("/workspaces", workspaces);
   app.use("/users", usersRoutes);
+  app.use("/workspaces", workspaces);
+  app.use("/users", usersRoutes);
   app.use("/chats", chatRoutes);
   app.use("/", loginRoutes);
   app.use("*", (req, res) => {
