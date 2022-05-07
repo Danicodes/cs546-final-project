@@ -382,6 +382,8 @@ async function seedRelationships(){
             }
         ]
     }
+    const chatInfo1 = await chatsCollection.insertOne(chat1);
+    if(!chatInfo1 || chatInfo1.insertedId) throw "Could not insert chat 1 when seeding chats and relationships.";
     let relationship1 = {
         "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
         "mentor": user1id,
@@ -390,11 +392,31 @@ async function seedRelationships(){
         "status": "PENDING",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo1.insertedId
     }
+    
     // Relationship 2: 2->8 ACTIVE
     let chat2 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user8id,
+                "message": "I really want to learn how to paint better.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user2id,
+                "message": "Let's get to painting, then!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user8id,
+                "message": "You're my hero",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo2 = await chatsCollection.insertOne(chat2);
+    if(!chatInfo2 || chatInfo2.insertedId) throw "Could not insert chat 2 when seeding chats and relationships.";
     let relationship2 = {
         "relationshipDescription": "A newbie at painting is learning from Bob Ross.",
         "mentor": user2id,
@@ -403,11 +425,46 @@ async function seedRelationships(){
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo2.insertedId
     }
+
     // Relationship 3: 3->9 REJECTED
     let chat3 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user9id,
+                "message": "Can you mentor me so that I don't spill shakes when I try to make them?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user9id,
+                "message": "Please?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user9id,
+                "message": "Please?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user9id,
+                "message": "Please?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user9id,
+                "message": "Please?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user9id,
+                "message": "Please?",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo3 = await chatsCollection.insertOne(chat3);
+    if(!chatInfo3 || chatInfo3.insertedId) throw "Could not insert chat 3 when seeding chats and relationships.";
     let relationship3 = {
         "relationshipDescription": "Some kid wants to learn how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
@@ -416,11 +473,51 @@ async function seedRelationships(){
         "status": "REJECTED",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo3.insertedId
     }
+
     // Relationship 4: 4->10 COMPLETED
     let chat4 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user10id,
+                "message": "I want to get better at gambling so I win money from it instead of losing every paycheck.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user4id,
+                "message": "Perfect! We can get to work on that!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user10id,
+                "message": "So what do I do to win?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user4id,
+                "message": "Play more. That way, you'll have a higher chance of winning.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user10id,
+                "message": "That's awesome! I'll gamble more so I can win more! That sounds great!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user10id,
+                "message": "Thanks, Mr. Cheese! You're the best influence ever.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user4id,
+                "message": "No problem! Hehe",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo4 = await chatsCollection.insertOne(chat4);
+    if(!chatInfo4 || chatInfo4.insertedId) throw "Could not insert chat 4 when seeding chats and relationships.";
     let relationship4 = {
         "relationshipDescription": "A slots addict became more addicted to gambling after Chuck E Cheese apparently taught him how to win.",
         "mentor": user4id,
@@ -429,11 +526,21 @@ async function seedRelationships(){
         "status": "COMPLETED",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo4.insertedId
     }
+
     // Relationship 5: 5->11 PENDING
     let chat5 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user11id,
+                "message": "I want to learn how to make my own game since I love video games so much.",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo5 = await chatsCollection.insertOne(chat5);
+    if(!chatInfo5 || chatInfo5.insertedId) throw "Could not insert chat 5 when seeding chats and relationships.";
     let relationship5 = {
         "relationshipDescription": "A gaming enthusiast wants to learn how to make their own game from an experienced developer.",
         "mentor": user5id,
@@ -442,11 +549,46 @@ async function seedRelationships(){
         "status": "PENDING",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo5.insertedId
     }
+
     // Relationship 6: 2->12 ACTIVE
     let chat6 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user12id,
+                "message": "I can't believe I'm learning how to paint! It's great!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user2id,
+                "message": "Painting is awesome.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user12id,
+                "message": "So, how can I paint better?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user2id,
+                "message": "Paint more often, and the experience you gain will help you improve.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user12id,
+                "message": "Oh, ok! That's inspirational. I'll keep trying.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user2id,
+                "message": "Let me know when you've gotten better at painting.",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo6 = await chatsCollection.insertOne(chat6);
+    if(!chatInfo6 || chatInfo6.insertedId) throw "Could not insert chat 6 when seeding chats and relationships.";
     let relationship6 = {
         "relationshipDescription": "An art fan is learning how to paint from Bob Ross",
         "mentor": user2id,
@@ -455,11 +597,26 @@ async function seedRelationships(){
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo6.insertedId
     }
+
     // Relationship 7: 3->16 ACTIVE
     let chat7 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user16id,
+                "message": "I love shakes! Can you mentor me so I can work on making better ones?",
+                "Datetime": new Date()
+            },
+            {
+                "author": user3id,
+                "message": "Sure!",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo7 = await chatsCollection.insertOne(chat7);
+    if(!chatInfo7 || chatInfo7.insertedId) throw "Could not insert chat 7 when seeding chats and relationships.";
     let relationship7 = {
         "relationshipDescription": "A shake drinker is learning how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
@@ -468,11 +625,15 @@ async function seedRelationships(){
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo7.insertedId
     }
+
     // Relationship 8: 2->17 REJECTED
     let chat8 = {
         "messages": []
     }
+    const chatInfo8 = await chatsCollection.insertOne(chat8);
+    if(!chatInfo8 || chatInfo8.insertedId) throw "Could not insert chat 8 when seeding chats and relationships.";
     let relationship8 = {
         "relationshipDescription": "Bob Ross couldn't bear to teach a literal paintbrush how to paint better.",
         "mentor": user2id,
@@ -481,11 +642,46 @@ async function seedRelationships(){
         "status": "REJECTED",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo8.insertedId
     }
+
     // Relationship 9: 2->18 COMPLETED
     let chat9 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user18id,
+                "message": "Pizza pizza pasta pasta!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user18id,
+                "message": "It's a-me, and I want to learn painting!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user2id,
+                "message": "You can paint however you like!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user18id,
+                "message": "That's a-great! I'll try it in games!",
+                "Datetime": new Date()
+            },
+            {
+                "author": user2id,
+                "message": "Good idea, Mario. Keep on doing things your way.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user18id,
+                "message": "Wahoo!",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo9 = await chatsCollection.insertOne(chat9);
+    if(!chatInfo9 || chatInfo9.insertedId) throw "Could not insert chat 9 when seeding chats and relationships.";
     let relationship9 = {
         "relationshipDescription": "Super Mario learned how to paint from Bob Ross, then starred in Mario Artist.",
         "mentor": user2id,
@@ -494,11 +690,31 @@ async function seedRelationships(){
         "status": "COMPLETED",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo9.insertedId
     }
+
     // Relationship 10: 1->19 ACTIVE
     let chat10 = {
-        "messages": []
+        "messages": [
+            {
+                "author": user19id,
+                "message": "I want to improve my chicken recipe.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user1id,
+                "message": "This sounds like a worthy cause. I'll help you.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user19id,
+                "message": "Teach me your ways, legendary general.",
+                "Datetime": new Date()
+            }
+        ]
     }
+    const chatInfo10 = await chatsCollection.insertOne(chat10);
+    if(!chatInfo10 || chatInfo10.insertedId) throw "Could not insert chat 10 when seeding chats and relationships.";
     let relationship10 = {
         "relationshipDescription": "Colonel Sanders is learning new techniques in chicken cooking from General Tso.",
         "mentor": user1id,
@@ -507,6 +723,7 @@ async function seedRelationships(){
         "status": "ACTIVE",
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "chatChannel": chatInfo10.insertedId
     }
 }
 
