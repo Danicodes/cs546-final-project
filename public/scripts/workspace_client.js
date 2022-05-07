@@ -318,7 +318,7 @@ console.log("AJAX HAPPENS HERE");
             chatWindow = $("<p class='chat-window'>No chat to display yet</p>");
         }
         else {
-            chatWindow = $();
+            chatWindow = $(); // chats/:relationshipId/mesages
             chatWindow = $(`<p class='chat-window'>${chat.toString()}</p>`); // placeholder
         }
 
