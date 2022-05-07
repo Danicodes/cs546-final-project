@@ -27,4 +27,23 @@
         </label>
         <button type="submit" form="edit-user">Submit</button>
     </form>
+    {{#if updated}}
+        Password has been updated!
+    {{/if}}
+    <form action="/users/{{person._id}}/reset?_method=PUT" method="POST" id="change-password">
+        Reset password:
+        <label>
+            Current password:
+            <input type="password" name="password1"/>
+        </label>
+        <label>
+            Confirm current password:
+            <input type="password" name="password2"/>
+        </label>
+        <label>
+            New password:
+            <input type="password" name="newpassword"/>
+        </label>
+        <button type="submit" form="change-password">Submit</button>
+    </form>
 </div>

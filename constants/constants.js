@@ -1,7 +1,9 @@
 const DEFAULT_PAGE_NO = 0;
 const DEFAULT_POSTS_PER_PAGE = 4;
+const BCRYPT_VAL = 8;
 
 module.exports = {
     DEFAULT_PAGE_NO,
-    DEFAULT_POSTS_PER_PAGE
+    DEFAULT_POSTS_PER_PAGE,
+    BCRYPT_VAL
 }

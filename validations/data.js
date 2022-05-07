@@ -1,6 +1,8 @@
 // Functions for checking data going into the database and checking params passed from routes
 // universally common helper functions
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
+const constants = require('../constants/constants');
 
 /**
  * Check that the correct number of arguments is in a given array
@@ -38,18 +40,28 @@ function convertID(id){
     return id;
 }
 
+const passCheck = async function passCheck(userPass, password1, password2, newpassword){
+    if (!(password1 == password2)){
+        throw "Error: Passwords do not match!";
+    }
+    let same = await bcrypt.compare(newpassword, userPass);
+    console.log(same);
+    if (same){
+        throw "Error: The password is the same as the one in the database."
+    }
+}
 const checks = function checks(name, bio, age, searchTags){
     if (!(typeof name == 'string') || (name == '')){
-        throw new Error("name needs to be a non-zero string");
+        throw "Error: name needs to be a non-zero string";
     }
     if (!(typeof bio == 'string')){
-        throw new Error("bio needs to be a string");
+        throw "Error: bio needs to be a string";
     }
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
-        throw new Error("age must be a number between 0 and 100");
+        throw "Error: age must be a number between 0 and 100";
     }
     if (!Array.isArray(searchTags)){
-        throw new Error("searchTags must be an array of strings");
+        throw "Error:searchTags must be an array of strings";
     }
     let flag = false;
     for (let i = 0; i < searchTags.length; i++){
@@ -58,7 +70,7 @@ const checks = function checks(name, bio, age, searchTags){
         }
     }
     if (flag){
-        throw new Error("searchTags must contain strings");
+        throw "Error: searchTags must contain strings";
     }
 }
 
@@ -67,5 +79,6 @@ module.exports = {
     checkIsString,
     checkIsEmptyString,
     convertID,
-    checks
+    checks,
+    passCheck
 }

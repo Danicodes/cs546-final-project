@@ -5,6 +5,7 @@ const getUsersCollection = mongoCollections.users;
 const validations = require("../validations/validations");
 const {ObjectId} = require("mongodb");
 const validate = require('../validations/data');
+const constants = require('../constants/constants');
 
 async function getPersonById(id){
     validations.validateId(id);
@@ -45,7 +46,7 @@ async function updateUser(id, name, bio, age, searchTags){
 async function updatePassword(id, password){
     validations.validateId(id);
     password = validations.validateString(password);
-    let hashedpassword = await bcrypt.hash(password, 8);
+    let hashedpassword = await bcrypt.hash(password, constants.BCRYPT_VAL);
     const userCollection = await users();
     const updated = await userCollection.updateOne(
         { _id : ObjectId(id)},
