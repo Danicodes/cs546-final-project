@@ -4,19 +4,159 @@
 let mentorButton = document.getElementsByClassName('mentor-workspace');
 let menteeButton = document.getElementsByClassName('mentee-workspace');
 
+function getElementFromCookie(elementName){
+    let element;
+    if  (document.cookie.match(`${elementName}=`)){
+        element = document.cookie
+        .split('; ')
+        .find(row => row.startsWith(`${elementName}=`));
+        if (element.split('=').length > 0){
+            return element.split('=')[1];
+        }
+    }
+    return null;
+}
 
-function showPendingDetails(item){
+function createUserProfileLink(item, name){
+    return $(`<a class=\"user-profile-link\" href="/profile/${item._id}">${name ? name : ""}</a>`);
+}
 
-    //INSIDE workspace details for PENDING users - show the accept or reject function
-    $(item).children('a').on('click', function(event){
-        event.preventDefault();
+function createShowWorkspaceLink(item, name){
+    return $(`<a class=\"show-workspace-link link-that-looks-like-button\" 
+                href=\"/workspaces/relationships/${item._id}/${name ? name : "" }\">Show workspace</a>`); // workspace/rship/userid/relid
+}
 
-        // Instead of going to a user's profile we should show the workspace
-    });
+function createNotificationElement(item){
+    return $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${item._id}\"/>
+    <label for=\"workspace-notification-${item._id}\">
+        <i class=\"fas fa-circle\"></i>
+    </label>`);
 }
 
 console.log("AJAX HAPPENS HERE");
 (function ($){ 
+    function bindDisplayPendingWS(item){
+        //INSIDE workspace details for PENDING users - show the accept or reject function
+        $(item).children('a.show-workspace-link').on('click', function(event){
+            event.preventDefault();
+            workspaceDiv.hide(); // this should hide the relationshipsDiv as well
+            singleWorkspaceDiv.show();
+
+            let userId = getUserFromCookie();
+            if (!userId) {
+                userId = window.location.pathname.match(/[\w\d]{1,}$/)[0]; //proxy for now, will break when route changes
+            }
+
+            let backtoall = `<a href="/workspaces/${userId}">Back to all workspaces</a>`;
+            singleWorkspaceDiv.append(backtoall); // Add back to all workspaces/relationships
+            
+            // this passes a NODE element so dom manipulation here is fine
+            let h2 = $(`<h2 class='selected-user'>${$(item).children('a.user-profile-link')[0].innerHTML}</h2>`); // Other user's name 
+            let profile_link = $(item).children('a.user-profile-link').attr('href');
+            let otherUser = profile_link.match(/(?<=\/profile\/).*$/)[0];
+            //document.cookie = `selected_user=${otherUser}`; 
+
+            singleWorkspaceDiv.append(h2);
+
+            let selected_user = getElementFromCookie('selected_user');
+            let selected_relationship = getElementFromCookie('selected_relationship');
+            // onclick=\"location.href=\'/workspaces/accept/${selected_user ? selected_user : ''}\';\"
+            let requestDiv = $(`<div class='workspace-request-div' style='display:none'></div>`);
+            
+            let relationshipRoute = `/relationships/${userId}/${selected_relationship}/`;
+            //let acceptroute = `/relationships/accept/${selected_user ? selected_user : ''}`; // /relationships/relationshipId/status
+            let acceptroute = relationshipRoute + "approved";
+    
+            //let rejectroute = `/relationships/reject/${selected_user ? selected_user : ''}`;
+            let rejectroute = relationshipRoute + "rejected";
+    
+            let acceptbtn = $(`<button class=\"accept-pending-request btn btn-primary\">Accept</button>`);
+            let rejectbtn = $(`<button class=\"accept-pending-request btn btn-secondary\">Reject</button>`);
+    
+            acceptbtn.on('click', function(e){
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: acceptroute,
+                    success: function(result) {
+                        acceptbtn.removeClass('btn-primary');
+                        acceptbtn.addClass('btn-success');
+                        acceptbtn.addClass('disabled');
+                        acceptbtn.attr('disabled', 'true');
+    
+                        rejectbtn.removeClass('btn-secondary');
+                        rejectbtn.addClass('btn-danger');
+                        rejectbtn.addClass('disabled');
+                        rejectbtn.attr('disabled', 'true');
+                        //Disable both buttons
+                        console.log("Accepted user");
+                    },
+                    error: function(result) {
+                        alert(`${result.error ? result.error : "Could not process request"}`);
+                    }
+    
+                })
+            });
+    
+            rejectbtn.on('click', function(e){
+                e.preventDefault();
+                $.ajax({
+                    type: 'POST',
+                    url: rejectroute,
+                    success: function(result) {
+                        acceptbtn.removeClass('btn-primary');
+                        acceptbtn.addClass('btn-danger');
+                        acceptbtn.addClass('disabled');
+                        acceptbtn.attr('disabled', 'true');
+    
+                        rejectbtn.removeClass('btn-secondary');
+                        rejectbtn.addClass('btn-success');
+                        rejectbtn.addClass('disabled');
+                        rejectbtn.attr('disabled', 'true');
+                        //Disable both buttons
+                        console.log("Rejected user");
+                    },
+                    error: function(result) {
+                        alert(`${result.error ? result.error : "Could not process request"}`);
+                    }
+    
+                })
+            });
+            
+            
+            requestDiv.append(acceptbtn);
+            requestDiv.append(rejectbtn);
+    
+            if (!selected_user){
+                acceptbtn.addClass('disabled');
+                acceptbtn.attr('disabled', 'true');
+                rejectbtn.addClass('disabled');
+                rejectbtn.attr('disabled', 'true');
+            }
+    
+            singleWorkspaceDiv.append(requestDiv);
+            requestDiv.show();
+
+            var currentLink = this.getAttribute("href"); // workspaces/relationships/:relationshipID
+            
+            // Do things to display a single workspace
+            let res = getWorkSpaceData(currentLink, getWorkSpaceDataCallback);
+    
+            // let userId = getUserFromCookie();
+            // if (!userId) {
+            //     //redirect to login instead
+            //     return;
+            // }
+    
+            // let backtoall = `<a href="/workspaces/${userId}">Back to all workspaces</a>`;
+            // singleWorkspaceDiv.append(backtoall);
+    
+            // let h2 = $(`<h2 class='selected-user'>${$(item).children('a.user-profile-link')[0].innerHTML}</h2>`);
+            // singleWorkspaceDiv.append(h2)
+    
+    
+        });
+    }
     // This script will control the display when on /workspaces
     let workspaceDiv = $('#workspace-div'); // /workspaces/:userID
     let relationshipsDiv = $('#relationships-div'); // /workspaces/:userID -- this is nested in workspaceDiv
@@ -45,16 +185,24 @@ console.log("AJAX HAPPENS HERE");
             let relationships = res.relationships;
             
             for (let mentorRel of relationships){
+                if (mentorRel.status.name != "Approved"){
+                    continue;
+                }
                 let element = $("<li></li>");
                 //element.classList.add(`workspace-notification-${mentorRel.mentor._id}`);
                 // Add a button for show workspace
                 // button and user profile link will be siblings in tree
-                element.append($(`<a class=\"show-workspace-link link-that-looks-like-button\" href=\"/workspaces/relationships/${mentorRel.mentee}/${mentorRel._id}\">Show workspace</a>`)); 
-                element.append($(`<a class=\"user-profile-link\" href="/profile/${mentorRel._id}">${mentorRel.mentor.name}</a>`)); // this should instead link to user profile
-                let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${mentorRel.mentor._id}\"/>
-                                            <label for=\"workspace-notification-${mentorRel.mentor._id}\">
-                                                <i class=\"fas fa-circle\"></i>
-                                            </label>`);
+                element.append(createShowWorkspaceLink(mentorRel.mentee, mentorRel._id));
+                element.append(createUserProfileLink(mentorRel, mentorRel.mentor.name));
+                let notificationElement = createNotificationElement(mentorRel.mentor);
+
+                //element.append($(`<a class=\"show-workspace-link link-that-looks-like-button\" href=\"/workspaces/relationships/${mentorRel.mentee}/${mentorRel._id}\">Show workspace</a>`)); 
+                //element.append($(`<a class=\"user-profile-link\" href="/profile/${mentorRel._id}">${mentorRel.mentor.name}</a>`)); // this should instead link to user profile
+                
+                // let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${mentorRel.mentor._id}\"/>
+                //                             <label for=\"workspace-notification-${mentorRel.mentor._id}\">
+                //                                 <i class=\"fas fa-circle\"></i>
+                //                             </label>`);
                 
                 if (mentorRel.lastCheckInTime && (Date.now() > Date.parse(mentorRel.lastCheckInTime) - ONE_MINUTE)){
                     notificationElement.show();
@@ -80,12 +228,15 @@ console.log("AJAX HAPPENS HERE");
             for (let menteeRel of relationships){
                 let element = $("<li></li>"); //document.createElement('li');
                 //element.classList.add(`workspace-notification-${menteeRel.mentee._id}`);
-                element.append($(`<a class=\"show-workspace-link link-that-looks-like-button\" href=\"/workspaces/relationships/${menteeRel.mentor}/${menteeRel._id}\">Show workspace</a>`)); 
-                element.append($(`<a class=\"user-profile-link\" href="/profile/${menteeRel._id}">${menteeRel.mentee.name}</a>`));
-                let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${menteeRel.mentee._id}\"/>
-                                            <label for=\"workspace-notification-${menteeRel.mentee._id}\">
-                                                <i class=\"fas fa-circle\"></i>
-                                            </label>`);
+                element.append(createShowWorkspaceLink(menteeRel.mentor, menteeRel._id));
+                element.append(createUserProfileLink(menteeRel, menteeRel.mentee.name));
+                let notificationElement = createNotificationElement(menteeRel.mentor);
+                // element.append($(`<a class=\"show-workspace-link link-that-looks-like-button\" href=\"/workspaces/relationships/${menteeRel.mentor}/${menteeRel._id}\">Show workspace</a>`)); 
+                // element.append($(`<a class=\"user-profile-link\" href="/profile/${menteeRel._id}">${menteeRel.mentee.name}</a>`));
+                // let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${menteeRel.mentee._id}\"/>
+                //                             <label for=\"workspace-notification-${menteeRel.mentee._id}\">
+                //                                 <i class=\"fas fa-circle\"></i>
+                //                             </label>`);
                 if (menteeRel.lastCheckInTime && (Date.now() > (Date.parse(menteeRel.lastCheckInTime) - ONE_MINUTE))){
                     notificationElement.show();
                 }
@@ -107,22 +258,46 @@ console.log("AJAX HAPPENS HERE");
         for (let status of statuses) {
             let statusendpoint = `/relationships/${userID}/${status}`;
             $.getJSON(statusendpoint).then(function(res) {
+                
+                
                 let relationships = res.relationships;
                 // Get all relationships per status
                 relationshipsDiv.append($(`<h3>${status[0].toUpperCase() + status.substring(1)}</h3>`));
                 let currUl = $(`<ul class='${status}-relationship-list'></ul>`);
                 relationshipsDiv.append(currUl);
-                
-                // TODO bind link to the user's profile
+                //menteeRel, menteeRel.mentor
+                let workspaceName;
                 for (let relationshipObject of relationships){
+                    let element = document.createElement('li');
+                  
                     if (userID.toString() === relationshipObject.mentor._id.toString()){
                         // return a mentee
-                        let element = document.createElement('li');
-                        element.innerHTML = relationshipObject.mentee.name;
+                        let menteeLink = createUserProfileLink(relationshipObject.mentee, relationshipObject.mentee.name);
+                        $(element).append(menteeLink);
                         currUl.append(element)
+                        workspaceName = relationshipObject.mentee;
                     }
                     else {
-                        currUl.append($(`<li>${relationshipObject.mentor.name}</li>`));
+                        $(element).append(createUserProfileLink(relationshipObject.mentor, relationshipObject.mentor.name));
+                        currUl.append(element);
+                        workspaceName = relationshipObject.mentor;
+                    }
+                    
+                    // TODO::: ADD VALIDATION ON THE BACKEND TO PREVENT A USER FROM 
+                    // ACCESSING A WORKSPACE RELATIONSHIP IF THE STATUS IS IN PENDING/REJECTED STATE
+                    let showWS = createShowWorkspaceLink(workspaceName, relationshipObject._id);
+                    $(element).append(showWS);
+                    if (status === 'pending'){
+                        // ------ DO within the bindDisplayPending function - check if user is a mentor or mentee. Mentors can do this, mentee cannot use this with this state 
+                        // showWS.addClass('disabled'); // displays the btn as disabled
+                        bindDisplayPendingWS(element);
+                    }
+                    else if (status === 'completed') {
+                        showWS.attr('disabled', true); // Double check this
+                        bindDisplayWorkspaceEvent(element);
+                    }
+                    else {
+                        showWS.attr('disabled', true);
                     }
                         
                 }
@@ -143,6 +318,7 @@ console.log("AJAX HAPPENS HERE");
             chatWindow = $("<p class='chat-window'>No chat to display yet</p>");
         }
         else {
+            chatWindow = $();
             chatWindow = $(`<p class='chat-window'>${chat.toString()}</p>`); // placeholder
         }
 
@@ -179,7 +355,11 @@ console.log("AJAX HAPPENS HERE");
             singleWorkspaceDiv.append(backtoall); // Add back to all workspaces/relationships
             
             // this passes a NODE element so dom manipulation here is fine
-            let h2 = $(`<h2 class='selected-user'>${$(listItem).children('a.user-profile-link')[0].innerHTML}</h2>`); // User's name 
+            let h2 = $(`<h2 class='selected-user'>${$(listItem).children('a.user-profile-link')[0].innerHTML}</h2>`); // Other user's name 
+            let profile_link = $(listItem).children('a.user-profile-link').attr('href');
+            let otherUser = profile_link.match(/(?<=\/profile\/).*$/)[0];
+            document.cookie = `selected_user=${otherUser}`; 
+
             singleWorkspaceDiv.append(h2);
 
             var currentLink = this.getAttribute("href"); // workspaces/relationships/:relationshipID
@@ -192,8 +372,6 @@ console.log("AJAX HAPPENS HERE");
 
             // TODO: Display chat
             // TODO: Display files
-
-            // TODO if parent clicked and notif is visible hide the notif
 
         });
     }
