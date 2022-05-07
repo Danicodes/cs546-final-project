@@ -85,7 +85,8 @@ async function getAllRelationships(req, res){
 };
 
 /**
- * Post a new relationship object 
+ * Post a new relationship object from mentee to mentor always
+ * A mentee 
  * @param {Object} req - request object
  * @param {Object} res - response object
  * @returns void
@@ -93,13 +94,13 @@ async function getAllRelationships(req, res){
 async function postNewRelationship(req, res){
     let menteeId, mentorId, userId, timeline;
     try {
-        userId = validate.convertID(req.params.userId);
+        userId = validate.convertID(req.params.userId); // mentee
        // validate.checkArgLength(req.body, 4);
         validate.checkIsEmptyString(req.body.relationshipDescription);
         mentorId = validate.convertID(req.body.mentorId); 
-        menteeId = validate.convertID(req.body.menteeId);
+        menteeId = validate.convertID(req.body.menteeId); //
         validate.checkIsEmptyString(req.body.relationshipCategory);
-        timeline = validate.parseTimeInterval(req.body.timeline);
+        timeline = validate.parseTimeInterval(req.body.timeline); // allowed to be null
 
         enums.categories.get(req.body.relationshipCategory); // will throw an error if the category is not in the list
     }
@@ -110,7 +111,7 @@ async function postNewRelationship(req, res){
     }
 
     try {
-        if ((userId.toString() !== mentorId.toString()) && (userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
+        if ((userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
     }
     catch(e){
         res.status(403).json({error: e});
@@ -123,6 +124,7 @@ async function postNewRelationship(req, res){
         relationshipObj = await relationships.createRelationship(req.body.relationshipDescription, mentorId, menteeId, req.body.relationshipCategory, timeline);
         let added = await users.updateUserRelationships(userId, relationshipObj);
        
+        // TODO : SUCCESSFUL CREATION BUT ERRRORED , PLS DEBUG
         //res.render('frame/request', {layout: 'profile', relationship: relationshipObj, created: true});
         res.status(200).json({success: true, relationship: relationshipObj, added: added}); // used for testing
     }
@@ -230,9 +232,10 @@ async function getRelationshipByStatus(req, res){
        
         // TODO:if in mentee view, show all your mentors
         let mentorList = await users.getMentorList(userId);
-        returnList.concat(await relationships.filterRelationshipsByStatus(mentorList, req.params.status));
+        let filteredMentorList = await relationships.filterRelationshipsByStatus(mentorList, req.params.status);
+        returnList = returnList.concat(filteredMentorList);
         
-        let relationshipObjects = []
+        let relationshipObjects = [];
         for (let relationshipId of returnList){
             let relationshipObject = await relationships.getRelationshipById(relationshipId);
             
@@ -539,10 +542,10 @@ router
         }
     })
 
-router.route('/:userId/:relationshipID/:status')
+router.route('/:userId/:relationshipID/:status(approved|rejected|pending|completed)') // // instead of /accept/reject
 .post(postRelationshipStatusUpdate);
 
-router.route('/:userId$') // this works!
+router.route('/:userId$') // this works! Request a relationship
 .get(getAllRelationships)
 .post(postNewRelationship);
 
@@ -552,16 +555,18 @@ router.route('/:userId/mentors')
 router.route('/:userId/mentees')
 .get(getMentees);
 
-router.route('/:userId/:status')
+router.route('/:userId/:status(approved|rejected|pending|completed)')
 .get(getRelationshipByStatus);
 
 router.route('/:userId/:relationshipId$')
 .post(postUpdateTimeline);
 
 //router.route('/mentors')
+// router.route('/accept/:userId')
+// .get();
 
-router.route('/:userId/:status')
-.get(getRelationshipByStatus);
+// router.route('/reject/:userId')
+// .get();
 
 router.route("/:id/upload")
 .post(fileUpload);
