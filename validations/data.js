@@ -2,8 +2,6 @@
 // universally common helper functions
 const { ObjectId } = require('mongodb');
 const constants = require('../constants/constants');
-const { getRelationshipById } = require('../data/relationships');
-const { validateString } = require('./validations');
 // const relationshipsData = require('../data/relationships');
 
 /**
@@ -87,17 +85,6 @@ const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed,
     let flag = false;
 }
 
-const isUserAuthorizedForPost = async function(userId, relationshipId) {
-    convertID(userId);
-    convertID(relationshipId);
-
-    let relationship = await getRelationshipById(relationshipId);
-    if(userId === relationship.mentor.toString() || userId === relationship.mentee.toString())
-        return relationship;
-    else
-        throw UnauthorizedRequest(`${userId} Not Authorized to update ${relationshipId}`);
-}
-
 module.exports = {
     checkArgLength,
     checkIsString,
@@ -105,6 +92,5 @@ module.exports = {
     convertID,
     checks,
     parseTimeInterval,
-    parseCheckin,
-    isUserAuthorizedForPost
+    parseCheckin
 }
