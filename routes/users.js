@@ -61,17 +61,24 @@ router.put('/', async (req, res) => {
 router.put('/reset', async (req, res) => {
     // Update user in database
     let userId = req.session.user.id;
-    let newpassword = req.body['password'];
+    let newpassword = req.body['newpassword'];
+    let password1 = req.body['password1'];
+    let password2 = req.body['password2'];
     try {
         userId = validations.validateId(userId);
         newpassword = validations.validateString(newpassword);
-    } catch (e) {
-        return res.status(400).json("Error: " + e);
+        let user = await userData.getPersonById(userId);
+        const userPass = user['password'];
+        validate.passCheck(userPass, password1, password2, newpassword);
     }
-
+    catch(e){
+        console.log(e);
+        res.status(400).json({error: e});
+    }
+    
     try {
         const ret = await userData.updatePassword(userId, newpassword);
-        return res.status(200).json(ret);
+        return res.render('layouts/users', {person : ret, updated : true});
     }
     catch(e){
         console.log(e);

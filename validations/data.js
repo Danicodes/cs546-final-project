@@ -3,6 +3,7 @@
 const { ObjectId } = require('mongodb');
 const constants = require('../constants/constants');
 const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
+const bcrypt = require('bcrypt');
 
 /**
  * Check that the correct number of arguments is in a given array
@@ -67,20 +68,33 @@ function parseCheckin(lastcheckin){
      return lastcheckin;
 }
 
+const passCheck = async function passCheck(userPass, password1, password2, newpassword){
+    if (!(password1 == password2)){
+        throw "Error: Passwords do not match!";
+    }
+    let same = await bcrypt.compare(newpassword, userPass);
+    console.log(same);
+    if (same){
+        throw "Error: The password is the same as the one in the database."
+    }
+}
+
 const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed, searchTags){
     checkIsEmptyString(name);
     checkIsEmptyString(mentorBio);
     checkIsEmptyString(menteeBio);
     checkIsEmptyString(myPreferredFeed);
+
+
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
-        throw new Error("age must be a number between 0 and 100");
+        throw "Error: age must be a number between 0 and 100";
     }
 
     if (!Array.isArray(searchTags)){
-        throw new Error("searchTags must be an array of strings");
+        throw "Error:searchTags must be an array of strings";
     }
     for(let searchTag of searchTags) 
-        checkIsEmptyString(searchTag);
+        checkIsEmptyString(searchTag, "Search Tags");
 }
 
 module.exports = {
@@ -90,5 +104,6 @@ module.exports = {
     convertID,
     checks,
     parseTimeInterval,
-    parseCheckin
+    parseCheckin,
+    passCheck
 }

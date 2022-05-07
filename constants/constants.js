@@ -5,6 +5,7 @@ const MIN_CHECKIN_INTERVAL = 2*1000; // 2 seconds in ms
 const MAX_CHECKIN_INTERVAL = 864000*1000; // 10 days in ms
 const HOME_PAGE_URL = "/posts/html";
 const RESTRICTED_PATHS_REGEX = /^\/(?!login|signup|\/).*$/; // For use in auth middleware, check any route that is not /login or signup
+const BCRYPT_VAL = 8;
 
 module.exports = {
     DEFAULT_PAGE_NO,
@@ -13,5 +14,6 @@ module.exports = {
     MIN_CHECKIN_INTERVAL,
     MAX_CHECKIN_INTERVAL,
     HOME_PAGE_URL,
-    RESTRICTED_PATHS_REGEX
+    RESTRICTED_PATHS_REGEX,
+    BCRYPT_VAL
 }
