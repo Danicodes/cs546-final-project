@@ -1,6 +1,7 @@
 // Functions for checking data going into the database and checking params passed from routes
 // universally common helper functions
 const { ObjectId } = require('mongodb');
+const constants = require('../constants/constants');
 
 /**
  * Check that the correct number of arguments is in a given array
@@ -41,7 +42,7 @@ function convertID(id){
 function parseTimeInterval(timelineInterval){
     if (timelineInterval != null) {
         if (typeof(timelineInterval) === 'string'){
-           timelineInterval = parseInt(timelineInterval);
+           timelineInterval = Date.parse(timelineInterval);
         }
         
         if (timelineInterval < constants.MIN_CHECKIN_INTERVAL || timelineInterval > constants.MAX_CHECKIN_INTERVAL){
@@ -49,6 +50,20 @@ function parseTimeInterval(timelineInterval){
         }
      }
      return timelineInterval;
+}
+
+function parseCheckin(lastcheckin){
+    if (typeof(lastcheckin) == 'string'){
+        checkIsEmptyString(lastcheckin);
+        lastcheckin = new Date(Date.parse(lastcheckin));
+     }
+     else if (typeof(lastcheckin) == 'number'){
+        lastcheckin = new Date(lastcheckin);
+     }
+     else {
+        throw `Invalid date type`;
+     }
+     return lastcheckin;
 }
 
 const checks = function checks(name, bio, age, searchTags, mentorRelations, menteeRelations, myPosts){
@@ -91,5 +106,6 @@ module.exports = {
     checkIsEmptyString,
     convertID,
     checks,
-    parseTimeInterval
+    parseTimeInterval,
+    parseCheckin
 }

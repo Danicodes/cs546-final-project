@@ -1,8 +1,8 @@
 const DEFAULT_PAGE_NO = 0;
 const DEFAULT_POSTS_PER_PAGE = 4;
 const MAX_FILE_SIZE = 10 * 1000 * 1000; // 10 MB
-const MIN_CHECKIN_INTERVAL = 2; // 2 seconds
-const MAX_CHECKIN_INTERVAL = 864000; // 10 days
+const MIN_CHECKIN_INTERVAL = 2*1000; // 2 seconds in ms
+const MAX_CHECKIN_INTERVAL = 864000*1000; // 10 days in ms
 
 module.exports = {
     DEFAULT_PAGE_NO,

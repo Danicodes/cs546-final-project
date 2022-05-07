@@ -34,7 +34,7 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
        relationshipCategory = new Category(relationshipCategory.trim()); //convert to Category object
     }
 
-    timelineInterval = validate.parseTimeInterval(timelineInterval);
+    timelineInterval = validate.parseTimeInterval(timelineInterval); // milliseconds
 
     let relationshipDB = await relationshipCollection();
 
@@ -84,10 +84,33 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
    };
    let updated = await relationshipDB.findOneAndUpdate({ _id: relationshipId }, updateObj);
    if (updated.value == null) throw `Could not update ${relationshipId} `;
+   let newObj = await relationshipDB.findOne({_id: relationshipId});
    
-   return updated.value; 
+   return newObj; 
  }
 
+ async function updateLastCheckin(relationshipId, lastcheckin){
+   validate.checkArgLength(2);
+   relationshipId = validate.convertID(relationshipId);
+   
+   if (!(lastcheckin instanceof Date)){
+      validate.parseCheckin(lastcheckin);
+    }
+
+    let relationshipDB = await relationshipCollection();
+
+    let updateObj = {
+       $set: {
+          lastCheckInTime: lastcheckin
+       }
+    };
+
+    let updated = await relationshipDB.findOneAndUpdate({_id: relationshipId}, updateObj);
+    if (updated.value == null) throw `Could not update ${relationshipId}`;
+    let newObj = await relationshipDB.findOne({_id: relationshipId});
+   
+    return newObj; 
+ }
  /**
   * Retrieve a relationship object given an object ID
   * @param {string} relationshipId An objectId associated with a relationship
@@ -239,5 +262,6 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     filterRelationshipsByStatus,
     uploadfile,
     downloadfile,
-    updateRelationshipTimeline
+    updateRelationshipTimeline,
+    updateLastCheckin
  }

@@ -5,6 +5,7 @@ const validate = require('../validations/data');
 const enums = require('../enums/');
 const data = require('../data');
 const { route } = require('./chat');
+const { validateDate } = require('../validations/validations');
 
 const relationships = data.relationships;
 const users = data.users;
@@ -16,17 +17,19 @@ async function getWorkspaceLandingPage(req, res){
     // Right now user is coming from params
     let userId;
     // TODO: add 'view' to session obj
-    if (req.session.user){
-        userId = req.session.user.id;
-    }
-    else {
-        res.redirect('/');
-        return;
-    }
+
+    // if (req.session.user){
+    //     userId = req.session.user.id;
+    // }
+    // else {
+    //     res.redirect('/');
+    //     return;
+    // }
     
     let mentorList, menteeList;
     try {
-        validate.checkIsEmptyString(userId);
+        validate.checkIsEmptyString(req.params.userId);
+        userId = validate.convertID(req.params.userId)
 
         menteeList = await users.getMenteeList(userId);
         menteeList = await relationships.filterRelationshipsByStatus(menteeList, "approved");
@@ -47,8 +50,11 @@ async function getWorkspaceLandingPage(req, res){
             relationshipObj.menteeObj = await users.getPersonById(relationshipObj.mentee);
             menteeObjects.push(relationshipObj);
         };
-        
-        res.render('partials/relationships', {layout: 'workspaces', mentorRelationships: mentorObjects, menteeRelationships: menteeObjects});
+        res.cookie('user', userId.toString())
+            .render('partials/relationships', 
+                    {layout: 'workspaces',
+                     mentorRelationships: mentorObjects,
+                      menteeRelationships: menteeObjects});
     }
     catch(e){
         res.status(400).json({error: e});
@@ -62,14 +68,15 @@ async function getWorkspaceLandingPage(req, res){
  */
 async function getWorkspaceRelationship(req, res){
     //validate relationshipId, userId
-    let userId;
-    if (req.session.user){
-        userId = req.session.user.id;
-    }
-    else {
-        res.redirect('/');
-        return;
-    }
+    let userId = req.params.userId;
+
+    // if (req.session.user){
+    //     userId = req.session.user.id;
+    // }
+    // else {
+    //     res.redirect('/');
+    //     return;
+    // }
 
     let relationshipId = req.params.relationshipId;
     let relationshipObject;
@@ -81,15 +88,15 @@ async function getWorkspaceRelationship(req, res){
         relationshipObject = await relationships.getRelationshipById(relationshipId);
         
         if (userId.toString() === relationshipObject.mentor.toString()){
-            // then retrieve info of mentee
-            otherUser = relationshipObject.mentee;
-        }
-        else if (userId.toString() === relationshipObject.mentee.toString()) {
-            otherUser = relationshipObject.mentor;
-        }
-        else {
-            throw `Error: Unauthorized`
-        }
+             // then retrieve info of mentee
+             otherUser = relationshipObject.mentee;
+         }
+         else if (userId.toString() === relationshipObject.mentee.toString()) {
+             otherUser = relationshipObject.mentor;
+         }
+         else {
+             throw `Error: Unauthorized`
+         }
     }
     catch(e){
         res.status(403).json({error: e});
@@ -100,7 +107,7 @@ async function getWorkspaceRelationship(req, res){
         // workspaceId contains files
         let workspace = relationshipObject.workspaceId;// get workspace function to get files
         let chat = relationshipObject.chatId; // get chat info 
-
+        //otherUser = relationship
         otherUser = await users.getPersonById(otherUser);
 
         //res.render('partials/relationships', 
@@ -148,10 +155,10 @@ async function getMentors(req, res){
 router.route('/getMentors')
 .get(getMentors); // API enpoint, if this is in users url, redirect to workspaces
 
-router.route('/$')
+router.route('/:userId$') // /
 .get(getWorkspaceLandingPage);
 
-router.route('/relationships/:relationshipId')
+router.route('/relationships/:userId/:relationshipId')
 .get(getWorkspaceRelationship);
 
 

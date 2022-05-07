@@ -138,7 +138,7 @@ async function postUpdateTimeline(req, res){
 
     try {
         timeline = validate.parseTimeInterval(req.body.timeline);
-        relationshipId = validate.convertID(relationshipId);
+        relationshipId = validate.convertID(req.params.relationshipId);
         if (timeline == null){
             throw `timeline cannot be null`;
         }
@@ -150,13 +150,43 @@ async function postUpdateTimeline(req, res){
 
     try{
         //TODO: Ensure that user is the MENTOR of the relationship
-        let res = await relationships.updateRelationshipTimeline(relationshipId, timeline);
-        res.status(200).json({ success: true, relationship: res });
+        let response = await relationships.updateRelationshipTimeline(relationshipId, timeline);
+        res.status(200).json({ success: true, relationship: response });
     }
     catch(e){
         res.status(500).json({error:e});
     }
 }
+
+async function postLastCheckin(req, res){
+    let checkin, relationshipId, userId;
+
+    try {
+        checkin = new Date(req.body.lastCheckIn);
+        //checkin = validate.parseCheckin(req.body.lastCheckIn);
+        relationshipId = validate.convertID(req.body.relationshipId);
+        userId = validate.convertID(req.body.userId);
+
+        if (checkin == null){
+            throw `checkin cannot be null`;
+        }
+    }
+    catch(e){
+        res.status(400).json({error:e});
+        return;
+    }
+
+    try{
+        //TODO: Ensure that user is the MENTOR of the relationship
+        let response = await relationships.updateLastCheckin(relationshipId, checkin);
+        res.status(200).json({ success: true, relationship: response });
+    }
+    catch(e){
+        res.status(500).json({error:e});
+    }
+}
+
+
 
 // /**
 //  * Get the timeline for a single relationship object
@@ -516,6 +546,12 @@ router.route('/:userId$') // this works!
 .get(getAllRelationships)
 .post(postNewRelationship);
 
+router.route('/:userId/mentors')
+.get(getMentors);
+
+router.route('/:userId/mentees')
+.get(getMentees);
+
 router.route('/:userId/:status')
 .get(getRelationshipByStatus);
 
@@ -523,11 +559,6 @@ router.route('/:userId/:relationshipId$')
 .post(postUpdateTimeline);
 
 //router.route('/mentors')
-router.route('/:userId/mentors')
-.get(getMentors);
-
-router.route('/:userId/mentees')
-.get(getMentees);
 
 router.route('/:userId/:status')
 .get(getRelationshipByStatus);
@@ -538,5 +569,10 @@ router.route("/:id/upload")
 router.route("/:id/download/:filename")
 .get(fileDownload);
 
+router.route('/updateCheckin')
+.post(postLastCheckin);
+
+router.route('/interval/:relationshipId')
+.post(postUpdateTimeline);
 
 module.exports = router;

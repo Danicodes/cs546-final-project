@@ -104,3 +104,29 @@ header h1 {
     width: auto;
     column-span: all;
   }
+
+  .workspace-notification {
+      /*display: none;
+      position: relative; */
+      color: red;
+      width: 0.8em;
+      height: 0.8em;
+      border: none;
+      background-color: red;
+      border-radius: 50%;
+      vertical-align: middle;
+      appearance: none;
+      -webkit-appearance: none;
+      outline: none;
+      cursor: pointer;
+  }
+
+
+  .fas .fa-circle {
+      background-color: red;
+      color: red;
+  }
+
+  :checked ~ button {
+      display: none;
+  }
