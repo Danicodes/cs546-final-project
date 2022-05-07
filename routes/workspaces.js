@@ -4,8 +4,7 @@ const router = express.Router();
 const validate = require('../validations/data');
 const enums = require('../enums/');
 const data = require('../data');
-const { route } = require('./chat');
-const { validateDate } = require('../validations/validations');
+const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
 const relationships = data.relationships;
 const users = data.users;
@@ -82,25 +81,13 @@ async function getWorkspaceRelationship(req, res){
     let relationshipObject;
     let otherUser;
     try {
-        validate.checkIsEmptyString(relationshipId);
-
-        // check if I am mentor or mentee
-        relationshipObject = await relationships.getRelationshipById(relationshipId);
-        
-        if (userId.toString() === relationshipObject.mentor.toString()){
-             // then retrieve info of mentee
-             otherUser = relationshipObject.mentee;
-         }
-         else if (userId.toString() === relationshipObject.mentee.toString()) {
-             otherUser = relationshipObject.mentor;
-         }
-         else {
-             throw `Error: Unauthorized`
-         }
+        validate.convertID(relationshipId);
+        validate.isUserAuthorizedForPost(userId, relationshipId);
     }
     catch(e){
-        res.status(403).json({error: e});
-        return;
+        if(e instanceof UnauthorizedRequest)
+            return res.status(e.status).json({error: e.message});
+        return res.status(400).json({error: e});
     }
 
     try {

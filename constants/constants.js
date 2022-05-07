@@ -3,11 +3,13 @@ const DEFAULT_POSTS_PER_PAGE = 4;
 const MAX_FILE_SIZE = 10 * 1000 * 1000; // 10 MB
 const MIN_CHECKIN_INTERVAL = 2*1000; // 2 seconds in ms
 const MAX_CHECKIN_INTERVAL = 864000*1000; // 10 days in ms
+const HOME_PAGE_URL = "/private";
 
 module.exports = {
     DEFAULT_PAGE_NO,
     DEFAULT_POSTS_PER_PAGE,
     MAX_FILE_SIZE,
     MIN_CHECKIN_INTERVAL,
-    MAX_CHECKIN_INTERVAL
+    MAX_CHECKIN_INTERVAL,
+    HOME_PAGE_URL
 }
