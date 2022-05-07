@@ -1,5 +1,17 @@
 (function($){
-    function getUserName(userId) {
+    /**
+     * post-like, post-comment, post-report 
+     *  are the links for corresponding actions
+     */
+    let postSearchForm = $("#posts-search-form");
+    let newPostForm = $("#post-form");
+    let postSearchInput = $("#posts-search-text");
+    let myPostsCheckbox = $("#my-posts");
+    let myPreferredFeedCheckbox = $("#my-preferred-feed");
+    let sessionUserId = $("#user-id").text();
+
+
+    function getUserObject(userId) {
         request = {
             method : "GET",
             url : `http://localhost:3000/users/${userId}`,
@@ -15,11 +27,40 @@
                 method : "POST",
                 url : `http://localhost:3000/posts/${postId}/report`,
                 success: function(countOfReportsForThisPost) {
-                    postNode.find("#post-report").val(countOfLikesForThisPost);
+                    if(postNode.find(".error").length > 0)
+                        postNode.find(".error").remove();
+                    postNode.find(".post-report").html(`Reports - ${countOfReportsForThisPost}`);
                 },
                 error: function(errorObj, exception) {
+                    if(postNode.find(".error").length > 0)
+                        postNode.find(".error").remove();
+                    postNode.append($(`<p class="error">${exception}</p>`))
                     console.log(errorObj);
                     console.log("Failed to report this post" + exception);
+                }
+            }
+            // Add the comment into database and update the post comments div
+            $.ajax(request);
+        });
+    }
+
+    function addEventHandlerForDisLikePost(postNode, postId){
+        postNode.find(".post-dislike").click(function(event) {
+            event.preventDefault();
+            request = {
+                method : "POST",
+                url : `http://localhost:3000/posts/${postId}/dislike`,
+                success: function(countOfDislikesForThisPost) {
+                    if(postNode.find(".error").length > 0)
+                        postNode.find(".error").remove();
+                    postNode.find(".post-dislike").html(`Dislikes - ${countOfDislikesForThisPost}`);
+                },
+                error: function(errorObj, exception) {
+                    if(postNode.find(".error").length > 0)
+                        postNode.find(".error").remove();
+                    postNode.append($(`<p class="error">${exception}</p>`))
+                    console.log(errorObj);
+                    console.log("Failed to Dislike this post" + exception);
                 }
             }
             // Add the comment into database and update the post comments div
@@ -34,9 +75,14 @@
                 method : "POST",
                 url : `http://localhost:3000/posts/${postId}/like`,
                 success: function(countOfLikesForThisPost) {
-                    postNode.find("#post-like").val(countOfLikesForThisPost);
+                    if(postNode.find(".error").length > 0)
+                        postNode.find(".error").remove();
+                    postNode.find(".post-like").html(`Likes - ${countOfLikesForThisPost}`);
                 },
                 error: function(errorObj, exception) {
+                    if(postNode.find(".error").length > 0)
+                        postNode.find(".error").remove();
+                    postNode.append($(`<p class="error">${exception}</p>`))
                     console.log(errorObj);
                     console.log("Failed to add your like " + exception);
                 }
@@ -92,7 +138,7 @@
         if(!append)
             commentsDiv.empty();
         for(let comment of comments){
-            let user = await getUserName(comment.author);
+            let user = await getUserObject(comment.author);
             let username = user.name;
             let commentHtml =
             `<section class="comment">
@@ -144,7 +190,7 @@
             postsDiv.empty();
 
         for(let post of posts) {
-            let username = (await getUserName(post.author)).name;
+            let username = (await getUserObject(post.author)).name;
             let postHtml = 
             `<li class="card" id=${post._id}>
                 <div class="card-header">
@@ -156,6 +202,7 @@
                 <p class="visibility">${post.visibility}</p>
                 <ul class="card-actions">
                     <li> <a class="post-like" href="/posts/${post._id}/like">Like - ${post.likedBy.length}</a></li>
+                    <li> <a class="post-dislike" href="/posts/${post._id}/dislike">Dislike - ${post.dislikedBy && post.dislikedBy.length}</a></li>
                     <li> <a class="post-comment" href="/posts/${post._id}/comments">Comments</a></li>
                     <li> <a class="post-report" href="/posts/${post._id}/report">Reports - ${post.reportedBy.length}</a></li>
                 </ul>
@@ -164,7 +211,7 @@
 
                     </div>
                     <div id="${post._id}-comments-add">
-                        <form id="posts-add-comment-form">
+                        <form class="posts-add-comment-form">
                             <input type="text" placeholder="Add Comment Here" id="comment-message"/>
                             <button type="submit"> Add Comment </button>
                         </form>
@@ -179,52 +226,75 @@
             addEventHandlersForCommentActions(postNode, post._id);
             addEventHandlerForAddCommentAction(postNode, post._id);
             addEventHandlerForLikePost(postNode, post._id);
+            addEventHandlerForDisLikePost(postNode, post._id);
             addEventHandlerForReportPost(postNode, post._id);
         }
     }
 
     function loadPosts(postSearchText, myPosts) {
-        console.log("Received search Text " + postSearchText);
-        if(typeof postSearchText === "string" && postSearchText.length > 0) {
+        let request = {}
+        if(myPosts) {
+            // Hit My Posts URL
+            let userId = "6274526c073570c18813243f";
+            request = {
+                method : "GET",
+                url : `http://localhost:3000/posts/user/${userId}` // This UserID will be taken from session in future
+            };
+        } else if(typeof postSearchText === "string" && postSearchText.length > 0) {
             // Hit search posts URL
-
+            request = {
+                method : "GET",
+                url : `http://localhost:3000/search/posts/?searchTerm=${postSearchText}`,
+            };
         } else {
             // Hit Get All Posts URL
             request = {
                 method : "GET",
                 url : `http://localhost:3000/posts/`,
-            }
-            if(myPosts) {
-                let userId = $("#user-id").val();
-                request.url += `user/${userId}`;
-            }
-            $.ajax(request).then(function (posts) {
-                renderPosts(posts);
-            });
+            };
         }
+        $.ajax(request).then((posts) => renderPosts(posts)).fail(function(error) {
+            console.log("Error while loading the Posts - " + error);
+        });
     }
 
-    $("#posts-search-form").submit(function(event) {
+    postSearchForm.submit(function(event) {
         event.preventDefault();
-        let postSearchInput = $("#posts-search-text");
         let postSearchText = postSearchInput.val().trim();
         try {
-            postSearchText = validateString(postSearchText);
-            $("#posts-search-form").find(".error").remove();
-            let myPosts = $("#my-posts").is(':checked');
+            postSearchText = validateString(postSearchText, "Search Term");
+            postSearchForm.find(".error").remove();
+            let myPosts = myPostsCheckbox.is(':checked');
             loadPosts(postSearchText, myPosts);
         } catch (e) {
-            $("#posts-search-form").append($(`<p class="error">${e}</p>`));
+            if(postSearchForm.find(".error").length > 0)
+                postSearchForm.find(".error").remove();
+            postSearchForm.append($(`<p class="error">${e}</p>`));
         }
         
     });
-    
-    $("#posts-search-form").find("input:checkbox").click(function(event) {
-        // event.preventDefault();
-        let postSearchInput = $("#posts-search-text");
-        let postSearchText = postSearchInput.val().trim();
-        let myPosts = $("#my-posts").is(':checked');
 
+    /**
+     * When myPreferredFeedCheckBox is hit
+     */
+    myPreferredFeedCheckbox.click(async function(event) {
+        let myUser = await getUserObject(sessionUserId);
+        let postSearchText = myUser.myPreferredFeed;
+        myPostsCheckbox.prop("checked", false);
+        postSearchInput.val(postSearchText);
+        loadPosts(postSearchtext, false);
+    });
+    
+    /**
+     * When "MyPosts" is checked
+     */
+     myPostsCheckbox.click(function(event) {
+        let postSearchText = postSearchInput.val("");
+        let myPosts = myPostsCheckbox.is(':checked');
+        if(myPosts) 
+            postSearchForm.find("button").attr("disabled", '');
+        else 
+            postSearchForm.find("button").removeAttr("disabled");
         loadPosts(postSearchText, myPosts);
     });
 
@@ -236,7 +306,6 @@
     }
 
     function validateNewPostForm() {
-        let newPostForm = $("#post-form");
         let newPostDesc = newPostForm.find("#post-description").val();
         let newPostTags = newPostForm.find("#post-tags").val();
         let visibility = newPostForm.find("input[name='visibility']:checked").val();
@@ -248,10 +317,12 @@
         visibility = validateString(visibility, "Visibility");
     }
 
-    $("#post-form").submit(function(event) {
+    /**
+     * When a New Post Form is Submitted
+     */
+    newPostForm.submit(function(event) {
         event.preventDefault();
         // Validate the form
-        let newPostForm = $("#post-form");
         let newPostDesc = newPostForm.find("#post-description").val();
         let newPostTags = newPostForm.find("#post-tags").val();
         let visibility = newPostForm.find("input[name='visibility']:checked").val();

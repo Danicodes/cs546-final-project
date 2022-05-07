@@ -1,6 +1,7 @@
 const mongoCollections = require('../config/mongoCollections');
 const relationshipCollection = mongoCollections.relationships;
 const { ObjectId } = require('mongodb');
+const constants = require('../constants/constants');
 const fs = require('fs');
 
 const enums = require('../enums');
@@ -22,16 +23,18 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
  * @param {Category|string} relationshipCategory the profession under which this relationship belongs
  * @returns relationship object of the newly created relationship
  */
- async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
-    validate.checkArgLength(arguments, 4);
+ async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory, timelineInterval){
+    validate.checkArgLength(arguments, 5);
     validate.checkIsEmptyString(relationshipDescription); // Cannot be empty
     mentor = validate.convertID(mentor);
     mentee = validate.convertID(mentee);
+    
+    // validate array content relationshipCategory
     if (typeof(relationshipCategory) === 'string'){
        relationshipCategory = new Category(relationshipCategory.trim()); //convert to Category object
     }
 
-    // validate array content relationshipCategory
+    timelineInterval = validate.parseTimeInterval(timelineInterval); // milliseconds
 
     let relationshipDB = await relationshipCollection();
 
@@ -51,7 +54,9 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
         createdOn: createdOn,
         updatedOn: updatedOn,
         relationshipCategory: relationshipCategory,
-        chatChannel: chatChannel
+        chatChannel: chatChannel,
+        timelineInterval: timelineInterval,
+        lastCheckInTime: timelineInterval != null ? new Date() : null
     }
 
     let insertedRelationship = await relationshipDB.insertOne(relationshipObject);
@@ -60,6 +65,52 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     return relationship; // returns the relationship object
  }
 
+ async function updateRelationshipTimeline(relationshipId, timelineInterval){
+   validate.checkArgLength(arguments, 2);
+   relationshipId = validate.convertID(relationshipId);
+
+   if (timelineInterval == null){
+      throw `Cannot update timeline with null interval`;
+   }
+
+   timelineInterval = validate.parseTimeInterval(timelineInterval);
+
+   let relationshipDB = await relationshipCollection();
+   
+   let updateObj = {
+      $set: {
+         timelineInterval: timelineInterval
+      }
+   };
+   let updated = await relationshipDB.findOneAndUpdate({ _id: relationshipId }, updateObj);
+   if (updated.value == null) throw `Could not update ${relationshipId} `;
+   let newObj = await relationshipDB.findOne({_id: relationshipId});
+   
+   return newObj; 
+ }
+
+ async function updateLastCheckin(relationshipId, lastcheckin){
+   validate.checkArgLength(2);
+   relationshipId = validate.convertID(relationshipId);
+   
+   if (!(lastcheckin instanceof Date)){
+      validate.parseCheckin(lastcheckin);
+    }
+
+    let relationshipDB = await relationshipCollection();
+
+    let updateObj = {
+       $set: {
+          lastCheckInTime: lastcheckin
+       }
+    };
+
+    let updated = await relationshipDB.findOneAndUpdate({_id: relationshipId}, updateObj);
+    if (updated.value == null) throw `Could not update ${relationshipId}`;
+    let newObj = await relationshipDB.findOne({_id: relationshipId});
+   
+    return newObj; 
+ }
  /**
   * Retrieve a relationship object given an object ID
   * @param {string} relationshipId An objectId associated with a relationship
@@ -210,5 +261,7 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     updateRelationshipStatus,
     filterRelationshipsByStatus,
     uploadfile,
-    downloadfile
+    downloadfile,
+    updateRelationshipTimeline,
+    updateLastCheckin
  }

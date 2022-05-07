@@ -91,7 +91,7 @@ async function getAllRelationships(req, res){
  * @returns void
  */
 async function postNewRelationship(req, res){
-    let menteeId, mentorId, userId;
+    let menteeId, mentorId, userId, timeline;
     try {
         userId = validate.convertID(req.params.userId);
        // validate.checkArgLength(req.body, 4);
@@ -99,6 +99,7 @@ async function postNewRelationship(req, res){
         mentorId = validate.convertID(req.body.mentorId); 
         menteeId = validate.convertID(req.body.menteeId);
         validate.checkIsEmptyString(req.body.relationshipCategory);
+        timeline = validate.parseTimeInterval(req.body.timeline);
 
         enums.categories.get(req.body.relationshipCategory); // will throw an error if the category is not in the list
     }
@@ -119,7 +120,7 @@ async function postNewRelationship(req, res){
     let relationshipObj;
     try {
         // Need to add to the userObject
-        relationshipObj = await relationships.createRelationship(req.body.relationshipDescription, mentorId, menteeId, req.body.relationshipCategory);
+        relationshipObj = await relationships.createRelationship(req.body.relationshipDescription, mentorId, menteeId, req.body.relationshipCategory, timeline);
         let added = await users.updateUserRelationships(userId, relationshipObj);
        
         //res.render('frame/request', {layout: 'profile', relationship: relationshipObj, created: true});
@@ -130,6 +131,85 @@ async function postNewRelationship(req, res){
         res.status(500).json({error:e});
     }
 };
+
+
+async function postUpdateTimeline(req, res){
+    let timeline, relationshipId, userid;
+
+    try {
+        timeline = validate.parseTimeInterval(req.body.timeline);
+        relationshipId = validate.convertID(req.params.relationshipId);
+        if (timeline == null){
+            throw `timeline cannot be null`;
+        }
+    }
+    catch(e){
+        res.status(400).json({error:e});
+        return;
+    }
+
+    try{
+        //TODO: Ensure that user is the MENTOR of the relationship
+        let response = await relationships.updateRelationshipTimeline(relationshipId, timeline);
+        res.status(200).json({ success: true, relationship: response });
+    }
+    catch(e){
+        res.status(500).json({error:e});
+    }
+}
+
+async function postLastCheckin(req, res){
+    let checkin, relationshipId, userId;
+
+    try {
+        checkin = new Date(req.body.lastCheckIn);
+        //checkin = validate.parseCheckin(req.body.lastCheckIn);
+        relationshipId = validate.convertID(req.body.relationshipId);
+        userId = validate.convertID(req.body.userId);
+
+        if (checkin == null){
+            throw `checkin cannot be null`;
+        }
+    }
+    catch(e){
+        res.status(400).json({error:e});
+        return;
+    }
+
+    try{
+        //TODO: Ensure that user is the MENTOR of the relationship
+        let response = await relationships.updateLastCheckin(relationshipId, checkin);
+        res.status(200).json({ success: true, relationship: response });
+    }
+    catch(e){
+        res.status(500).json({error:e});
+    }
+}
+
+
+
+// /**
+//  * Get the timeline for a single relationship object
+//  * @param {Object} req 
+//  * @param {Object} res 
+// async function getRelationshipTimeline(req, res){
+//     let relationshipId, userId;
+    
+//     try {
+//         relationshipId = validate.convertID(req.params.relationshipId);
+//         userId = validate.convertID(req.params.userId); //TODO update to Session user 
+//     }
+//     catch(e){
+//         res.status(400).json({error: e});
+//     }
+
+//     try{
+//         let res = await relationships.getRelationshipById(relationshipId);
+//         res.status(200)
+//     }
+
+
+// }
 
 /**
  * Get relationshipObjects filtered by status
@@ -475,11 +555,24 @@ router.route('/:userId/mentees')
 router.route('/:userId/:status')
 .get(getRelationshipByStatus);
 
+router.route('/:userId/:relationshipId$')
+.post(postUpdateTimeline);
+
+//router.route('/mentors')
+
+router.route('/:userId/:status')
+.get(getRelationshipByStatus);
+
 router.route("/:id/upload")
 .post(fileUpload);
 
 router.route("/:id/download/:filename")
 .get(fileDownload);
 
+router.route('/updateCheckin')
+.post(postLastCheckin);
+
+router.route('/interval/:relationshipId')
+.post(postUpdateTimeline);
 
 module.exports = router;
