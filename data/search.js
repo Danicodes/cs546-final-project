@@ -1,6 +1,5 @@
 const mongoCollections = require("./../config/mongoCollections");
 const validate = require('../validations/data');
-const { search } = require("../routes/chat");
 
 const usersCol = mongoCollections.users;
 const postsCol = mongoCollections.posts;

@@ -19,10 +19,9 @@ async function getSearchPage(req, res){
 async function searchUsers(req, res){
     let searchTerm;
     try {
-        searchTerm = req.body.searchTerm;
+        searchTerm = req.query.searchTerm;
         validate.checkIsEmptyString(searchTerm);
-        searchTerm = req.body.searchTerm.trim();
-        if (searchTerm.length === 0) throw `Invalid search term`;
+        searchTerm = searchTerm.trim();
     }
     catch(e) {
         res.status(400).json({error: e});
@@ -45,10 +44,9 @@ async function searchUsers(req, res){
 async function searchPosts(req, res){
     let searchTerm;
     try {
-        searchTerm = req.body.searchTerm;
+        searchTerm = req.query.searchTerm;
         validate.checkIsEmptyString(searchTerm);
-        searchTerm = req.body.searchTerm.trim();
-        if (searchTerm.length === 0) throw `Invalid search term`;
+        searchTerm = searchTerm.trim();
     }
     catch(e) {
         res.status(400).json({error: e});
@@ -72,9 +70,9 @@ router.route('/')
 .get(getSearchPage);
 
 router.route('/users')
-.post(searchUsers);
+.get(searchUsers);
 
 router.route('/posts')
-.post(searchPosts);
+.get(searchPosts);
 
 module.exports = router;

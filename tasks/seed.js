@@ -10,12 +10,12 @@ const indexSeed = require("./indexes");
  *      True cannot be used for that collection
  */
 let main = async function(){
-    let userIds = await usersSeed(true);
-    console.log("Created Users : " + userIds);
-    let postIds = await postsSeed(userIds, true);
-    console.log(postIds);
-    let relationshipsCreated = await relationships(userIds, true);
-    console.log(relationshipsCreated);
+    // let userIds = await usersSeed(true);
+    // console.log("Created Users : " + userIds);
+    // let postIds = await postsSeed(userIds, true);
+    // console.log(postIds);
+    // let relationshipsCreated = await relationships(userIds, true);
+    // console.log(relationshipsCreated);
 
     let dropped = await indexSeed.dropIndexes();
     console.log("Dropped index " + dropped.success);

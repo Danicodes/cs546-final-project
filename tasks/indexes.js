@@ -8,7 +8,7 @@ async function addIndexes(){
     let usersCollection = await getUsersCollection();
     let indexes = await usersCollection.indexes();
     if (indexes.length === 1) {
-        await usersCollection.createIndex( { searchTags: "text", username: "text", name: "text" }, { name: "userIndex" } );
+        await usersCollection.createIndex( { searchTags: "text", username: "text", name: "text", mentorBio: "text", menteeBio: "text" }, { name: "userIndex" } );
     }
 
     let postsCollection = await getPostsCollection();
