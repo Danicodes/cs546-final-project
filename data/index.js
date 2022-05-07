@@ -6,10 +6,10 @@ const login_users = require("./loginUsers");
 const search = require("./search");
 
 module.exports = {
-    users : users,
-    relationships: relationships,
-    posts: postsData,
-    chat: chat,
-    login_users: login_users,
-    search: search
+  users: users,
+  relationships: relationships,
+  posts: postsData,
+  chat: chat,
+  login_users: login_users,
+  search: search,
 };

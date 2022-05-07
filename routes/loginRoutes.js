@@ -9,6 +9,7 @@ router.get("/", async (req, res) => {
   if (!req.session.login) {
     return res.render("frames/login", { title: "Login" });
   }
+  res.redirect("/About");
   res.redirect(HOME_PAGE_URL);
 });
 
@@ -17,6 +18,7 @@ router.get("/signup", async (req, res) => {
   if (!req.session.login) {
     return res.render("frames/signup", { title: "Signup" });
   }
+  res.redirect("/About");
   res.redirect(HOME_PAGE_URL);
 });
 
@@ -62,6 +64,7 @@ router.post("/login", async (req, res) => {
     let result = await login_users.checkUser(username, password);
     req.session.login = result;
     req.session.username = username;
+    res.redirect("/About");
     res.redirect("/");
   } catch (e) {
     if (e.code) {
@@ -76,8 +79,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/private", async (req, res) => {
-  res.render("frames/private", {
+router.get("/About", async (req, res) => {
+  res.render("frames/About", {
     username: req.session.username,
     title: "Private Page",
   });
