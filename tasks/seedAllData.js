@@ -299,7 +299,215 @@ async function seedUsers(){
 
 // Seeds relationships, chats, and workspaces
 async function seedRelationships(){
-    // Implement
+    const usersCollection = await usersCol();
+    const relationshipsCollection = await relationshipsCol();
+    //const workspacesCollection = await workspacesCol();
+    const chatsCollection = await chatsCol();
+
+    // Get users
+    const user1 = await usersCollection.findOne({"name": "General Tso"});
+    if(!user1) throw "Could not get user 1 when seeding relationships.";
+    let user1id = user1["_id"];
+    const user2 = await usersCollection.findOne({"name": "Bob Ross"});
+    if(!user2) throw "Could not get user 2 when seeding relationships.";
+    let user2id = user2["_id"];
+    const user3 = await usersCollection.findOne({"name": "Johnny Rocket"});
+    if(!user3) throw "Could not get user 3 when seeding relationships.";
+    let user3id = user3["_id"];
+    const user4 = await usersCollection.findOne({"name": "Chuck Cheese"});
+    if(!user4) throw "Could not get user 4 when seeding relationships.";
+    let user4id = user4["_id"];
+    const user5 = await usersCollection.findOne({"name": "Red Digit"});
+    if(!user5) throw "Could not get user 5 when seeding relationships.";
+    let user5id = user5["_id"];
+    //const user6 = await usersCollection.findOne({"name": "Lloyd Beige"});
+    //if(!user6) throw "Could not get user 6 when seeding relationships.";
+    //let user6id = user6["_id"];
+    const user7 = await usersCollection.findOne({"name": "Cooking Noob"});
+    if(!user7) throw "Could not get user 7 when seeding relationships.";
+    let user7id = user7["_id"];
+    const user8 = await usersCollection.findOne({"name": "Painting Newbie"});
+    if(!user8) throw "Could not get user 8 when seeding relationships.";
+    let user8id = user8["_id"];
+    const user9 = await usersCollection.findOne({"name": "Shake Beginner"});
+    if(!user9) throw "Could not get user 9 when seeding relationships.";
+    let user9id = user9["_id"];
+    const user10 = await usersCollection.findOne({"name": "Slots Addict"});
+    if(!user10) throw "Could not get user 10 when seeding relationships.";
+    let user10id = user10["_id"];
+    const user11 = await usersCollection.findOne({"name": "Gaming Enthusiast"});
+    if(!user11) throw "Could not get user 11 when seeding relationships.";
+    let user11id = user11["_id"];
+    const user12 = await usersCollection.findOne({"name": "Art Fan"});
+    if(!user12) throw "Could not get user 12 when seeding relationships.";
+    let user12id = user12["_id"];
+    //const user13 = await usersCollection.findOne({"name": "Sports Fan"});
+    //if(!user13) throw "Could not get user 13 when seeding relationships.";
+    //let user13id = user13["_id"];
+    //const user14 = await usersCollection.findOne({"name": "Grandma Basketweaver"});
+    //if(!user14) throw "Could not get user 14 when seeding relationships.";
+    //let user14id = user14["_id"];
+    //const user15 = await usersCollection.findOne({"name": "Internet Explorer"});
+    //if(!user15) throw "Could not get user 15 when seeding relationships.";
+    //let user15id = user15["_id"];
+    const user16 = await usersCollection.findOne({"name": "Shake Drinker"});
+    if(!user16) throw "Could not get user 16 when seeding relationships.";
+    let user16id = user16["_id"];
+    const user17 = await usersCollection.findOne({"name": "Magic Paintbrush"});
+    if(!user17) throw "Could not get user 17 when seeding relationships.";
+    let user17id = user17["_id"];
+    const user18 = await usersCollection.findOne({"name": "Mario Mario"});
+    if(!user18) throw "Could not get user 18 when seeding relationships.";
+    let user18id = user18["_id"];
+    const user19 = await usersCollection.findOne({"name": "Colonel Sanders"});
+    if(!user19) throw "Could not get user 19 when seeding relationships.";
+    let user19id = user19["_id"];
+    //const user20 = await usersCollection.findOne({"name": "King Hippo"});
+    //if(!user20) throw "Could not get user 20 when seeding relationships.";
+    //let user20id = user20["_id"];
+
+
+    // Relationship 1: 1->7 PENDING
+    let chat1 = {
+        "messages": [
+            {
+                "author": user7id,
+                "message": "I would like to learn your ways of cooking chicken with your special sauce.",
+                "Datetime": new Date()
+            },
+            {
+                "author": user7id,
+                "message": "Please?",
+                "Datetime": new Date()
+            }
+        ]
+    }
+    let relationship1 = {
+        "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
+        "mentor": user1id,
+        "mentor": user7id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "PENDING",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 2: 2->8 ACTIVE
+    let chat2 = {
+        "messages": []
+    }
+    let relationship2 = {
+        "relationshipDescription": "A newbie at painting is learning from Bob Ross.",
+        "mentor": user2id,
+        "mentor": user8id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "ACTIVE",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 3: 3->9 REJECTED
+    let chat3 = {
+        "messages": []
+    }
+    let relationship3 = {
+        "relationshipDescription": "Some kid wants to learn how to make better shakes from Johnny Rocket.",
+        "mentor": user3id,
+        "mentor": user9id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "REJECTED",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 4: 4->10 COMPLETED
+    let chat4 = {
+        "messages": []
+    }
+    let relationship4 = {
+        "relationshipDescription": "A slots addict became more addicted to gambling after Chuck E Cheese apparently taught him how to win.",
+        "mentor": user4id,
+        "mentor": user10id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "COMPLETED",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 5: 5->11 PENDING
+    let chat5 = {
+        "messages": []
+    }
+    let relationship5 = {
+        "relationshipDescription": "A gaming enthusiast wants to learn how to make their own game from an experienced developer.",
+        "mentor": user5id,
+        "mentor": user11id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "PENDING",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 6: 2->12 ACTIVE
+    let chat6 = {
+        "messages": []
+    }
+    let relationship6 = {
+        "relationshipDescription": "An art fan is learning how to paint from Bob Ross",
+        "mentor": user2id,
+        "mentor": user12id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "ACTIVE",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 7: 3->16 ACTIVE
+    let chat7 = {
+        "messages": []
+    }
+    let relationship7 = {
+        "relationshipDescription": "A shake drinker is learning how to make better shakes from Johnny Rocket.",
+        "mentor": user3id,
+        "mentor": user16id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "ACTIVE",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 8: 2->17 REJECTED
+    let chat8 = {
+        "messages": []
+    }
+    let relationship8 = {
+        "relationshipDescription": "Bob Ross couldn't bear to teach a literal paintbrush how to paint better.",
+        "mentor": user2id,
+        "mentor": user17id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "REJECTED",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 9: 2->18 COMPLETED
+    let chat9 = {
+        "messages": []
+    }
+    let relationship9 = {
+        "relationshipDescription": "Super Mario learned how to paint from Bob Ross, then starred in Mario Artist.",
+        "mentor": user2id,
+        "mentor": user18id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "COMPLETED",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
+    // Relationship 10: 1->19 ACTIVE
+    let chat10 = {
+        "messages": []
+    }
+    let relationship10 = {
+        "relationshipDescription": "Colonel Sanders is learning new techniques in chicken cooking from General Tso.",
+        "mentor": user1id,
+        "mentor": user19id,
+        "workspace": new ObjectId(), // PLACEHOLDER
+        "status": "ACTIVE",
+        "createdOn": new Date(),
+        "updatedOn": new Date(),
+    }
 }
 
 // Seeds posts
