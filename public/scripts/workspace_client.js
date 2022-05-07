@@ -4,6 +4,7 @@
 let mentorButton = document.getElementsByClassName('mentor-workspace');
 let menteeButton = document.getElementsByClassName('mentee-workspace');
 
+// async shouldn't work here I think this should be removed
 async function getWorkSpace(relationshipId){
     let relationship = await $.getJSON(`/workspaces/relationships/${relationshipId}`);
     return relationship;
@@ -37,10 +38,23 @@ console.log("AJAX HAPPENS HERE");
         
         $.getJSON(getMentorEndpoint).then(function(res) {
             let relationships = res.relationships;
-        
+            
             for (let mentorRel of relationships){
-                let element = document.createElement('li');
-                element.innerHTML = `<a href="/workspaces/relationships/${mentorRel._id}">${mentorRel.mentor.name}</a>`;
+                let element = $("<li></li>");
+                //element.classList.add(`workspace-notification-${mentorRel.mentor._id}`);
+                element.append($(`<a href="/workspaces/relationships/${mentorRel.mentee}/${mentorRel._id}">${mentorRel.mentor.name}</a>`));
+                let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${mentorRel.mentor._id}\"/>
+                                            <label for=\"workspace-notification-${mentorRel.mentor._id}\">
+                                                <i class=\"fas fa-circle\"></i>
+                                            </label>`);
+                
+                if (mentorRel.lastCheckInTime && (Date.now() > Date.parse(mentorRel.lastCheckInTime))){
+                    notificationElement.show();
+                }
+                else {
+                    notificationElement.hide();
+                }
+                element.append(notificationElement);
                 bindDisplayWorkspaceEvent(element);
                 mentorUl.append(element);
             }
@@ -56,8 +70,20 @@ console.log("AJAX HAPPENS HERE");
             let relationships = res.relationships;
 
             for (let menteeRel of relationships){
-                let element = document.createElement('li');
-                element.innerHTML = `<a href="/workspaces/relationships/${menteeRel._id}">${menteeRel.mentee.name}</a>`;
+                let element = $("<li></li>"); //document.createElement('li');
+                //element.classList.add(`workspace-notification-${menteeRel.mentee._id}`);
+                element.append($(`<a href="/workspaces/relationships/${menteeRel.mentor}/${menteeRel._id}">${menteeRel.mentee.name}</a>`));
+                let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${menteeRel.mentee._id}\"/>
+                                            <label for=\"workspace-notification-${menteeRel.mentee._id}\">
+                                                <i class=\"fas fa-circle\"></i>
+                                            </label>`);
+                if (menteeRel.lastCheckInTime && (Date.now() > (Date.parse(menteeRel.lastCheckInTime) - ONE_MINUTE))){
+                    notificationElement.show();
+                }
+                else {
+                    notificationElement.hide();
+                }
+                element.append(notificationElement);
                 bindDisplayWorkspaceEvent(element);
                 menteeUl.append(element);
             }
@@ -120,7 +146,7 @@ console.log("AJAX HAPPENS HERE");
         }
 
         singleWorkspaceDiv.append(chatWindow);
-        singleWorkspaceDiv.append(workspaceWindow);
+        singleWorkspaceDiv.append(fileWindow);
     }
 
     function getWorkSpaceData(url, callback) {
@@ -135,21 +161,26 @@ console.log("AJAX HAPPENS HERE");
             workspaceDiv.hide(); // this should hide the relationshipsDiv as well
             singleWorkspaceDiv.show();
 
-            let userID = window.location.pathname.match(/[\w\d]{1,}$/)[0];
+            let userID = window.location.pathname.match(/[\w\d]{1,}$/)[0]; //fix this
             let backtoall = `<a href="/workspaces/${userID}">Back to all workspaces</a>`;
             singleWorkspaceDiv.append(backtoall); // Add back to all workspaces/relationships
             
-
-            let h2 = $(`<h2 class='selected-user'>${this.innerHTML}</h2>`); // User's name
+            // this passes a NODE element so dom manipulation here is fine
+            let h2 = $(`<h2 class='selected-user'>${this.innerHTML}</h2>`); // User's name 
             singleWorkspaceDiv.append(h2);
 
-            var currentLink = $(this).attr("href"); // workspaces/relationships/:relationshipID
+            var currentLink = this.getAttribute("href"); // workspaces/relationships/:relationshipID
             
             // Do things to display a single workspace
             let res = getWorkSpaceData(currentLink, getWorkSpaceDataCallback);
 
+            $('.workspace-content-placeholder').hide(); // Hide the placeholder class
+            $(listItem).children('input:not(:checked)').hide(); // hide notification when pressed
+
             // TODO: Display chat
             // TODO: Display files
+
+            // TODO if parent clicked and notif is visible hide the notif
 
         });
     }
