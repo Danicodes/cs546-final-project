@@ -4,10 +4,15 @@
 let mentorButton = document.getElementsByClassName('mentor-workspace');
 let menteeButton = document.getElementsByClassName('mentee-workspace');
 
-// async shouldn't work here I think this should be removed
-async function getWorkSpace(relationshipId){
-    let relationship = await $.getJSON(`/workspaces/relationships/${relationshipId}`);
-    return relationship;
+
+function showPendingDetails(item){
+
+    //INSIDE workspace details for PENDING users - show the accept or reject function
+    $(item).children('a').on('click', function(event){
+        event.preventDefault();
+
+        // Instead of going to a user's profile we should show the workspace
+    });
 }
 
 console.log("AJAX HAPPENS HERE");
@@ -42,13 +47,16 @@ console.log("AJAX HAPPENS HERE");
             for (let mentorRel of relationships){
                 let element = $("<li></li>");
                 //element.classList.add(`workspace-notification-${mentorRel.mentor._id}`);
-                element.append($(`<a href="/workspaces/relationships/${mentorRel.mentee}/${mentorRel._id}">${mentorRel.mentor.name}</a>`));
+                // Add a button for show workspace
+                // button and user profile link will be siblings in tree
+                element.append($(`<a class=\"show-workspace-link link-that-looks-like-button\" href=\"/workspaces/relationships/${mentorRel.mentee}/${mentorRel._id}\">Show workspace</a>`)); 
+                element.append($(`<a class=\"user-profile-link\" href="/profile/${mentorRel._id}">${mentorRel.mentor.name}</a>`)); // this should instead link to user profile
                 let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${mentorRel.mentor._id}\"/>
                                             <label for=\"workspace-notification-${mentorRel.mentor._id}\">
                                                 <i class=\"fas fa-circle\"></i>
                                             </label>`);
                 
-                if (mentorRel.lastCheckInTime && (Date.now() > Date.parse(mentorRel.lastCheckInTime))){
+                if (mentorRel.lastCheckInTime && (Date.now() > Date.parse(mentorRel.lastCheckInTime) - ONE_MINUTE)){
                     notificationElement.show();
                 }
                 else {
@@ -72,7 +80,8 @@ console.log("AJAX HAPPENS HERE");
             for (let menteeRel of relationships){
                 let element = $("<li></li>"); //document.createElement('li');
                 //element.classList.add(`workspace-notification-${menteeRel.mentee._id}`);
-                element.append($(`<a href="/workspaces/relationships/${menteeRel.mentor}/${menteeRel._id}">${menteeRel.mentee.name}</a>`));
+                element.append($(`<a class=\"show-workspace-link link-that-looks-like-button\" href=\"/workspaces/relationships/${menteeRel.mentor}/${menteeRel._id}\">Show workspace</a>`)); 
+                element.append($(`<a class=\"user-profile-link\" href="/profile/${menteeRel._id}">${menteeRel.mentee.name}</a>`));
                 let notificationElement  = $(`<input type=\"checkbox\" class=\"workspace-notification workspace-notification-useritem\" id=\"workspace-notification-${menteeRel.mentee._id}\"/>
                                             <label for=\"workspace-notification-${menteeRel.mentee._id}\">
                                                 <i class=\"fas fa-circle\"></i>
@@ -156,17 +165,21 @@ console.log("AJAX HAPPENS HERE");
     }
 
     function bindDisplayWorkspaceEvent(listItem) {
-        $(listItem).children('a').on('click', function(event) {
+        $(listItem).children('a.show-workspace-link').on('click', function(event) {
             event.preventDefault();
             workspaceDiv.hide(); // this should hide the relationshipsDiv as well
             singleWorkspaceDiv.show();
 
-            let userID = window.location.pathname.match(/[\w\d]{1,}$/)[0]; //fix this
-            let backtoall = `<a href="/workspaces/${userID}">Back to all workspaces</a>`;
+            let userId = getUserFromCookie();
+            if (!userId) {
+                userId = window.location.pathname.match(/[\w\d]{1,}$/)[0]; //proxy for now, will break when route changes
+            }
+
+            let backtoall = `<a href="/workspaces/${userId}">Back to all workspaces</a>`;
             singleWorkspaceDiv.append(backtoall); // Add back to all workspaces/relationships
             
             // this passes a NODE element so dom manipulation here is fine
-            let h2 = $(`<h2 class='selected-user'>${this.innerHTML}</h2>`); // User's name 
+            let h2 = $(`<h2 class='selected-user'>${$(listItem).children('a.user-profile-link')[0].innerHTML}</h2>`); // User's name 
             singleWorkspaceDiv.append(h2);
 
             var currentLink = this.getAttribute("href"); // workspaces/relationships/:relationshipID
