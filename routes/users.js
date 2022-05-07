@@ -86,4 +86,43 @@ router.put('/reset', async (req, res) => {
     }
 });
 
+router.put('/:userid/removeTag', async (req, res) => {
+    // Update user in database
+    let userId = req.params['userid'];
+    let searchTag = req.body['searchTag'];
+    try {
+        userId = validations.validateId(userId);
+        validations.validateString(searchTag);
+    } catch (e) {
+        return res.status(400).json("Error: " + e);
+    }
+    try {
+        const ret = await userData.removeTag(userId, searchTag);
+        return res.render('layouts/users', {person : ret});
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json(e);
+    }
+});
+
+router.put('/:userid/addTag', async (req, res) => {
+    let userId = req.params['userid'];
+    let searchTag = req.body['searchTag'];
+    try {
+        userId = validations.validateId(userId);
+        validations.validateString(searchTag);
+    } catch (e) {
+        return res.status(400).json("Error: " + e);
+    }
+    try {
+        const ret = await userData.addTag(userId, searchTag);
+        return res.render('layouts/users', {person : ret});
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json(e);
+    }
+});
+
 module.exports = router;
