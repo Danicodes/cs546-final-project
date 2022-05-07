@@ -28,8 +28,7 @@ const createUsers = async function createUsers(
     _id: ObjectId(), // new user object which includes firstName and lastName [input by user during signup]
     username: username,
     password: hashedPassword,
-    firstName: firstName,
-    lastName: lastName,
+    name: firstName + lastName,
   };
   let insertedUser = await userDatabase.insertOne(newUser);
   if (insertedUser.insertedCount == 0) {

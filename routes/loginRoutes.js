@@ -1,4 +1,5 @@
 const express = require("express");
+const { HOME_PAGE_URL } = require("../constants/constants");
 const router = express.Router();
 const { login_users } = require("../data/index");
 const login_validations = require("../validations/login_validations");
@@ -8,7 +9,7 @@ router.get("/", async (req, res) => {
   if (!req.session.login) {
     return res.render("frames/login", { title: "Login" });
   }
-  res.redirect("/private");
+  res.redirect(HOME_PAGE_URL);
 });
 
 router.get("/signup", async (req, res) => {
@@ -16,7 +17,7 @@ router.get("/signup", async (req, res) => {
   if (!req.session.login) {
     return res.render("frames/signup", { title: "Signup" });
   }
-  res.redirect("/private");
+  res.redirect(HOME_PAGE_URL);
 });
 
 router.post("/signup", async (req, res) => {
@@ -61,7 +62,7 @@ router.post("/login", async (req, res) => {
     let result = await login_users.checkUser(username, password);
     req.session.login = result;
     req.session.username = username;
-    res.redirect("/private");
+    res.redirect("/");
   } catch (e) {
     if (e.code) {
       res.status(e.code).render("frames/login", {
