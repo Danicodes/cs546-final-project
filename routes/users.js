@@ -8,7 +8,7 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 router.get('/:userid', async (req, res) => {
     // Show profile information
-    let userId = req.session.user.id;
+    let userId = req.params.userid;
     try {
         userId = validations.validateId(userId);
     } catch (e) {

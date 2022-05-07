@@ -6,7 +6,7 @@ const login_validations = require("../validations/login_validations");
 
 router.get("/login", async (req, res) => {
   // res.json('Login page')
-  if (!req.session.login) {
+  if (!req.session.user) {
     return res.render("frames/login", { title: "Login" });
   }
   res.redirect(HOME_PAGE_URL);
@@ -14,7 +14,7 @@ router.get("/login", async (req, res) => {
 
 router.get("/signup", async (req, res) => {
   // res.json('Signup page')
-  if (!req.session.login) {
+  if (!req.session.user) {
     return res.render("frames/signup", { title: "Signup" });
   }
   res.redirect(HOME_PAGE_URL);

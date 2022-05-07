@@ -24,22 +24,9 @@ app.use(
     secret: "dakjsfgokj34io2j3i2hjr8h0d9hadjaf!!a11213", // some difficult to decode string
     resave: false,
     saveUninitialized: true,
-    cookie: {maxAge: 120000} // two minutes
+    cookie: {maxAge: 30 * 600 * 1000} // 30 minutes
   })
 );
-
-// AUTHENTICATION MIDDLEWARE
-/*
-app.use("/private", (req, res, next) => {
-  if (!req.session.login) {
-    return res
-      .status(403)
-      .render("frames/errors", { notLogged: true, title: "403: Forbidden" });
-  }
-  // res.render('users/private')
-  next();
-});
-*/
 
 // LOGGING MIDDLEWARE
 app.use((req, res, next) => {

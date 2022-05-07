@@ -3,7 +3,7 @@ const DEFAULT_POSTS_PER_PAGE = 4;
 const MAX_FILE_SIZE = 10 * 1000 * 1000; // 10 MB
 const MIN_CHECKIN_INTERVAL = 2*1000; // 2 seconds in ms
 const MAX_CHECKIN_INTERVAL = 864000*1000; // 10 days in ms
-const HOME_PAGE_URL = "/private";
+const HOME_PAGE_URL = "/posts/html";
 const RESTRICTED_PATHS_REGEX = /^\/(?!login|signup|\/).*$/; // For use in auth middleware, check any route that is not /login or signup
 
 module.exports = {

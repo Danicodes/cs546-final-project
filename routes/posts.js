@@ -123,9 +123,7 @@ let likeAPost = async function(req, res) {
  *          in case of update failure (500)
  */
  let reportAPost = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let userId = req.query.user;
+    let userId = req.session.user.id;
     let postId = req.params.id;
     try{
         postId = validations.validateId(postId, "PostId");
@@ -151,9 +149,7 @@ let likeAPost = async function(req, res) {
  *          in case of update failure (500)
  */
  let disLikeAPost = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let userId = req.query.user;
+    let userId = req.session.user.id;
     let postId = req.params.id;
     try{
         postId = validations.validateId(postId, "PostId");
