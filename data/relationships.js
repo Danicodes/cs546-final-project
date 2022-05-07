@@ -187,7 +187,7 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
  async function filterRelationshipsByStatus(relationshipList, statusFilter){
     validate.checkArgLength(arguments, 2);
     relationshipList.map((relationshipId) => {
-         relationshipId = validate.convertID(relationshipId);
+         return validate.convertID(relationshipId);
     });
 
     statusFilter = status.get(statusFilter);

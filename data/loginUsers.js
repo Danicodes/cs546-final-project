@@ -34,7 +34,8 @@ const createUsers = async function createUsers(
   if (insertedUser.insertedCount == 0) {
     throw { code: 500, error: "Unable to create new user" };
   }
-  return { insertedUser: true };
+  newUser._id = newUser._id.toString();
+  return { insertedUser: true, insertedId: insertedUser.insertedId, user: newUser };
 };
 
 // Check User function
@@ -54,7 +55,7 @@ const checkUser = async function checkUser(username, password) {
   if (!passMatch) {
     throw { code: 400, error: `Either the username or password is invalid` };
   }
-  return { authenticated: true };
+  return { authenticated: true, user: getUser };
 };
 
 module.exports = {

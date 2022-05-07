@@ -146,7 +146,7 @@ async function updateUserRelationships(userId, relationshipObj){
     if (mentor == null || mentee == null) throw `Error: Could not find user ${mentor} or ${mentee}`;
     mentor.menteeRelationships.push(relationshipObj._id);
     mentee.mentorRelationships.push(relationshipObj._id);
-
+    // TODO : ADD TO SET
     let setMentorObj = {
         $set: {
             menteeRelationships: mentor.menteeRelationships
@@ -167,14 +167,14 @@ async function updateUserRelationships(userId, relationshipObj){
     
     userId = validate.convertID(userId);
     if (userId.toString() === mentorId.toString()){
-        updatedMentor._id = updatedMentor._id.toString();
-        delete updatedMentor.password;
-        return updatedMentor;
+        updatedMentor.value._id = updatedMentor.value._id.toString();
+        delete updatedMentor.value.password;
+        return updatedMentor.value;
     }
     else {
-        updatedMentee._id = updatedMentee._id.toString();
-        delete updatedMentee.password;
-        return updatedMentee;
+        updatedMentee.value._id = updatedMentee.value._id.toString();
+        delete updatedMentee.value.password;
+        return updatedMentee.value;
     }
 }
 

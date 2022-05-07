@@ -16,9 +16,8 @@ const UnprocessibleRequest = require("../errors/UnprocessibleRequest");
  *          in case of any other issue 
  */
 let addPost = async function(req, res) {
-    let {author, visibility, content, searchTags} = req.body;
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
+    let {visibility, content, searchTags} = req.body;
+    let author = req.session.user.id;
     try {
         // Validations of the properties
         author = validations.validateId(author, "author");
@@ -41,7 +40,7 @@ let addPost = async function(req, res) {
 
 
 /**
- * Returns the list of all pages (paginated) for the feed page of the user
+ * Returns the list of all posts (paginated) for the feed page of the user
  * @param {Request} req 
  * @param {Response} res 
  * @returns in case of success (200) - Returns the list of Posts
@@ -72,11 +71,9 @@ let getPosts = async function(req, res) {
  *          in case of update failure (500)
  */
 let getPostsByUser = async function(req, res) {
-    // TODO: get the author from expression-session instead of query param
-    // let userId = req.session.user;
-    let userId = req.params.id;
+    let userId = req.session.user.id;
     try {
-        userId = validations.validateId(userId);
+        userId = validations.validateId(userId, "User ID");
     } catch (e) {
         return res.status(400).json("Error: " + e);     // Failed in validation
     }
@@ -99,9 +96,7 @@ let getPostsByUser = async function(req, res) {
  *          in case of update failure (500)
  */
 let likeAPost = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let userId = req.query.user;
+    let userId = req.session.user.id;
     let postId = req.params.id;
     try{
         postId = validations.validateId(postId, "PostId");
@@ -128,9 +123,7 @@ let likeAPost = async function(req, res) {
  *          in case of update failure (500)
  */
  let reportAPost = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let userId = req.query.user;
+    let userId = req.session.user.id;
     let postId = req.params.id;
     try{
         postId = validations.validateId(postId, "PostId");
@@ -156,9 +149,7 @@ let likeAPost = async function(req, res) {
  *          in case of update failure (500)
  */
  let disLikeAPost = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let userId = req.query.user;
+    let userId = req.session.user.id;
     let postId = req.params.id;
     try{
         postId = validations.validateId(postId, "PostId");
@@ -186,9 +177,7 @@ let likeAPost = async function(req, res) {
  *          in case of any other Issue (500)
  */
 let addComment = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let author = req.query.user;
+    let author = req.session.user.id;
     let postId = req.params.id;
     let message = req.body.message;
     
@@ -246,7 +235,7 @@ let deleteComments = async function(req, res) {
 router.route("/html")
     .get(getPostsPage);
 
-router.route("/user/:id")
+router.route("/user")
     .get(getPostsByUser);
 
 router.route("/:id/like")

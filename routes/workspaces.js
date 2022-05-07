@@ -110,7 +110,8 @@ async function getWorkspaceRelationship(req, res){
         otherUser = await users.getPersonById(otherUser);
 
         //res.render('partials/relationships', 
-        res.status(200).json({
+        res.cookie('selected_relationship', relationshipObject._id.toString())
+        .status(200).json({
                             layout: 'workspaces', 
                             relationship: relationshipObject,
                             user: otherUser,
