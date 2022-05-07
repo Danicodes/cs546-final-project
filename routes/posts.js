@@ -5,6 +5,7 @@ const postsData = data.posts;
 const validations = require("../validations/validations");
 const {ObjectId} = require("mongodb");
 const constants = require("../constants/constants");
+const UnprocessibleRequest = require("../errors/UnprocessibleRequest");
 
 /**
  * Creates a new Post in the database under the user logged into session
@@ -47,27 +48,15 @@ let addPost = async function(req, res) {
  *          in case of invalid parameters (400) - pageNo and limit (optional)
  */
 let getPostsPage = async function(req, res) {
-    return res.status(200).render("frames/feed", {pageTitle: "Feed Page"});
+    return res.status(200).render("frames/feed", {pageTitle: "Feed Page", userSessionId: "6274526c073570c18813243f"}); // TODO: From Session
 };
 
 let getPosts = async function(req, res) {
+    // let sessionUserId = req.session.user.id;
+    let sessionUserId = "6274526c073570c188132441";
     try{
-        let pageNo = req.query.pageNo;
-        let limit = req.query.limit;
-
-        // Assign the parameters to default values if not provided 
-        if(pageNo == null) pageNo = constants.DEFAULT_PAGE_NO;
-        if(limit == null) limit = constants.DEFAULT_POSTS_PER_PAGE;
-
-        // Validate and parse the query parameter to Number
-        pageNo = validations.validateNumber(pageNo, "pageNo");
-        limit = validations.validateNumber(limit, "limit");
-
-        let posts = await postsData.getPosts(pageNo, limit);
-        if(posts.length === 0)
-            return res.status(200).json("No Posts available on this page");
-        else 
-            return res.status(200).json(posts);
+        let posts = await postsData.getPosts(sessionUserId);
+        return res.status(200).json(posts);
     } catch(e) {
         return res.status(400).json("getAllPosts - Error: " + e);
     }
@@ -125,6 +114,65 @@ let likeAPost = async function(req, res) {
         return res.status(200).json(likes); 
     } catch(e){
         return res.status(500).json(`likeAPost - Error: ${e}`);
+    }
+};
+
+
+
+/**
+ * Report a post 
+ * @param {Request} req 
+ * @param {Response} res 
+ * @returns in case of success (200) - The number of reports does this post have
+ *          in case of validation failure (400)
+ *          in case of update failure (500)
+ */
+ let reportAPost = async function(req, res) {
+    // TODO: get the author from expression-session instead of body
+    // let userId = req.session.user;
+    let userId = req.query.user;
+    let postId = req.params.id;
+    try{
+        postId = validations.validateId(postId, "PostId");
+    } catch(e) {
+        return res.status(400).json(`likeAPost - Error: PostId provided in the URL - ${req.params.id} is not valid - ${e}`);
+    }
+    
+    try{
+        let reports = await postsData.reportAPost(userId, postId);
+        return res.status(200).json(reports); 
+    } catch(e){
+        return res.status(500).json(`reportAPost - Error: ${e}`);
+    }
+};
+
+
+/**
+ * Report a post 
+ * @param {Request} req 
+ * @param {Response} res 
+ * @returns in case of success (200) - The number of reports does this post have
+ *          in case of validation failure (400)
+ *          in case of update failure (500)
+ */
+ let disLikeAPost = async function(req, res) {
+    // TODO: get the author from expression-session instead of body
+    // let userId = req.session.user;
+    let userId = req.query.user;
+    let postId = req.params.id;
+    try{
+        postId = validations.validateId(postId, "PostId");
+    } catch(e) {
+        return res.status(400).json(`disLikeAPost - Error: PostId provided in the URL - ${req.params.id} is not valid - ${e}`);
+    }
+    
+    try{
+        let disLikes = await postsData.disLikeAPost(userId, postId);
+        return res.status(200).json(disLikes); 
+    } catch(e){
+        if(e instanceof UnprocessibleRequest)
+            return res.status(e.status).json({error: e.message});
+        return res.status(500).json(`disLikeAPost - Error: ${e}`);
     }
 };
 
@@ -198,18 +246,24 @@ let deleteComments = async function(req, res) {
 router.route("/html")
     .get(getPostsPage);
 
-router.route("/")
-.post(addPost)
-.get(getPosts);
-
 router.route("/user/:id")
     .get(getPostsByUser);
 
 router.route("/:id/like")
-.post(likeAPost);
+    .post(likeAPost);
 
+router.route("/:id/report")
+    .post(reportAPost);
+
+router.route("/:id/dislike")
+    .post(disLikeAPost);
+    
 router.route("/:id/comments")
     .post(addComment)
     .get(getComments);
-
+    
+router.route("/")
+    .post(addPost)
+    .get(getPosts);
+    
 module.exports = router;
