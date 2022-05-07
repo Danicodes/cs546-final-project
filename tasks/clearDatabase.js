@@ -5,7 +5,7 @@
 /*
 Functions
  - clearUsers
- - clearRelationships (also clears chats and workspaces)
+ - clearRelationships (also clears chats)
  - clearPosts
  - clearAll (runs other clear functions)
 */
@@ -16,7 +16,6 @@ const {ObjectId} = require("mongodb");
 const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
-//const workspacesCol = mongoCollections.workspaces;
 const postsCol = mongoCollections.posts;
 
 
@@ -38,7 +37,7 @@ async function clearUsers(){
     }
 }
 
-// Clears relationships, chats, and workspaces from database
+// Clears relationships, and chats from database
 async function clearRelationships(){
     // Clear relationships from database
     let relationshipsArray = [];
@@ -69,8 +68,7 @@ async function clearRelationships(){
             console.log("clearChats: Could not delete a chat.");
         }
     }
-    // Clear workspaces from database - DO THIS LATER
-} // IMPLEMENT WORKSPACES CLEARING ONCE THAT IS DONE
+}
 
 // Clears posts from database
 async function clearPosts(){
@@ -100,11 +98,11 @@ async function clearAll(){
         console.log(e);
     }
     try{
-        console.log("Clearing relationships, chats, and workspaces...");
+        console.log("Clearing relationships...");
         await clearRelationships();
-        console.log("Done clearing relationships, chats, and workspaces.");
+        console.log("Done clearing relationships.");
     } catch (e) {
-        console.log("Something went wrong with clearing relationships, chats, and workspaces. Error below:");
+        console.log("Something went wrong with clearing relationships. Error below:");
         console.log(e);
     }
     try{

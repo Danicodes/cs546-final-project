@@ -6,6 +6,10 @@ class Category {
     static Writing = new Category("Writing");
     static GraphicDesign = new Category("Graphic Design");
     static HR = new Category("Human Resources");
+    static Cooking = new Category("Cooking");
+    static Painting = new Category("Painting");
+    static Gambling = new Category("Gambling");
+    static GameDesign = new Category("Game Design");
 
     constructor(name){
         this.name = name;
@@ -23,6 +27,14 @@ class Category {
                 return this.GraphicDesign;
             case "hr":
                 return this.HR;
+            case "cooking":
+                return this.Cooking;
+            case "painting":
+                return this.Painting;
+            case "gambling":
+                return this.Gambling;
+            case "game design":
+                return this.GameDesign;
             default:
                 throw `Error: Undefined Category`;
         }

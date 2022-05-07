@@ -8,11 +8,10 @@ Database Object Types and target amounts
  - Relationships: 10
  - Chats: 10
  - Posts: 25
- - Workspaces: 10
 
 Functions
  - seedUsers
- - seedRelationships (also seeds chats and workspaces)
+ - seedRelationships (also seeds chats)
  - seedPosts
  - seedAllData (runs other seed functions)
 */
@@ -23,8 +22,8 @@ const {ObjectId} = require("mongodb");
 const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
-//const workspacesCol = mongoCollections.workspaces;
 const postsCol = mongoCollections.posts;
+const Category = require('../enums/categories');
 
 
 
@@ -337,11 +336,10 @@ async function seedUsers(){
     if(!insertInfo20.acknowledged || !insertInfo20.insertedId) throw "Could not insert user 20";
 }
 
-// Seeds relationships, chats, and workspaces
+// Seeds relationships and chats
 async function seedRelationships(){
     const usersCollection = await usersCol();
     const relationshipsCollection = await relationshipsCol();
-    //const workspacesCollection = await workspacesCol();
     const chatsCollection = await chatsCol();
 
     // Get users
@@ -423,7 +421,9 @@ async function seedRelationships(){
         ]
     }
     const chatInfo1 = await chatsCollection.insertOne(chat1);
-    if(!chatInfo1 || chatInfo1.insertedId) throw "Could not insert chat 1 when seeding chats and relationships.";
+    //console.log("chatInfo1:"); // debug
+    //console.log(chatInfo1); // debug
+    if(!chatInfo1.acknowledged || !chatInfo1.insertedId) throw "Could not insert chat 1 when seeding chats and relationships.";
     let relationship1 = {
         "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
         "mentor": user1id,
@@ -432,10 +432,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Cooking"),
         "chatChannel": chatInfo1.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo1 = await relationshipsCollection.insertOne(relationship1);
+    if(!relInfo1.acknowledged || !relInfo1.insertedId) throw "Could not insert relationship 1 when seeding relationships";
+    const userInfo1_7 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"mentorRelationships": relInfo1.insertedId}});
+    if(!userInfo1_7.acknowledged) throw "Could not update user 1 when seeding relationships";
+    const userInfo7_1 = await usersCollection.updateOne({"_id": user7id}, {"$push": {"menteeRelationships": relInfo1.insertedId}});
+    if(!userInfo7_1.acknowledged) throw "Could not update user 7 when seeding relationships";
 
     // Relationship 2: 2->8 ACTIVE
     let chat2 = {
@@ -458,7 +465,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo2 = await chatsCollection.insertOne(chat2);
-    if(!chatInfo2 || chatInfo2.insertedId) throw "Could not insert chat 2 when seeding chats and relationships.";
+    if(!chatInfo2.acknowledged || !chatInfo2.insertedId) throw "Could not insert chat 2 when seeding chats and relationships.";
     let relationship2 = {
         "relationshipDescription": "A newbie at painting is learning from Bob Ross.",
         "mentor": user2id,
@@ -467,10 +474,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Painting"),
         "chatChannel": chatInfo2.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo2 = await relationshipsCollection.insertOne(relationship2);
+    if(!relInfo2.acknowledged || !relInfo2.insertedId) throw "Could not insert relationship 2 when seeding relationships";
+    const userInfo2_8 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo2.insertedId}});
+    if(!userInfo2_8.acknowledged) throw "Could not update user 2 when seeding relationships";
+    const userInfo8_2 = await usersCollection.updateOne({"_id": user8id}, {"$push": {"menteeRelationships": relInfo2.insertedId}});
+    if(!userInfo8_2.acknowledged) throw "Could not update user 8 when seeding relationships";
 
     // Relationship 3: 3->9 REJECTED
     let chat3 = {
@@ -508,7 +522,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo3 = await chatsCollection.insertOne(chat3);
-    if(!chatInfo3 || chatInfo3.insertedId) throw "Could not insert chat 3 when seeding chats and relationships.";
+    if(!chatInfo3.acknowledged || !chatInfo3.insertedId) throw "Could not insert chat 3 when seeding chats and relationships.";
     let relationship3 = {
         "relationshipDescription": "Some kid wants to learn how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
@@ -517,10 +531,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Cooking"),
         "chatChannel": chatInfo3.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo3 = await relationshipsCollection.insertOne(relationship3);
+    if(!relInfo3.acknowledged || !relInfo3.insertedId) throw "Could not insert relationship 3 when seeding relationships";
+    const userInfo3_9 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"mentorRelationships": relInfo3.insertedId}});
+    if(!userInfo3_9.acknowledged) throw "Could not update user 3 when seeding relationships";
+    const userInfo9_3 = await usersCollection.updateOne({"_id": user9id}, {"$push": {"menteeRelationships": relInfo3.insertedId}});
+    if(!userInfo9_3.acknowledged) throw "Could not update user 9 when seeding relationships";
 
     // Relationship 4: 4->10 COMPLETED
     let chat4 = {
@@ -563,7 +584,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo4 = await chatsCollection.insertOne(chat4);
-    if(!chatInfo4 || chatInfo4.insertedId) throw "Could not insert chat 4 when seeding chats and relationships.";
+    if(!chatInfo4.acknowledged || !chatInfo4.insertedId) throw "Could not insert chat 4 when seeding chats and relationships.";
     let relationship4 = {
         "relationshipDescription": "A slots addict became more addicted to gambling after Chuck E Cheese apparently taught him how to win.",
         "mentor": user4id,
@@ -572,10 +593,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Gambling"),
         "chatChannel": chatInfo4.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo4 = await relationshipsCollection.insertOne(relationship4);
+    if(!relInfo4.acknowledged || !relInfo4.insertedId) throw "Could not insert relationship 4 when seeding relationships";
+    const userInfo4_10 = await usersCollection.updateOne({"_id": user4id}, {"$push": {"mentorRelationships": relInfo4.insertedId}});
+    if(!userInfo4_10.acknowledged) throw "Could not update user 4 when seeding relationships";
+    const userInfo10_4 = await usersCollection.updateOne({"_id": user10id}, {"$push": {"menteeRelationships": relInfo4.insertedId}});
+    if(!userInfo10_4.acknowledged) throw "Could not update user 10 when seeding relationships";
 
     // Relationship 5: 5->11 PENDING
     let chat5 = {
@@ -588,7 +616,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo5 = await chatsCollection.insertOne(chat5);
-    if(!chatInfo5 || chatInfo5.insertedId) throw "Could not insert chat 5 when seeding chats and relationships.";
+    if(!chatInfo5.acknowledged || !chatInfo5.insertedId) throw "Could not insert chat 5 when seeding chats and relationships.";
     let relationship5 = {
         "relationshipDescription": "A gaming enthusiast wants to learn how to make their own game from an experienced developer.",
         "mentor": user5id,
@@ -597,10 +625,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Game Design"),
         "chatChannel": chatInfo5.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo5 = await relationshipsCollection.insertOne(relationship5);
+    if(!relInfo5.acknowledged || !relInfo5.insertedId) throw "Could not insert relationship 5 when seeding relationships";
+    const userInfo5_11 = await usersCollection.updateOne({"_id": user5id}, {"$push": {"mentorRelationships": relInfo5.insertedId}});
+    if(!userInfo5_11.acknowledged) throw "Could not update user 5 when seeding relationships";
+    const userInfo11_5 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"menteeRelationships": relInfo5.insertedId}});
+    if(!userInfo11_5.acknowledged) throw "Could not update user 11 when seeding relationships";
 
     // Relationship 6: 2->12 ACTIVE
     let chat6 = {
@@ -638,7 +673,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo6 = await chatsCollection.insertOne(chat6);
-    if(!chatInfo6 || chatInfo6.insertedId) throw "Could not insert chat 6 when seeding chats and relationships.";
+    if(!chatInfo6.acknowledged || !chatInfo6.insertedId) throw "Could not insert chat 6 when seeding chats and relationships.";
     let relationship6 = {
         "relationshipDescription": "An art fan is learning how to paint from Bob Ross",
         "mentor": user2id,
@@ -647,10 +682,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Painting"),
         "chatChannel": chatInfo6.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo6 = await relationshipsCollection.insertOne(relationship6);
+    if(!relInfo6.acknowledged || !relInfo6.insertedId) throw "Could not insert relationship 6 when seeding relationships";
+    const userInfo2_12 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo6.insertedId}});
+    if(!userInfo2_12.acknowledged) throw "Could not update user 2 when seeding relationships";
+    const userInfo12_2 = await usersCollection.updateOne({"_id": user12id}, {"$push": {"menteeRelationships": relInfo6.insertedId}});
+    if(!userInfo12_2.acknowledged) throw "Could not update user 12 when seeding relationships";
 
     // Relationship 7: 3->16 ACTIVE
     let chat7 = {
@@ -668,7 +710,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo7 = await chatsCollection.insertOne(chat7);
-    if(!chatInfo7 || chatInfo7.insertedId) throw "Could not insert chat 7 when seeding chats and relationships.";
+    if(!chatInfo7.acknowledged || !chatInfo7.insertedId) throw "Could not insert chat 7 when seeding chats and relationships.";
     let relationship7 = {
         "relationshipDescription": "A shake drinker is learning how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
@@ -677,17 +719,24 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Cooking"),
         "chatChannel": chatInfo7.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo7 = await relationshipsCollection.insertOne(relationship7);
+    if(!relInfo7.acknowledged || !relInfo7.insertedId) throw "Could not insert relationship 7 when seeding relationships";
+    const userInfo3_16 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"mentorRelationships": relInfo7.insertedId}});
+    if(!userInfo3_16.acknowledged) throw "Could not update user 3 when seeding relationships";
+    const userInfo16_3 = await usersCollection.updateOne({"_id": user16id}, {"$push": {"menteeRelationships": relInfo7.insertedId}});
+    if(!userInfo16_3.acknowledged) throw "Could not update user 16 when seeding relationships";
 
     // Relationship 8: 2->17 REJECTED
     let chat8 = {
         "messages": []
     }
     const chatInfo8 = await chatsCollection.insertOne(chat8);
-    if(!chatInfo8 || chatInfo8.insertedId) throw "Could not insert chat 8 when seeding chats and relationships.";
+    if(!chatInfo8.acknowledged || !chatInfo8.insertedId) throw "Could not insert chat 8 when seeding chats and relationships.";
     let relationship8 = {
         "relationshipDescription": "Bob Ross couldn't bear to teach a literal paintbrush how to paint better.",
         "mentor": user2id,
@@ -696,10 +745,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Painting"),
         "chatChannel": chatInfo8.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo8 = await relationshipsCollection.insertOne(relationship8);
+    if(!relInfo8.acknowledged || !relInfo8.insertedId) throw "Could not insert relationship 8 when seeding relationships";
+    const userInfo2_17 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo8.insertedId}});
+    if(!userInfo2_17.acknowledged) throw "Could not update user 2 when seeding relationships";
+    const userInfo17_2 = await usersCollection.updateOne({"_id": user17id}, {"$push": {"menteeRelationships": relInfo8.insertedId}});
+    if(!userInfo17_2.acknowledged) throw "Could not update user 17 when seeding relationships";
 
     // Relationship 9: 2->18 COMPLETED
     let chat9 = {
@@ -737,7 +793,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo9 = await chatsCollection.insertOne(chat9);
-    if(!chatInfo9 || chatInfo9.insertedId) throw "Could not insert chat 9 when seeding chats and relationships.";
+    if(!chatInfo9.acknowledged || !chatInfo9.insertedId) throw "Could not insert chat 9 when seeding chats and relationships.";
     let relationship9 = {
         "relationshipDescription": "Super Mario learned how to paint from Bob Ross, then starred in Mario Artist.",
         "mentor": user2id,
@@ -746,10 +802,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Painting"),
         "chatChannel": chatInfo9.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo9 = await relationshipsCollection.insertOne(relationship9);
+    if(!relInfo9.acknowledged || !relInfo9.insertedId) throw "Could not insert relationship 9 when seeding relationships";
+    const userInfo2_18 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo9.insertedId}});
+    if(!userInfo2_18.acknowledged) throw "Could not update user 2 when seeding relationships";
+    const userInfo18_2 = await usersCollection.updateOne({"_id": user18id}, {"$push": {"menteeRelationships": relInfo9.insertedId}});
+    if(!userInfo18_2.acknowledged) throw "Could not update user 18 when seeding relationships";
 
     // Relationship 10: 1->19 ACTIVE
     let chat10 = {
@@ -772,7 +835,7 @@ async function seedRelationships(){
         ]
     }
     const chatInfo10 = await chatsCollection.insertOne(chat10);
-    if(!chatInfo10 || chatInfo10.insertedId) throw "Could not insert chat 10 when seeding chats and relationships.";
+    if(!chatInfo10.acknowledged || !chatInfo10.insertedId) throw "Could not insert chat 10 when seeding chats and relationships.";
     let relationship10 = {
         "relationshipDescription": "Colonel Sanders is learning new techniques in chicken cooking from General Tso.",
         "mentor": user1id,
@@ -781,10 +844,17 @@ async function seedRelationships(){
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
+        "relationshipCategory": Category.get("Cooking"),
         "chatChannel": chatInfo10.insertedId,
         "timelineInterval": 43200000, // 12 hours
         "lastCheckInTime": new Date()
     }
+    const relInfo10 = await relationshipsCollection.insertOne(relationship10);
+    if(!relInfo10.acknowledged || !relInfo10.insertedId) throw "Could not insert relationship 10 when seeding relationships";
+    const userInfo1_19 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"mentorRelationships": relInfo10.insertedId}});
+    if(!userInfo1_19.acknowledged) throw "Could not update user 1 when seeding relationships";
+    const userInfo19_1 = await usersCollection.updateOne({"_id": user19id}, {"$push": {"menteeRelationships": relInfo10.insertedId}});
+    if(!userInfo19_1.acknowledged) throw "Could not update user 19 when seeding relationships";
 }
 
 // Seeds posts
@@ -802,9 +872,9 @@ async function seedAllData(){
         throw e;
     }
     try{
-        console.log("Seeding relationships, chats, and workspaces...");
+        console.log("Seeding relationships and chats...");
         await seedRelationships();
-        console.log("Done seeding relationships, chats, and workspaces...");
+        console.log("Done seeding relationships and chats...");
     } catch (e) {
         throw e;
     }
