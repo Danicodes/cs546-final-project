@@ -17,16 +17,15 @@ async function getPersonById(id){
     return person;
 }
 
-async function updateUser(id, name, bio, age, searchTags){
+async function updateUser(id, name, bio, age){
     validations.validateId(id);
     currentuser = getPersonById(id);
-    validate.checks(name, bio, age, searchTags);
+    validate.checks(name, bio, age);
     // I need to get the password/username for the given id to put in updateduser here
     const updateduser = {
         name : name,
         bio : bio,
-        age : age,
-        searchTags: searchTags,
+        age : age
     };
     let userCollection = await users();
     const updated = await userCollection.updateOne(
@@ -56,6 +55,57 @@ async function updatePassword(id, password){
         throw "Error: could not update password."
     }
     const ret = await userCollection.findOne({_id : ObjectId(id)});
+    ret._id = ret._id.toString();
+    return ret;
+}
+
+async function addTag(userId, searchTag){
+    validations.validateId(userId);
+    let person = await getPersonById(userId);
+    let searchTags = person['searchTags'];
+    temp = [];
+    for (let i = 0; i < searchTags.length; i++){
+        temp.push(searchTags[i]);
+    }
+    temp.push(searchTag);
+    const updateduser = {
+        searchTags : temp
+    };
+    let userCollection = await users();
+    const updated = await userCollection.updateOne(
+        { _id : ObjectId(userId) },
+        {$set : updateduser}
+        );
+    if (updated.modifiedCount == 0){
+        throw "Error: nothing to be updated."
+    }
+    const ret = await userCollection.findOne({_id : ObjectId(userId)});
+    ret._id = ret._id.toString();
+    return ret;
+}
+
+async function removeTag(userId, searchTag){
+    validations.validateId(userId);
+    let person = await getPersonById(userId);
+    let searchTags = person['searchTags'];
+    let temp = [];
+    for (let i = 0; i<searchTags.length; i++){
+        if (searchTag != searchTags[i]){
+            temp.push(searchTags[i]);
+        }
+    }
+    const updateduser = {
+        searchTags : temp
+    };
+    let userCollection = await users();
+    const updated = await userCollection.updateOne(
+        { _id : ObjectId(userId) },
+        {$set : updateduser}
+        );
+    if (updated.modifiedCount == 0){
+        throw "Error: nothing to be updated."
+    }
+    const ret = await userCollection.findOne({_id : ObjectId(userId)});
     ret._id = ret._id.toString();
     return ret;
 }
@@ -231,5 +281,7 @@ module.exports = {
     getMentorList: getMentorList,
     getMenteeList: getMenteeList,
     getUserRelationships: getUserRelationships,
-    updateUserRelationships: updateUserRelationships
+    updateUserRelationships: updateUserRelationships,
+    removeTag,
+    addTag
 }

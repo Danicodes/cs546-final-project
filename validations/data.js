@@ -50,7 +50,7 @@ const passCheck = async function passCheck(userPass, password1, password2, newpa
         throw "Error: The password is the same as the one in the database."
     }
 }
-const checks = function checks(name, bio, age, searchTags){
+const checks = function checks(name, bio, age){
     if (!(typeof name == 'string') || (name == '')){
         throw "Error: name needs to be a non-zero string";
     }
@@ -59,18 +59,6 @@ const checks = function checks(name, bio, age, searchTags){
     }
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
         throw "Error: age must be a number between 0 and 100";
-    }
-    if (!Array.isArray(searchTags)){
-        throw "Error:searchTags must be an array of strings";
-    }
-    let flag = false;
-    for (let i = 0; i < searchTags.length; i++){
-        if (typeof searchTags[i] != 'string'){
-            flag = true;
-        }
-    }
-    if (flag){
-        throw "Error: searchTags must contain strings";
     }
 }
 

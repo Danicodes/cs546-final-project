@@ -1,18 +1,23 @@
 <h1>User Profile</h1>
 <div>
     <form action="/users/{{person._id}}?_method=PUT" method="POST" id="edit-user">
-        <label>Username:
-            <input type="text" name="username" value={{person.username}} readonly>
-        </label>
+            <label>Username:
+                <input type="text" name="username" value={{person.username}} readonly>
+            </label>
             <label>Age:
-            <input type="number" name="age" value={{person.age}}>
-        </label>
-        <label>Name:
-            <input type="text" name="name" value={{person.name}}>
-        </label>
+                <input type="number" name="age" value={{person.age}}>
+            </label>
+            <label>Name:
+                <input type="text" name="name" value={{person.name}}>
+            </label>
             <label>Bio:
-            <input type="text" name="bio" value={{person.bio}}>
-        </label>
+                <input type="text" name="bio" value={{person.bio}}>
+            </label>
+        <button type="submit" form="edit-user">Submit</button>
+    </form>
+</div>
+<h2>Search Tags</h2>
+<div>
         Current Search Tags:
         <ul>
             {{#each person.searchTags}}
@@ -21,12 +26,23 @@
                 {{/if}}
             {{/each}}
         </ul>
+    <form action="/users/{{person._id}}/addTag?_method=PUT" method="POST" id="addTag">
+            <label>
+            Submit New Search Tag:
+                <input type="text" name="searchTag">
+            </label>
+        <button type="submit" form="addTag">Submit</button>
+    </form>
+    <form action="/users/{{person._id}}/removeTag?_method=PUT" method="POST" id="removeTag">
         <label>
-        Submit New Search Tag:
+            Remove Search Tag:
             <input type="text" name="searchTag">
         </label>
-        <button type="submit" form="edit-user">Submit</button>
+        <button type="submit" form="removeTag">Submit</button>
     </form>
+    </div>
+    <h3>Password</h3>
+    <div>
     {{#if updated}}
         Password has been updated!
     {{/if}}

@@ -30,24 +30,16 @@ router.put('/:userid', async (req, res) => {
     const name = req.body['name'];
     const bio = req.body['bio'];
     const age = req.body['age'];
-    const searchTag = req.body['searchTag'];
     let person = await userData.getPersonById(userId);
-    let finalSearchTags = []
-    for (let i = 0; i < person['searchTags'].length; i++){
-        finalSearchTags.push(person['searchTags'][i]);
-    }
-    if(searchTag){
-        finalSearchTags.push(searchTag);
-    }
     try {
         userId = validations.validateId(userId);
-        validate.checks(name, bio, parseInt(age), finalSearchTags);
+        validate.checks(name, bio, parseInt(age));
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
 
     try {
-        const ret = await userData.updateUser(userId, name, bio, parseInt(age), finalSearchTags);
+        const ret = await userData.updateUser(userId, name, bio, parseInt(age));
         return res.render('layouts/users', {person : ret});
         //return res.status(200).json(ret);
     }
@@ -59,14 +51,10 @@ router.put('/:userid', async (req, res) => {
 
 router.put('/:userid/reset', async (req, res) => {
     // Update user in database
-    console.log(req.body);
     let userId = req.params['userid'];
     const newpassword = req.body['newpassword'];
     const password1 = req.body['password1'];
     const password2 = req.body['password2'];
-    console.log(newpassword);
-    console.log(password1);
-    console.log(password2);
     const user = await userData.getPersonById(userId);
     const userPass = user['password'];
     try {
@@ -85,6 +73,45 @@ router.put('/:userid/reset', async (req, res) => {
     try {
         const ret = await userData.updatePassword(userId, newpassword);
         return res.render('layouts/users', {person : ret, updated : true});
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json(e);
+    }
+});
+
+router.put('/:userid/removeTag', async (req, res) => {
+    // Update user in database
+    let userId = req.params['userid'];
+    let searchTag = req.body['searchTag'];
+    try {
+        userId = validations.validateId(userId);
+        validations.validateString(searchTag);
+    } catch (e) {
+        return res.status(400).json("Error: " + e);
+    }
+    try {
+        const ret = await userData.removeTag(userId, searchTag);
+        return res.render('layouts/users', {person : ret});
+    }
+    catch(e){
+        console.log(e);
+        res.status(500).json(e);
+    }
+});
+
+router.put('/:userid/addTag', async (req, res) => {
+    let userId = req.params['userid'];
+    let searchTag = req.body['searchTag'];
+    try {
+        userId = validations.validateId(userId);
+        validations.validateString(searchTag);
+    } catch (e) {
+        return res.status(400).json("Error: " + e);
+    }
+    try {
+        const ret = await userData.addTag(userId, searchTag);
+        return res.render('layouts/users', {person : ret});
     }
     catch(e){
         console.log(e);
