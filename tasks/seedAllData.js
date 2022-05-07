@@ -34,222 +34,262 @@ async function seedUsers(){
     let user1 = {
         "name": "General Tso",
         "username": "GeneralTso",
-        "password": "xxxxxxxxxx",
-        "bio": "Mentor at cooking chicken in the best sauce imaginable.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 67,
         "searchTags": ["Chicken", "Sauce", "Cooking"],
         "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Not a mentee, but I used to be.",
+        "mentorBio": "Mentor at cooking chicken in the best sauce imaginable.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user2 = {
         "name": "Bob Ross",
         "username": "BobRoss",
-        "password": "xxxxxxxxxx",
-        "bio": "Let's relax with some painting.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 50,
         "searchTags": ["Painting"],
         "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Not a mentee for anything now, but I may take up something later.",
+        "mentorBio": "Let's relax with some painting.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user3 = {
         "name": "Johnny Rocket",
         "username": "JohnnyRocket",
-        "password": "xxxxxxxxxx",
-        "bio": "As long as the shakes are decent, it doesn't matter if the burgers are mediocre.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 80,
         "searchTags": ["Milkshakes", "Shakes", "Restaurant", "Fun"],
         "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function,
+        "menteeBio": "Haven't been a mentee for a long time.",
+        "mentorBio": "As long as the shakes are decent, it doesn't matter if the burgers are mediocre.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user4 = {
         "name": "Chuck Cheese",
         "username": "ChuckECheese",
-        "password": "xxxxxxxxxx",
-        "bio": "Gambling addiction? No problem! I'll teach you how to win",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 68,
         "searchTags": ["Entertainment", "Gambling", "Mouse", "Fun", "Enjoyment", "Birthday", "Party"],
         "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "No need to be a mentee when I can help others get more addicted to gambling.",
+        "mentorBio": "Gambling addiction? No problem! I'll teach you how to win",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user5 = {
         "name": "Red Digit",
         "username": "Redigit",
-        "password": "xxxxxxxxxx",
-        "bio": "Experienced game developer.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 42,
         "searchTags": ["Fun", "Enjoyment", "Development"],
         "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Not a mentee myself, but a mentee in spirit",
+        "mentorBio": "Experienced game developer.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user6 = {
         "name": "Lloyd Beige",
         "username": "Lindybeige",
-        "password": "xxxxxxxxxx",
-        "bio": "Archeologist and generally fun guy.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 35,
         "searchTags": ["Archeology", "Basketweaving"],
         "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Probably going to be a mentee in the future, but not at the moment.",
+        "mentorBio": "Archeologist and generally fun guy.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user7 = {
         "name": "Cooking Noob",
         "username": "CookingNoob",
-        "password": "xxxxxxxxxx",
-        "bio": "I want to learn about cooking.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 18,
         "searchTags": ["Chicken", "Cooking"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "I want to learn about cooking",
+        "mentorBio": "Not a mentor yet, but once I learn enough about cooking, I may teach others.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user8 = {
         "name": "Painting Newbie",
         "username": "PaintingNewbie",
-        "password": "xxxxxxxxxx",
-        "bio": "I like painting.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 26,
         "searchTags": ["Painting", "Newbie"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "I like painting.",
+        "mentorBio": "Not a mentor. I don't have skills",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user9 = {
         "name": "Shake Beginner",
         "username": "ShakeBeginner",
-        "password": "xxxxxxxxxx",
-        "bio": "One time, I tried to shake a cup of milk. It spilled.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 5,
         "searchTags": ["Milkshakes"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "One time, I tried to shake a cup of milk. It spilled.",
+        "mentorBio": "I can totally do everything",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user10 = {
         "name": "Slots Addict",
         "username": "SlotsAddict",
-        "password": "xxxxxxxxxx",
-        "bio": "I'm here to win at gambling.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 51,
         "searchTags": ["Gambling"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "I'm here to win at gambling.",
+        "mentorBio": "Some day I'll teach you all how to get rich.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user11 = {
         "name": "Gaming Enthusiast",
         "username": "GamingEnthusiast",
-        "password": "xxxxxxxxxx",
-        "bio": "Video games are my passion.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 14,
         "searchTags": ["Gaming", "Fun"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Video games are my passion.",
+        "mentorBio": "I'll get really good at games, but I'm not mentoring that",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user12 = {
         "name": "Art Fan",
         "username": "ArtFan",
-        "password": "xxxxxxxxxx",
-        "bio": "Art is great.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 34,
         "searchTags": ["Art"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Art is great.",
+        "mentorBio": "I could teach others how to be better art fans, but I wouldn't recommend that.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user13 = {
         "name": "Sports Fan",
         "username": "SportsFan",
-        "password": "xxxxxxxxxx",
-        "bio": "Sports are great! I hope someone on here is a mentor in something sports-related.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 37,
         "searchTags": ["Sports", "Football", "Soccer", "Curling"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "mentorRelations": [],
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Sports are great! I hope someone on here is a mentor in something sports-related.",
+        "mentorBio": "Is there anyone on here that wants to learn about curling?",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user14 = {
         "name": "Grandma Basketweaver",
         "username": "GrandmaBasketweaver",
-        "password": "xxxxxxxxxx",
-        "bio": "My granddaughter told me I should check this site out.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 83,
         "searchTags": ["Basketweaving"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "mentorRelations": [],
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "My granddaughter told me I should check this site out.",
+        "mentorBio": "No mentoring for me yet",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user15 = {
         "name": "Internet Explorer",
         "username": "InternetExporer",
-        "password": "xxxxxxxxxx",
-        "bio": "#Kony2012",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 21,
         "searchTags": ["Fast", "Internet", "Explorer", "Enjoyment"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "mentorRelations": [],
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "#Kony2012",
+        "mentorBio": "#Kony2012",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user16 = {
         "name": "Shake Drinker",
         "username": "ShakeDrinker",
-        "password": "xxxxxxxxxx",
-        "bio": "Glug",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 22,
         "searchTags": ["Shakes"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Glug",
+        "mentorBio": "I can teach you to chug drinks faster.",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user17 = {
         "name": "Magic Paintbrush",
         "username": "MagicPaintbrush",
-        "password": "xxxxxxxxxx",
-        "bio": "I can't wait to turn rainbow colors and assist on an adventure.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 15,
         "searchTags": ["Painting"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "I can't wait to turn rainbow colors and assist on an adventure.",
+        "mentorBio": "Who wants to turn into a literal paintbrush?",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user18 = {
         "name": "Mario Mario",
         "username": "SuperMario",
-        "password": "xxxxxxxxxx",
-        "bio": "It's a-me.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 36,
         "searchTags": ["Mario", "SuperMario"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "It's a-me.",
+        "mentorBio": "Thank you so much for playing my games!",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user19 = {
         "name": "Colonel Sanders",
         "username": "DefinitelyNotKFC",
-        "password": "xxxxxxxxxx",
-        "bio": "Yum yum chicken.",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 55,
         "searchTags": ["Chicken"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": "Yum yum chicken.",
+        "mentorBio": "Eat at KFC",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
     let user20 = {
         "name": "King Hippo",
         "username": "mkclsarnd",
-        "password": "xxxxxxxxxx",
-        "bio": ",xclcxlkdsldlkslkdsacxewlkr",
+        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
         "age": 32,
         "searchTags": [],
-        "mentorRelations": [], // Updated later in the relationships seeding function
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [] // Updated later in the posts seeding function
+        "mentorRelations": [],
+        "menteeRelations": [],
+        "myPosts": [], // Updated later in the posts seeding function
+        "menteeBio": ",xclcxlkdsldlkslkdsacxewlkr",
+        "mentorBio": "kjcsaxlkxaelknx",
+        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
     };
 
     // Insert user objects
@@ -388,13 +428,15 @@ async function seedRelationships(){
         "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
         "mentor": user1id,
         "mentor": user7id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "PENDING",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo1.insertedId
+        "chatChannel": chatInfo1.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
-    
+
     // Relationship 2: 2->8 ACTIVE
     let chat2 = {
         "messages": [
@@ -421,11 +463,13 @@ async function seedRelationships(){
         "relationshipDescription": "A newbie at painting is learning from Bob Ross.",
         "mentor": user2id,
         "mentor": user8id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "ACTIVE",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo2.insertedId
+        "chatChannel": chatInfo2.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 3: 3->9 REJECTED
@@ -469,11 +513,13 @@ async function seedRelationships(){
         "relationshipDescription": "Some kid wants to learn how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
         "mentor": user9id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "REJECTED",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo3.insertedId
+        "chatChannel": chatInfo3.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 4: 4->10 COMPLETED
@@ -522,11 +568,13 @@ async function seedRelationships(){
         "relationshipDescription": "A slots addict became more addicted to gambling after Chuck E Cheese apparently taught him how to win.",
         "mentor": user4id,
         "mentor": user10id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "COMPLETED",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo4.insertedId
+        "chatChannel": chatInfo4.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 5: 5->11 PENDING
@@ -545,11 +593,13 @@ async function seedRelationships(){
         "relationshipDescription": "A gaming enthusiast wants to learn how to make their own game from an experienced developer.",
         "mentor": user5id,
         "mentor": user11id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "PENDING",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo5.insertedId
+        "chatChannel": chatInfo5.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 6: 2->12 ACTIVE
@@ -593,11 +643,13 @@ async function seedRelationships(){
         "relationshipDescription": "An art fan is learning how to paint from Bob Ross",
         "mentor": user2id,
         "mentor": user12id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "ACTIVE",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo6.insertedId
+        "chatChannel": chatInfo6.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 7: 3->16 ACTIVE
@@ -621,11 +673,13 @@ async function seedRelationships(){
         "relationshipDescription": "A shake drinker is learning how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
         "mentor": user16id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "ACTIVE",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo7.insertedId
+        "chatChannel": chatInfo7.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 8: 2->17 REJECTED
@@ -638,11 +692,13 @@ async function seedRelationships(){
         "relationshipDescription": "Bob Ross couldn't bear to teach a literal paintbrush how to paint better.",
         "mentor": user2id,
         "mentor": user17id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "REJECTED",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo8.insertedId
+        "chatChannel": chatInfo8.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 9: 2->18 COMPLETED
@@ -686,11 +742,13 @@ async function seedRelationships(){
         "relationshipDescription": "Super Mario learned how to paint from Bob Ross, then starred in Mario Artist.",
         "mentor": user2id,
         "mentor": user18id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "COMPLETED",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo9.insertedId
+        "chatChannel": chatInfo9.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 
     // Relationship 10: 1->19 ACTIVE
@@ -719,11 +777,13 @@ async function seedRelationships(){
         "relationshipDescription": "Colonel Sanders is learning new techniques in chicken cooking from General Tso.",
         "mentor": user1id,
         "mentor": user19id,
-        "workspace": new ObjectId(), // PLACEHOLDER
         "status": "ACTIVE",
+        "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
-        "chatChannel": chatInfo10.insertedId
+        "chatChannel": chatInfo10.insertedId,
+        "timelineInterval": 43200000, // 12 hours
+        "lastCheckInTime": new Date()
     }
 }
 
