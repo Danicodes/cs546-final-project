@@ -77,7 +77,7 @@ function displayUserCard(userItem){
         //$.ajax({}).done(); -- test this
 
         $.ajax({
-            method: 'POST',
+            method: 'GET',
             url: searchForm.attr('action'),
             dataType: "json",
             data: { searchTerm: currData },
