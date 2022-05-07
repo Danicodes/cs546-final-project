@@ -82,7 +82,19 @@ async function getWorkspaceRelationship(req, res){
     let otherUser;
     try {
         validate.convertID(relationshipId);
-        validate.isUserAuthorizedForPost(userId, relationshipId);
+        // check if I am mentor or mentee
+        relationshipObject = await relationships.getRelationshipById(relationshipId);
+        
+        if (userId.toString() === relationshipObject.mentor.toString()){
+             // then retrieve info of mentee
+             otherUser = relationshipObject.mentee;
+         }
+         else if (userId.toString() === relationshipObject.mentee.toString()) {
+             otherUser = relationshipObject.mentor;
+         }
+         else {
+             throw `Error: Unauthorized`
+         }
     }
     catch(e){
         if(e instanceof UnauthorizedRequest)
@@ -92,7 +104,7 @@ async function getWorkspaceRelationship(req, res){
 
     try {
         // workspaceId contains files
-        let workspace = relationshipObject.workspaceId;// get workspace function to get files
+        let files = relationshipObject.files;// get workspace function to get files
         let chat = relationshipObject.chatId; // get chat info 
         //otherUser = relationship
         otherUser = await users.getPersonById(otherUser);
@@ -103,7 +115,7 @@ async function getWorkspaceRelationship(req, res){
                             relationship: relationshipObject,
                             user: otherUser,
                             chatChannel: chat,
-                            workspace: workspace
+                            files: files
                             });
 
     }
