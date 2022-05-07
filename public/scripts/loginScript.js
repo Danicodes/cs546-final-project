@@ -5,6 +5,7 @@
 // This script is built upon the foundation of login_dom.js, written by Yash
 
 (function () {
+
   const username = document.getElementById("username-login-input");
   const password = document.getElementById("password-login-input");
   //const signupForm = document.getElementById("signup-form");
@@ -13,6 +14,13 @@
 
   loginForm.addEventListener("submit", (event) => {
     //console.log("The front-end event listener for login form submission was triggered."); // debug
+
+    const loginForm = document.getElementById("login-form");
+    const username = document.getElementById("username-login-input");
+    const password = document.getElementById("password-login-input");
+    const errorContainer = document.getElementById("login-error-container");
+
+    loginForm.addEventListener('submit', (event) => {
 
     let usernameInput = username.value;
     let passwordInput = password.value;
