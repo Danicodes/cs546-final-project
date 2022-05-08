@@ -82,6 +82,8 @@
 <div>
 <form action="/relationships" method="POST" id="new-relationship">
     Would you like to request mentorship from this user?
+        <input type="text" name="mentorId" value={{person._id}} hidden>
+        Relationship category: <input type="text" name="relationshipCategory">
         <button type="submit" form="new-relationship">Request mentorship</button>
 </form>
 </div>
