@@ -151,6 +151,23 @@ async function getMentors(req, res){
     }
 }
 
+async function getWorkspaceFilesPage(req, res) {
+    let relationshipId = req.params.relationshipId;
+    let userId = req.session.user.id;
+    let relationshipObj;
+    try {
+        validate.convertID(relationshipId);
+        relationshipObj = await relationships.isUserAuthorizedForPost(userId, relationshipId);
+    } catch (e) {
+        if(e instanceof UnauthorizedRequest)
+            return res.status(e.status).json({error: e.message});
+        return res.status(400).json("getWorkspaceFilesPage: " + e);
+    }
+
+    let options = {layout: null, pageTitle: "Files", relationship: relationshipObj};
+    return res.status(200).render("partials/workspace-files", options);
+}
+
 router.route('/getMentors')
 .get(getMentors); // API enpoint, if this is in users url, redirect to workspaces
 
@@ -160,5 +177,7 @@ router.route('/:userId$') // /
 router.route('/relationships/:userId/:relationshipId')
 .get(getWorkspaceRelationship);
 
+router.route("/:relationshipId/files")
+.get(getWorkspaceFilesPage);
 
 module.exports = router;
