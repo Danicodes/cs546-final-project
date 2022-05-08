@@ -35,6 +35,9 @@ const chatsCol = mongoCollections.chats;
 const postsCol = mongoCollections.posts;
 const Category = require('../enums/categories');
 
+const getUsersCollection = mongoCollections.users;
+const getPostsCollection = mongoCollections.posts;
+
 
 
 // Seeds users
