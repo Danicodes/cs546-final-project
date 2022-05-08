@@ -24,7 +24,7 @@ function getElementFromCookie(elementName){
  * @returns 
  */
 function createUserProfileLink(userId, name){
-    return $(`<a class=\"user-profile-link\" href="/profile/${userId}">${name ? name : ""}</a>`);
+    return $(`<a class=\"user-profile-link\" href="/users/${userId}">${name ? name : ""}</a>`);
 }
 
 /**
@@ -66,7 +66,7 @@ function createNotificationElement(item){
             // this passes a NODE element so dom manipulation here is fine
             let h2 = $(`<h2 class='selected-user'>${$(item).children('a.user-profile-link')[0].innerHTML}</h2>`); // Other user's name 
             let profile_link = $(item).children('a.user-profile-link').attr('href');
-            let otherUser = profile_link.match(/(?<=\/profile\/).*$/)[0];
+            let otherUser = profile_link.match(/(?<=\/users\/).*$/)[0];
             //document.cookie = `selected_user=${otherUser}`; 
 
             singleWorkspaceDiv.append(h2);  
@@ -519,7 +519,7 @@ function createNotificationElement(item){
             // this passes a NODE element so dom manipulation here is fine
             let h2 = $(`<h2 class='selected-user'>${$(listItem).children('a.user-profile-link')[0].innerHTML}</h2>`); // Other user's name 
             let profile_link = $(listItem).children('a.user-profile-link').attr('href');
-            let otherUser = profile_link.match(/(?<=\/profile\/).*$/)[0];
+            let otherUser = profile_link.match(/(?<=\/users\/).*$/)[0];
             let setCookieExpression = `document.cookie = \'selected_user=${otherUser}\'; `;
             $(this).attr('onclick', `${setCookieExpression}`);
 

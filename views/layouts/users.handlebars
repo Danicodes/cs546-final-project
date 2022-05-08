@@ -11,7 +11,7 @@
     <button onclick="toggleUserView();">Change View</button>
     <form action="/users/?_method=PUT" method="POST" id="edit-user">
             <label>Username:
-                <input type="text" readonly="readonly" name="username" value={{person.username}}>
+                <input type="text" readonly="readonly" name="username" value="{{person.username}}">
             </label>
             <label>Age:
                 <input type="number" {{#if bool}} readonly="readonly" {{/if}} name="age" value={{person.age}}>
@@ -20,13 +20,13 @@
                 <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="name" value={{person.name}}>
             </label>
             <label id="profile-mentee-ID">Mentee bio:
-                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="menteeBio" value={{person.menteeBio}}>
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="menteeBio" value="{{person.menteeBio}}">
             </label>
             <label id="profile-mentor-ID" style="display:none;">Mentor bio:
-                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="mentorBio" value={{person.mentorBio}}>
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="mentorBio" value="{{person.mentorBio}}">
             </label>
             <label>My preferred feed:
-                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="myPreferredFeed" value={{person.myPreferredFeed}}>
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="myPreferredFeed" value="{{person.myPreferredFeed}}">
             </label>
         <button type="submit" form="edit-user">Submit</button>
     </form>
@@ -84,9 +84,13 @@
     Would you like to request mentorship from this user?
         <input type="text" name="mentorId" value={{person._id}} hidden>
         Relationship category: <input type="text" name="relationshipCategory">
+        Relationship Description: <input type="text" name="relationshipDescription">
         <button type="submit" form="new-relationship">Request mentorship</button>
+        
 </form>
 </div>
 {{else}}
 {{/if}}
+<script src="/public/scripts/helper.js"></script>>
 <script src="/public/scripts/users_client.js"></script>
+

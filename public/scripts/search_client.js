@@ -49,7 +49,7 @@ function displayUserCard(userItem){
     let defaultBioStr = `We don\'t know much about ${userItem.name != null ? userItem.name : userItem.username } yet but they seem great!`;
     return $(`<div class="card" style="width: 18rem;">
                 <div class="card-body">
-                <a href='/profile/${userItem._id.toString()}' class='card-link card-title'>${userItem.name != null ? userItem.name : userItem.username }</a>
+                <a href='/users/${userItem._id.toString()}' class='card-link card-title'>${userItem.name != null ? userItem.name : userItem.username }</a>
                 <p class="card-text mentorBio-display" > Mentor Bio: ${userItem.mentorBio != null ? userItem.mentorBio : defaultBioStr }</p>
                 <p class="card-text menteeBio-display" > Mentee Bio: ${userItem.menteeBio != null ? userItem.menteeBio : defaultBioStr }</p>
                 </div>

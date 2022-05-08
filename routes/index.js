@@ -2,7 +2,7 @@ const chatRoutes = require("./chat");
 const relationships = require("./relationships");
 const postsRoutes = require("./posts");
 const loginRoutes = require("./loginRoutes");
-//const workspaces = require("./workspaces");
+const workspaces = require("./workspaces");
 const usersRoutes = require("./users");
 const searchRoutes = require("./search");
 const xss = require("xss");
@@ -44,7 +44,7 @@ function constructRoutes(app) {
 
   app.use("/posts", postsRoutes);
   app.use("/relationships", relationships);
-  //app.use("/workspaces", workspaces);
+  app.use("/workspaces", workspaces);
   app.use('/users', usersRoutes);
   app.use("/chats", chatRoutes);
   app.use("/search", searchRoutes);
