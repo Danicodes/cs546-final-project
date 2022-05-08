@@ -15,10 +15,32 @@ const getCollectionFn = (collection) => {
   };
 };
 
+const dropCollectionFn = (collection) => {
+
+  return async () => {
+      const db = await dbConnection.connectToDb();
+      await db.collection(collection).drop(function(err, deleteMessage) {
+        if (err) {
+          console.log(`Could not drop ${collection}`);
+        }
+        if (deleteMessage){
+          console.log(`Successfully deleted ${collection}`);
+        }
+      });
+      // dbConnection.closeConnection();
+  }
+
+}
+
 module.exports = {
     // Add collections here as needed
     users: getCollectionFn('users')
     , relationships: getCollectionFn('relationships')
     , posts: getCollectionFn('posts')
     , chats: getCollectionFn('chats')
+
+    , dropUsers: dropCollectionFn('users')
+    , dropRelationships: dropCollectionFn('relationships')
+    , dropPosts: dropCollectionFn('posts')
+    , dropChats: dropCollectionFn('chats')
 };

@@ -13,6 +13,7 @@
     }
 
     function renderFileNames(filesList, relationshipId) {
+        console.log(" Is this running " + filesList);
         if(filesList.length === 0) {
             workspaceSectionDiv.append($(`<p class="warning"> No files Shared Yet! </p>`));
             return ;

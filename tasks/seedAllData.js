@@ -33,17 +33,27 @@ const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 const postsCol = mongoCollections.posts;
+const getUsersCollection = mongoCollections.users;
+const getPostsCollection = mongoCollections.posts;
 const Category = require('../enums/categories');
+const status = require('../enums/status');
+const data = require('../data');
+const { fs } = require('file-system');
+const bcrypt = require('bcrypt');
 
+let relationshipsData = data.relationships;
+let placeholderfile = "/uploads/placeholder.txt";
+let password = "password";
 
 
 // Seeds users
 async function seedUsers(){
+    let passwordHash = await bcrypt.hash(password, 8); // Update from constants file when Brendans changes are integrated
     // Create user objects to insert
     let user1 = {
         "name": "General Tso",
-        "username": "GeneralTso",
-        "password": "xxxxxxxxxx",
+        "username": "GeneralTso".toLowerCase(),
+        "password": passwordHash,
         "age": 67,
         "searchTags": ["Chicken", "Sauce", "Cooking"],
         "mentorRelations": [],
@@ -55,8 +65,8 @@ async function seedUsers(){
     };
     let user2 = {
         "name": "Bob Ross",
-        "username": "BobRoss",
-        "password": "xxxxxxxxxx",
+        "username": "BobRoss".toLowerCase(),
+        "password": passwordHash,
         "age": 50,
         "searchTags": ["Painting"],
         "mentorRelations": [],
@@ -68,8 +78,8 @@ async function seedUsers(){
     };
     let user3 = {
         "name": "Johnny Rocket",
-        "username": "JohnnyRocket",
-        "password": "xxxxxxxxxx",
+        "username": "JohnnyRocket".toLowerCase(),
+        "password": passwordHash,
         "age": 80,
         "searchTags": ["Milkshakes", "Shakes", "Restaurant", "Fun"],
         "mentorRelations": [],
@@ -81,8 +91,8 @@ async function seedUsers(){
     };
     let user4 = {
         "name": "Chuck Cheese",
-        "username": "ChuckECheese",
-        "password": "xxxxxxxxxx",
+        "username": "ChuckECheese".toLowerCase(),
+        "password": passwordHash,
         "age": 68,
         "searchTags": ["Entertainment", "Gambling", "Mouse", "Fun", "Enjoyment", "Birthday", "Party"],
         "mentorRelations": [],
@@ -94,8 +104,8 @@ async function seedUsers(){
     };
     let user5 = {
         "name": "Red Digit",
-        "username": "Redigit",
-        "password": "xxxxxxxxxx",
+        "username": "Redigit".toLowerCase(),
+        "password": passwordHash,
         "age": 42,
         "searchTags": ["Fun", "Enjoyment", "Development"],
         "mentorRelations": [],
@@ -107,8 +117,8 @@ async function seedUsers(){
     };
     let user6 = {
         "name": "Lloyd Beige",
-        "username": "Lindybeige",
-        "password": "xxxxxxxxxx",
+        "username": "Lindybeige".toLowerCase(),
+        "password": passwordHash,
         "age": 35,
         "searchTags": ["Archeology", "Basketweaving"],
         "mentorRelations": [],
@@ -120,8 +130,8 @@ async function seedUsers(){
     };
     let user7 = {
         "name": "Cooking Noob",
-        "username": "CookingNoob",
-        "password": "xxxxxxxxxx",
+        "username": "CookingNoob".toLowerCase(),
+        "password": passwordHash,
         "age": 18,
         "searchTags": ["Chicken", "Cooking"],
         "mentorRelations": [],
@@ -133,8 +143,8 @@ async function seedUsers(){
     };
     let user8 = {
         "name": "Painting Newbie",
-        "username": "PaintingNewbie",
-        "password": "xxxxxxxxxx",
+        "username": "PaintingNewbie".toLowerCase(),
+        "password": passwordHash,
         "age": 26,
         "searchTags": ["Painting", "Newbie"],
         "mentorRelations": [],
@@ -146,8 +156,8 @@ async function seedUsers(){
     };
     let user9 = {
         "name": "Shake Beginner",
-        "username": "ShakeBeginner",
-        "password": "xxxxxxxxxx",
+        "username": "ShakeBeginner".toLowerCase(),
+        "password": passwordHash,
         "age": 5,
         "searchTags": ["Milkshakes"],
         "mentorRelations": [],
@@ -159,8 +169,8 @@ async function seedUsers(){
     };
     let user10 = {
         "name": "Slots Addict",
-        "username": "SlotsAddict",
-        "password": "xxxxxxxxxx",
+        "username": "SlotsAddict".toLowerCase(),
+        "password": passwordHash,
         "age": 51,
         "searchTags": ["Gambling"],
         "mentorRelations": [],
@@ -172,8 +182,8 @@ async function seedUsers(){
     };
     let user11 = {
         "name": "Gaming Enthusiast",
-        "username": "GamingEnthusiast",
-        "password": "xxxxxxxxxx",
+        "username": "GamingEnthusiast".toLowerCase(),
+        "password": passwordHash,
         "age": 14,
         "searchTags": ["Gaming", "Fun"],
         "mentorRelations": [],
@@ -185,8 +195,8 @@ async function seedUsers(){
     };
     let user12 = {
         "name": "Art Fan",
-        "username": "ArtFan",
-        "password": "xxxxxxxxxx",
+        "username": "ArtFan".toLowerCase(),
+        "password": passwordHash,
         "age": 34,
         "searchTags": ["Art"],
         "mentorRelations": [],
@@ -198,8 +208,8 @@ async function seedUsers(){
     };
     let user13 = {
         "name": "Sports Fan",
-        "username": "SportsFan",
-        "password": "xxxxxxxxxx",
+        "username": "SportsFan".toLowerCase(),
+        "password": passwordHash,
         "age": 37,
         "searchTags": ["Sports", "Football", "Soccer", "Curling"],
         "mentorRelations": [],
@@ -211,8 +221,8 @@ async function seedUsers(){
     };
     let user14 = {
         "name": "Grandma Basketweaver",
-        "username": "GrandmaBasketweaver",
-        "password": "xxxxxxxxxx",
+        "username": "GrandmaBasketweaver".toLowerCase(),
+        "password": passwordHash,
         "age": 83,
         "searchTags": ["Basketweaving"],
         "mentorRelations": [],
@@ -224,8 +234,8 @@ async function seedUsers(){
     };
     let user15 = {
         "name": "Internet Explorer",
-        "username": "InternetExporer",
-        "password": "xxxxxxxxxx",
+        "username": "InternetExporer".toLowerCase(),
+        "password": passwordHash,
         "age": 21,
         "searchTags": ["Fast", "Internet", "Explorer", "Enjoyment"],
         "mentorRelations": [],
@@ -237,8 +247,8 @@ async function seedUsers(){
     };
     let user16 = {
         "name": "Shake Drinker",
-        "username": "ShakeDrinker",
-        "password": "xxxxxxxxxx",
+        "username": "ShakeDrinker".toLowerCase(),
+        "password": passwordHash,
         "age": 22,
         "searchTags": ["Shakes"],
         "mentorRelations": [],
@@ -250,8 +260,8 @@ async function seedUsers(){
     };
     let user17 = {
         "name": "Magic Paintbrush",
-        "username": "MagicPaintbrush",
-        "password": "xxxxxxxxxx",
+        "username": "MagicPaintbrush".toLowerCase(),
+        "password": passwordHash,
         "age": 15,
         "searchTags": ["Painting"],
         "mentorRelations": [],
@@ -263,8 +273,8 @@ async function seedUsers(){
     };
     let user18 = {
         "name": "Mario Mario",
-        "username": "SuperMario",
-        "password": "xxxxxxxxxx",
+        "username": "SuperMario".toLowerCase(),
+        "password": passwordHash,
         "age": 36,
         "searchTags": ["Mario", "SuperMario"],
         "mentorRelations": [],
@@ -276,8 +286,8 @@ async function seedUsers(){
     };
     let user19 = {
         "name": "Colonel Sanders",
-        "username": "DefinitelyNotKFC",
-        "password": "xxxxxxxxxx",
+        "username": "DefinitelyNotKFC".toLowerCase(),
+        "password": passwordHash,
         "age": 55,
         "searchTags": ["Chicken"],
         "mentorRelations": [],
@@ -289,8 +299,8 @@ async function seedUsers(){
     };
     let user20 = {
         "name": "King Hippo",
-        "username": "mkclsarnd",
-        "password": "xxxxxxxxxx",
+        "username": "mkclsarnd".toLowerCase(),
+        "password": passwordHash,
         "age": 32,
         "searchTags": [],
         "mentorRelations": [],
@@ -437,7 +447,7 @@ async function seedRelationships(){
         "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
         "mentor": user1id,
         "mentor": user7id,
-        "status": "PENDING",
+        "status": status.PENDING,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -453,7 +463,7 @@ async function seedRelationships(){
     const userInfo7_1 = await usersCollection.updateOne({"_id": user7id}, {"$push": {"menteeRelations": relInfo1.insertedId}});
     if(!userInfo7_1.acknowledged) throw "Could not update user 7 when seeding relationships";
 
-    // Relationship 2: 2->8 ACTIVE
+    // Relationship 2: 2->8 APPROVED
     let chat2 = {
         "messages": [
             {
@@ -479,7 +489,7 @@ async function seedRelationships(){
         "relationshipDescription": "A newbie at painting is learning from Bob Ross.",
         "mentor": user2id,
         "mentor": user8id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -536,7 +546,7 @@ async function seedRelationships(){
         "relationshipDescription": "Some kid wants to learn how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
         "mentor": user9id,
-        "status": "REJECTED",
+        "status": status.REJECTED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -598,7 +608,7 @@ async function seedRelationships(){
         "relationshipDescription": "A slots addict became more addicted to gambling after Chuck E Cheese apparently taught him how to win.",
         "mentor": user4id,
         "mentor": user10id,
-        "status": "COMPLETED",
+        "status": status.COMPLETED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -630,7 +640,7 @@ async function seedRelationships(){
         "relationshipDescription": "A gaming enthusiast wants to learn how to make their own game from an experienced developer.",
         "mentor": user5id,
         "mentor": user11id,
-        "status": "PENDING",
+        "status": status.PENDING,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -646,7 +656,7 @@ async function seedRelationships(){
     const userInfo11_5 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"menteeRelations": relInfo5.insertedId}});
     if(!userInfo11_5.acknowledged) throw "Could not update user 11 when seeding relationships";
 
-    // Relationship 6: 2->12 ACTIVE
+    // Relationship 6: 2->12 APPROVED
     let chat6 = {
         "messages": [
             {
@@ -687,7 +697,7 @@ async function seedRelationships(){
         "relationshipDescription": "An art fan is learning how to paint from Bob Ross",
         "mentor": user2id,
         "mentor": user12id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -703,7 +713,7 @@ async function seedRelationships(){
     const userInfo12_2 = await usersCollection.updateOne({"_id": user12id}, {"$push": {"menteeRelations": relInfo6.insertedId}});
     if(!userInfo12_2.acknowledged) throw "Could not update user 12 when seeding relationships";
 
-    // Relationship 7: 3->16 ACTIVE
+    // Relationship 7: 3->16 APPROVED
     let chat7 = {
         "messages": [
             {
@@ -724,7 +734,7 @@ async function seedRelationships(){
         "relationshipDescription": "A shake drinker is learning how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
         "mentor": user16id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -740,6 +750,18 @@ async function seedRelationships(){
     const userInfo16_3 = await usersCollection.updateOne({"_id": user16id}, {"$push": {"menteeRelations": relInfo7.insertedId}});
     if(!userInfo16_3.acknowledged) throw "Could not update user 16 when seeding relationships";
 
+
+    /// ADD FILES FOR RELATIONSHIP
+
+
+   async function copyFileToRelationship(relationshipID){
+        if (fs.existsSync(placeholderfile)){
+            await relationshipsData.uploadfile(relationshipID, placeholderfile);
+        }
+   }
+   await copyFileToRelationship(relInfo7.insertedId);
+   await copyFileToRelationship(relInfo6.insertedId);
+
     // Relationship 8: 2->17 REJECTED
     let chat8 = {
         "messages": []
@@ -750,7 +772,7 @@ async function seedRelationships(){
         "relationshipDescription": "Bob Ross couldn't bear to teach a literal paintbrush how to paint better.",
         "mentor": user2id,
         "mentor": user17id,
-        "status": "REJECTED",
+        "status": status.REJECTED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -807,7 +829,7 @@ async function seedRelationships(){
         "relationshipDescription": "Super Mario learned how to paint from Bob Ross, then starred in Mario Artist.",
         "mentor": user2id,
         "mentor": user18id,
-        "status": "COMPLETED",
+        "status": status.COMPLETED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -823,7 +845,7 @@ async function seedRelationships(){
     const userInfo18_2 = await usersCollection.updateOne({"_id": user18id}, {"$push": {"menteeRelations": relInfo9.insertedId}});
     if(!userInfo18_2.acknowledged) throw "Could not update user 18 when seeding relationships";
 
-    // Relationship 10: 1->19 ACTIVE
+    // Relationship 10: 1->19 APPROVED
     let chat10 = {
         "messages": [
             {
@@ -849,7 +871,7 @@ async function seedRelationships(){
         "relationshipDescription": "Colonel Sanders is learning new techniques in chicken cooking from General Tso.",
         "mentor": user1id,
         "mentor": user19id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -955,7 +977,7 @@ async function seedPosts(){
         "searchTags": ["Cooking", "Chicken"],
         "visibility": "public",
         "likedBy": [user4id, user13id, user19id],
-        "disLikedBy": [user16id],
+        "dislikedBy": [user16id],
         "reportedBy": []
     };
     let post2 = {
@@ -982,7 +1004,7 @@ async function seedPosts(){
         "searchTags": ["Painting", "Art"],
         "visibility": "public",
         "likedBy": [user6id, user8id, user12id, user17id, user18id],
-        "disLikedBy": [user20id],
+        "dislikedBy": [user20id],
         "reportedBy": []
     };
     let post3 = {
@@ -999,7 +1021,7 @@ async function seedPosts(){
         "searchTags": ["Cooking", "Milkshakes", "Restaurants"],
         "visibility": "public",
         "likedBy": [user9id, user16id],
-        "disLikedBy": [user4id],
+        "dislikedBy": [user4id],
         "reportedBy": [user14id]
     };
     let post4 = {
@@ -1021,7 +1043,7 @@ async function seedPosts(){
         "searchTags": ["Party", "Fun", "Enjoyment", "Birthday"],
         "visibility": "public",
         "likedBy": [user4id, user11id, user20id],
-        "disLikedBy": [user18id],
+        "dislikedBy": [user18id],
         "reportedBy": [user3id]
     };
     let post5 = {
@@ -1053,7 +1075,7 @@ async function seedPosts(){
         "searchTags": ["GameDevelopment"],
         "visibility": "public",
         "likedBy": [user10id, user11id, user15id, user18id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post6 = {
@@ -1070,7 +1092,7 @@ async function seedPosts(){
         "searchTags": ["Events", "Medieval", "Hobbies"],
         "visibility": "private",
         "likedBy": [],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post7 = {
@@ -1087,7 +1109,7 @@ async function seedPosts(){
         "searchTags": ["Cooking", "Hobbies"],
         "visibility": "public",
         "likedBy": [user1id, user19id, user14id],
-        "disLikedBy": [user16id],
+        "dislikedBy": [user16id],
         "reportedBy": []
     };
     let post8 = {
@@ -1109,7 +1131,7 @@ async function seedPosts(){
         "searchTags": [],
         "visibility": "public",
         "likedBy": [user2id, user12id, user18id],
-        "disLikedBy": [user13id],
+        "dislikedBy": [user13id],
         "reportedBy": []
     };
     let post9 = {
@@ -1126,7 +1148,7 @@ async function seedPosts(){
         "searchTags": ["Help", "Rejected"],
         "visibility": "public",
         "likedBy": [user9id],
-        "disLikedBy": [user1id, user5id],
+        "dislikedBy": [user1id, user5id],
         "reportedBy": [user3id]
     };
     let post10 = {
@@ -1143,7 +1165,7 @@ async function seedPosts(){
         "searchTags": [],
         "visibility": "private",
         "likedBy": [],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post11 = {
@@ -1170,7 +1192,7 @@ async function seedPosts(){
         "searchTags": ["Gaming", "Hobbies"],
         "visibility": "public",
         "likedBy": [user18id, user20id, user4id],
-        "disLikedBy": [user13id],
+        "dislikedBy": [user13id],
         "reportedBy": []
     };
     let post12 = {
@@ -1197,7 +1219,7 @@ async function seedPosts(){
         "searchTags": ["Sports", "Hobbies", "Curling", "Gaming"],
         "visibility": "public",
         "likedBy": [user14id],
-        "disLikedBy": [user4id, user5id, user10id, user18id],
+        "dislikedBy": [user4id, user5id, user10id, user18id],
         "reportedBy": [user5id, user18id]
     };
     let post13 = {
@@ -1208,7 +1230,7 @@ async function seedPosts(){
         "searchTags": ["Hello", "Post"],
         "visibility": "public",
         "likedBy": [user6id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post14 = {
@@ -1225,7 +1247,7 @@ async function seedPosts(){
         "searchTags": ["Request", "SoftwareDevelopment"],
         "visibility": "public",
         "likedBy": [user20id],
-        "disLikedBy": [user17id, user4id],
+        "dislikedBy": [user17id, user4id],
         "reportedBy": []
     };
     let post15 = {
@@ -1247,7 +1269,7 @@ async function seedPosts(){
         "searchTags": ["Adventure", "Hobbies", "Art"],
         "visibility": "public",
         "likedBy": [user2id, user14id, user18id],
-        "disLikedBy": [user11id],
+        "dislikedBy": [user11id],
         "reportedBy": []
     };
     let post16 = {
@@ -1264,7 +1286,7 @@ async function seedPosts(){
         "searchTags": ["Gaming", "Fun", "Hobbies"],
         "visibility": "public",
         "likedBy": [user11id, user5id],
-        "disLikedBy": [user4id],
+        "dislikedBy": [user4id],
         "reportedBy": []
     };
     let post17 = {
@@ -1275,7 +1297,7 @@ async function seedPosts(){
         "searchTags": ["Cooking", "Chicken"],
         "visibility": "public",
         "likedBy": [user13id, user16id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post18 = {
@@ -1297,7 +1319,7 @@ async function seedPosts(){
         "searchTags": [],
         "visibility": "public",
         "likedBy": [user18id],
-        "disLikedBy": [user11id, user5id, user12id, user19id],
+        "dislikedBy": [user11id, user5id, user12id, user19id],
         "reportedBy": [user5id, user12id, user13id]
     };
     let post19 = {
@@ -1314,7 +1336,7 @@ async function seedPosts(){
         "searchTags": ["Help"],
         "visibility": "public",
         "likedBy": [user20id],
-        "disLikedBy": [user11id, user5id, user12id, user19id],
+        "dislikedBy": [user11id, user5id, user12id, user19id],
         "reportedBy": [user5id, user12id]
     };
     let post20 = {
@@ -1341,7 +1363,7 @@ async function seedPosts(){
         "searchTags": ["Help"],
         "visibility": "public",
         "likedBy": [],
-        "disLikedBy": [user11id, user5id, user12id],
+        "dislikedBy": [user11id, user5id, user12id],
         "reportedBy": [user5id, user12id, user13id]
     };
     let post21 = {
@@ -1358,7 +1380,7 @@ async function seedPosts(){
         "searchTags": ["Milkshakes"],
         "visibility": "public",
         "likedBy": [user13id, user16id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post22 = {
@@ -1390,7 +1412,7 @@ async function seedPosts(){
         "searchTags": ["Gambling", "Hobbies"],
         "visibility": "public",
         "likedBy": [user10id, user15id, user13id, user4id],
-        "disLikedBy": [user1id, user7id, user17id, user19id, user18id, user3id],
+        "dislikedBy": [user1id, user7id, user17id, user19id, user18id, user3id],
         "reportedBy": []
     };
     let post23 = {
@@ -1407,7 +1429,7 @@ async function seedPosts(){
         "searchTags": ["Hobbies", "Painting"],
         "visibility": "private",
         "likedBy": [user2id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post24 = {
@@ -1424,7 +1446,7 @@ async function seedPosts(){
         "searchTags": ["Gaming"],
         "visibility": "public",
         "likedBy": [user13id, user18id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
     let post25 = {
@@ -1456,7 +1478,7 @@ async function seedPosts(){
         "searchTags": ["Hobbies"],
         "visibility": "public",
         "likedBy": [user1id, user2id, user3id, user4id, user5id, user6id, user7id, user8id, user9id, user10id, user11id, user12id, user13id, user14id, user15id, user16id, user17id, user18id, user19id],
-        "disLikedBy": [],
+        "dislikedBy": [],
         "reportedBy": []
     };
 
@@ -1627,7 +1649,23 @@ async function seedAllData(){
     console.log("Done seeding data.");
 }
 
+
 async function main(){
+    if (process.argv.length > 2 && process.argv[2] == '-d') { // clear command
+        // then drop the database before reseeding
+        console.log("Dropping database collections");
+        let dropRelationships = mongoCollections.dropRelationships;
+        let dropUsers = mongoCollections.dropUsers;
+        let dropPosts = mongoCollections.dropPosts;
+        let dropChats = mongoCollections.dropChats;
+
+        dropChats();
+        dropPosts();
+        dropUsers();
+        dropRelationships();
+    }
+    
+
     console.log("Seeding data...");
     try{
         await seedAllData();
@@ -1635,6 +1673,8 @@ async function main(){
         console.log("Something went wrong with seeding data. Error below:");
         console.log(e);
     }
+    console.log("Completed task, exiting");
+    process.exit(0);
 }
 
 main();
