@@ -17,7 +17,13 @@ function getUserFromCookie(){
         .find(row => row.startsWith('user='));
 
         if (user.length > 0){
-            user = user.split('=', 1)[1]; // limit the regex to single match
+            let userSplit = user.split('=')[1]; // limit the regex to single match
+            if (userSplit.includes('=')){
+                user = user.split('=', 1)[1];
+            }
+            else{
+                return userSplit;
+            }
         }
         return user;
     }
