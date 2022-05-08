@@ -47,12 +47,11 @@ let addPost = async function(req, res) {
  *          in case of invalid parameters (400) - pageNo and limit (optional)
  */
 let getPostsPage = async function(req, res) {
-    return res.status(200).render("frames/feed", {pageTitle: "Feed Page", userSessionId: "6274526c073570c18813243f"}); // TODO: From Session
+    return res.status(200).render("frames/feed", {pageTitle: "Feed Page", userSessionId: req.session.user.id}); 
 };
 
 let getPosts = async function(req, res) {
-    // let sessionUserId = req.session.user.id;
-    let sessionUserId = "6274526c073570c188132441";
+    let sessionUserId = req.session.user.id;
     try{
         let posts = await postsData.getPosts(sessionUserId);
         return res.status(200).json(posts);
