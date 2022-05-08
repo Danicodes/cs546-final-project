@@ -2,19 +2,29 @@
 // Author: Ethan Grzeda
 // I pledge my honor that I have abided by the Stevens Honor System.
 
-/*
-Database Object Types and target amounts
- - Users: 20
- - Relationships: 10
- - Chats: 10
- - Posts: 25
 
-Functions
+/*
+How to use this file
+
+Execute the following command in the command line: node seedAllData.js
+
+This will seed 20 users, 10 relationships (and their corresponding chat channels), 25 posts, and necessary indexes
+*/
+
+
+// Parts of this file were copied from Yash's code in other seeding files
+
+
+/*
+Functions in this file
  - seedUsers
  - seedRelationships (also seeds chats)
  - seedPosts
+ - dropIndexes (coped from another file)
+ - addIndexes (copied from another file)
  - seedAllData (runs other seed functions)
 */
+
 
 // Imports
 const mongoCollections = require('../config/mongoCollections');
@@ -24,7 +34,6 @@ const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 const postsCol = mongoCollections.posts;
 const Category = require('../enums/categories');
-const indexSeed = require("./indexes");
 
 
 
@@ -34,12 +43,12 @@ async function seedUsers(){
     let user1 = {
         "name": "General Tso",
         "username": "GeneralTso",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 67,
         "searchTags": ["Chicken", "Sauce", "Cooking"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "Not a mentee, but I used to be.",
         "mentorBio": "Mentor at cooking chicken in the best sauce imaginable.",
         "myPreferredFeed": "Chicken"
@@ -47,12 +56,12 @@ async function seedUsers(){
     let user2 = {
         "name": "Bob Ross",
         "username": "BobRoss",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 50,
         "searchTags": ["Painting"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "Not a mentee for anything now, but I may take up something later.",
         "mentorBio": "Let's relax with some painting.",
         "myPreferredFeed": "Painting"
@@ -60,12 +69,12 @@ async function seedUsers(){
     let user3 = {
         "name": "Johnny Rocket",
         "username": "JohnnyRocket",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 80,
         "searchTags": ["Milkshakes", "Shakes", "Restaurant", "Fun"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function,
+        "myPosts": [],
         "menteeBio": "Haven't been a mentee for a long time.",
         "mentorBio": "As long as the shakes are decent, it doesn't matter if the burgers are mediocre.",
         "myPreferredFeed": "Milkshakes"
@@ -73,12 +82,12 @@ async function seedUsers(){
     let user4 = {
         "name": "Chuck Cheese",
         "username": "ChuckECheese",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 68,
         "searchTags": ["Entertainment", "Gambling", "Mouse", "Fun", "Enjoyment", "Birthday", "Party"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "No need to be a mentee when I can help others get more addicted to gambling.",
         "mentorBio": "Gambling addiction? No problem! I'll teach you how to win",
         "myPreferredFeed": "Fun"
@@ -86,12 +95,12 @@ async function seedUsers(){
     let user5 = {
         "name": "Red Digit",
         "username": "Redigit",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 42,
         "searchTags": ["Fun", "Enjoyment", "Development"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "Not a mentee myself, but a mentee in spirit",
         "mentorBio": "Experienced game developer.",
         "myPreferredFeed": "Gaming"
@@ -99,12 +108,12 @@ async function seedUsers(){
     let user6 = {
         "name": "Lloyd Beige",
         "username": "Lindybeige",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 35,
         "searchTags": ["Archeology", "Basketweaving"],
-        "mentorRelations": [], // Updated later in the relationships seeding function
+        "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "Probably going to be a mentee in the future, but not at the moment.",
         "mentorBio": "Archeologist and generally fun guy.",
         "myPreferredFeed": "Hobbies"
@@ -112,12 +121,12 @@ async function seedUsers(){
     let user7 = {
         "name": "Cooking Noob",
         "username": "CookingNoob",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 18,
         "searchTags": ["Chicken", "Cooking"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "I want to learn about cooking",
         "mentorBio": "Not a mentor yet, but once I learn enough about cooking, I may teach others.",
         "myPreferredFeed": "Cooking"
@@ -125,12 +134,12 @@ async function seedUsers(){
     let user8 = {
         "name": "Painting Newbie",
         "username": "PaintingNewbie",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 26,
         "searchTags": ["Painting", "Newbie"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "I like painting.",
         "mentorBio": "Not a mentor. I don't have skills",
         "myPreferredFeed": "Painting"
@@ -138,12 +147,12 @@ async function seedUsers(){
     let user9 = {
         "name": "Shake Beginner",
         "username": "ShakeBeginner",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 5,
         "searchTags": ["Milkshakes"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "One time, I tried to shake a cup of milk. It spilled.",
         "mentorBio": "I can totally do everything",
         "myPreferredFeed": "Milkshakes"
@@ -151,12 +160,12 @@ async function seedUsers(){
     let user10 = {
         "name": "Slots Addict",
         "username": "SlotsAddict",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 51,
         "searchTags": ["Gambling"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "I'm here to win at gambling.",
         "mentorBio": "Some day I'll teach you all how to get rich.",
         "myPreferredFeed": "Gambling"
@@ -164,12 +173,12 @@ async function seedUsers(){
     let user11 = {
         "name": "Gaming Enthusiast",
         "username": "GamingEnthusiast",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 14,
         "searchTags": ["Gaming", "Fun"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "Video games are my passion.",
         "mentorBio": "I'll get really good at games, but I'm not mentoring that",
         "myPreferredFeed": "Gaming"
@@ -177,12 +186,12 @@ async function seedUsers(){
     let user12 = {
         "name": "Art Fan",
         "username": "ArtFan",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 34,
         "searchTags": ["Art"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "Art is great.",
         "mentorBio": "I could teach others how to be better art fans, but I wouldn't recommend that.",
         "myPreferredFeed": "Art"
@@ -190,12 +199,12 @@ async function seedUsers(){
     let user13 = {
         "name": "Sports Fan",
         "username": "SportsFan",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 37,
         "searchTags": ["Sports", "Football", "Soccer", "Curling"],
         "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "Sports are great! I hope someone on here is a mentor in something sports-related.",
         "mentorBio": "Is there anyone on here that wants to learn about curling?",
         "myPreferredFeed": "Sports"
@@ -203,12 +212,12 @@ async function seedUsers(){
     let user14 = {
         "name": "Grandma Basketweaver",
         "username": "GrandmaBasketweaver",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 83,
         "searchTags": ["Basketweaving"],
         "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "My granddaughter told me I should check this site out.",
         "mentorBio": "No mentoring for me yet",
         "myPreferredFeed": "Hobbies"
@@ -216,12 +225,12 @@ async function seedUsers(){
     let user15 = {
         "name": "Internet Explorer",
         "username": "InternetExporer",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 21,
         "searchTags": ["Fast", "Internet", "Explorer", "Enjoyment"],
         "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": "#Kony2012",
         "mentorBio": "#Kony2012",
         "myPreferredFeed": "SoftwareDevelopment"
@@ -229,12 +238,12 @@ async function seedUsers(){
     let user16 = {
         "name": "Shake Drinker",
         "username": "ShakeDrinker",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 22,
         "searchTags": ["Shakes"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "Glug",
         "mentorBio": "I can teach you to chug drinks faster.",
         "myPreferredFeed": "Milkshakes"
@@ -242,12 +251,12 @@ async function seedUsers(){
     let user17 = {
         "name": "Magic Paintbrush",
         "username": "MagicPaintbrush",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 15,
         "searchTags": ["Painting"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "I can't wait to turn rainbow colors and assist on an adventure.",
         "mentorBio": "Who wants to turn into a literal paintbrush?",
         "myPreferredFeed": "Painting"
@@ -255,12 +264,12 @@ async function seedUsers(){
     let user18 = {
         "name": "Mario Mario",
         "username": "SuperMario",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 36,
         "searchTags": ["Mario", "SuperMario"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "It's a-me.",
         "mentorBio": "Thank you so much for playing my games!",
         "myPreferredFeed": "Gaming"
@@ -268,12 +277,12 @@ async function seedUsers(){
     let user19 = {
         "name": "Colonel Sanders",
         "username": "DefinitelyNotKFC",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 55,
         "searchTags": ["Chicken"],
         "mentorRelations": [],
-        "menteeRelations": [], // Updated later in the relationships seeding function
-        "myPosts": [], // Updated later in the posts seeding function
+        "menteeRelations": [],
+        "myPosts": [],
         "menteeBio": "Yum yum chicken.",
         "mentorBio": "Eat at KFC",
         "myPreferredFeed": "Chicken"
@@ -281,12 +290,12 @@ async function seedUsers(){
     let user20 = {
         "name": "King Hippo",
         "username": "mkclsarnd",
-        "password": "xxxxxxxxxx", // MAYBE A PLACEHOLDER
+        "password": "xxxxxxxxxx",
         "age": 32,
         "searchTags": [],
         "mentorRelations": [],
         "menteeRelations": [],
-        "myPosts": [], // Updated later in the posts seeding function
+        "myPosts": [],
         "menteeBio": ",xclcxlkdsldlkslkdsacxewlkr",
         "mentorBio": "kjcsaxlkxaelknx",
         "myPreferredFeed": "Help"
@@ -338,6 +347,7 @@ async function seedUsers(){
 }
 
 // Seeds relationships and chats
+// Run this function AFTER the seedUsers function
 async function seedRelationships(){
     const usersCollection = await usersCol();
     const relationshipsCollection = await relationshipsCol();
@@ -857,12 +867,13 @@ async function seedRelationships(){
 }
 
 // Seeds posts
+// Run this function AFTER the seedUsers function
 async function seedPosts(){
 
     const usersCollection = await usersCol();
     const postsCollection = await postsCol();
 
-    // Get users
+    // Get users from users collection
     const user1 = await usersCollection.findOne({"name": "General Tso"});
     if(!user1) throw "Could not get user 1 when seeding posts.";
     let user1id = user1["_id"];
@@ -1554,29 +1565,15 @@ async function seedPosts(){
     if(!userInfo25.acknowledged) throw "Could not update user 20 when seeding posts";
 }
 
-// Seeds all data
-async function seedAllData(){
-    try{
-        console.log("Seeding users...");
-        await seedUsers();
-        console.log("Done seeding users.");
-    } catch (e) {
-        throw e;
-    }
-    try{
-        console.log("Seeding relationships and chats...");
-        await seedRelationships();
-        console.log("Done seeding relationships and chats...");
-    } catch (e) {
-        throw e;
-    }
-    try{
-        console.log("Seeding posts...");
-        await seedPosts();
-        console.log("Done seeding posts.");
-    } catch (e) {
-        throw e;
-    }
+// Copied from indexes.js
+async function dropIndexes(){
+    let usersCollection = await getUsersCollection();
+    await usersCollection.dropIndexes();
+
+    let postsCollection = await getPostsCollection();
+    await postsCollection.dropIndexes();
+
+    return { success: true };
 }
 
 // Copied from indexes.js
@@ -1598,15 +1595,36 @@ async function addIndexes(){
     return { success: true }; 
 }
 
-// Copied from indexes.js
-async function dropIndexes(){
-    let usersCollection = await getUsersCollection();
-    await usersCollection.dropIndexes();
+// Seeds all data
+async function seedAllData(){
+    try{
+        console.log("Seeding users...");
+        await seedUsers();
+        console.log("Done seeding users.");
+    } catch (e) {
+        throw e;
+    }
+    try{
+        console.log("Seeding relationships and chats...");
+        await seedRelationships(); // If you run this function, make sure you also run the seedUsers function
+        console.log("Done seeding relationships and chats...");
+    } catch (e) {
+        throw e;
+    }
+    try{
+        console.log("Seeding posts...");
+        await seedPosts(); // If you run this function, make sure you also run the seedUsers function
+        console.log("Done seeding posts.");
+    } catch (e) {
+        throw e;
+    }
+    // The following 4 lines were copied from seed.js
+    let dropped = await dropIndexes();
+    console.log("Dropped index: " + dropped.success);
+    let indexes_added = await addIndexes();
+    console.log("Added index: " + indexes_added.success);
 
-    let postsCollection = await getPostsCollection();
-    await postsCollection.dropIndexes();
-
-    return { success: true };
+    console.log("Done seeding data.");
 }
 
 async function main(){
@@ -1617,14 +1635,6 @@ async function main(){
         console.log("Something went wrong with seeding data. Error below:");
         console.log(e);
     }
-
-    // The following 4 lines were copied from seed.js
-    let dropped = await indexSeed.dropIndexes();
-    console.log("Dropped index: " + dropped.success);
-    let indexes_added = await indexSeed.addIndexes();
-    console.log("Added index: " + indexes_added.success);
-
-    console.log("Done seeding data.");
 }
 
 main();

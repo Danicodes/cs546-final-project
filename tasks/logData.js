@@ -3,6 +3,16 @@
 // I pledge my honor that I have abided by the Stevens Honor System.
 
 /*
+How to use this file
+
+Execute the following command in the command line: node logData.js
+
+This will log the users, relationships, chats, and posts in the database.
+
+Feel free to comment out the execution of some logging functions in the logData function to log a limited set of data.
+*/
+
+/*
 Functions:
  - logUsers
  - logRelationships
@@ -10,6 +20,7 @@ Functions:
  - logPosts
  - logData (runs other log functions)
 */
+
 
 // Imports
 const mongoCollections = require('../config/mongoCollections');
@@ -51,7 +62,7 @@ async function logPosts(){
 
 // Logs all data in the database
 async function logData(){
-    /*
+    
     try{
         console.log("Users in database:");
         await logUsers();
@@ -60,8 +71,8 @@ async function logData(){
         console.log("Something went wrong with logging the users. Error below:");
         console.log(e);
     }
-    */
-    /*
+    
+    
     try{
         console.log("Relationships in database:");
         await logRelationships();
@@ -70,8 +81,8 @@ async function logData(){
         console.log("Something went wrong with logging the relationships. Error below:");
         console.log(e);
     }
-    */
-    /*
+    
+    
     try{
         console.log("Chats in database:");
         await logChats();
@@ -80,7 +91,7 @@ async function logData(){
         console.log("Something went wrong with logging the chats. Error below:");
         console.log(e);
     }
-    */
+    
     
     try{
         console.log("Posts in database:");

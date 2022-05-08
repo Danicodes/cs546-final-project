@@ -3,12 +3,22 @@
 // I pledge my honor that I have abided by the Stevens Honor System.
 
 /*
+How to use this file
+
+Execute the following command in the command line: node clearDatabase.js
+
+This will clear all the users, relationships, chats, and posts from the database.
+*/
+
+
+/*
 Functions
  - clearUsers
  - clearRelationships (also clears chats)
  - clearPosts
  - clearAll (runs other clear functions)
 */
+
 
 // Imports
 const mongoCollections = require('../config/mongoCollections');
@@ -37,7 +47,7 @@ async function clearUsers(){
     }
 }
 
-// Clears relationships, and chats from database
+// Clears relationships and chats from database
 async function clearRelationships(){
     // Clear relationships from database
     let relationshipsArray = [];
