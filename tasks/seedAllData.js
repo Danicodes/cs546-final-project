@@ -24,6 +24,7 @@ const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 const postsCol = mongoCollections.posts;
 const Category = require('../enums/categories');
+const indexSeed = require("./indexes");
 
 
 
@@ -1578,6 +1579,36 @@ async function seedAllData(){
     }
 }
 
+// Copied from indexes.js
+async function addIndexes(){
+    // Add search index to usersCollection
+    let usersCollection = await getUsersCollection();
+    let indexes = await usersCollection.indexes();
+    if (indexes.length === 1) {
+        await usersCollection.createIndex( { searchTags: "text", username: "text", name: "text", mentorBio: "text", menteeBio: "text" }, { name: "userIndex" } );
+    }
+
+    let postsCollection = await getPostsCollection();
+    // Add search index to postsCollection
+    indexes = await postsCollection.indexes();
+    if (indexes.length === 1) {
+        await postsCollection.createIndex( { searchTags: "text", content: "text" }, { name: "postIndex" } );
+    }
+
+    return { success: true }; 
+}
+
+// Copied from indexes.js
+async function dropIndexes(){
+    let usersCollection = await getUsersCollection();
+    await usersCollection.dropIndexes();
+
+    let postsCollection = await getPostsCollection();
+    await postsCollection.dropIndexes();
+
+    return { success: true };
+}
+
 async function main(){
     console.log("Seeding data...");
     try{
@@ -1586,6 +1617,13 @@ async function main(){
         console.log("Something went wrong with seeding data. Error below:");
         console.log(e);
     }
+
+    // The following 4 lines were copied from seed.js
+    let dropped = await indexSeed.dropIndexes();
+    console.log("Dropped index: " + dropped.success);
+    let indexes_added = await indexSeed.addIndexes();
+    console.log("Added index: " + indexes_added.success);
+
     console.log("Done seeding data.");
 }
 
