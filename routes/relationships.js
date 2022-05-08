@@ -121,10 +121,11 @@ async function postNewRelationship(req, res){
     try {
         // Need to add to the userObject
         relationshipObj = await relationships.createRelationship(req.body.relationshipDescription, mentorId, menteeId, req.body.relationshipCategory, timeline);
-        let added = await users.updateUserRelationships(userId, relationshipObj);
+        let added = await users.updateUserRelationships(userId, relationshipObj); 
+        let mentorObj = await users.getPersonById(mentorId);
        
         //res.render('frame/request', {layout: 'profile', relationship: relationshipObj, created: true});
-        res.status(200).json({success: true, relationship: relationshipObj, added: added}); // used for testing
+        res.status(200).render('layouts/users', {person : mentorObj , bool: true, updated: true});// relationship: relationshipObj, added: added}); // used for testing
         return;
     }
     catch(e){
