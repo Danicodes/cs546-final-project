@@ -369,7 +369,7 @@ let fileUpload = async function(req, res) {
             throw `File is not uploaded or is of size 0`;
         if(req.files.uploadfile.size > constants.MAX_FILE_SIZE)
             throw `File cannot be more than 10MB`;
-        validate.isUserAuthorizedForPost(req.session.user.id, relationshipId);
+        relationships.isUserAuthorizedForPost(req.session.user.id, relationshipId);
     } catch(e) {
         if(e instanceof UnauthorizedRequest)
             return res.status(UnauthorizedRequest.status).json({error:UnauthorizedRequest.message});
@@ -400,7 +400,7 @@ let fileDownload = async function(req, res) {
     try {
         relationshipId = validate.convertID(relationshipId);
         validate.checkIsEmptyString(filename);
-        validate.isUserAuthorizedForPost(req.session.user.id, relationshipId);
+        relationships.isUserAuthorizedForPost(req.session.user.id, relationshipId);
     } catch(e) {
         if(e instanceof UnauthorizedRequest)
             return res.status(UnauthorizedRequest.status).json({error:UnauthorizedRequest.message});
