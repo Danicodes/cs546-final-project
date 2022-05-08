@@ -33,9 +33,16 @@ const usersCol = mongoCollections.users;
 const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 const postsCol = mongoCollections.posts;
+const getUsersCollection = mongoCollections.users;
+const getPostsCollection = mongoCollections.posts;
 const Category = require('../enums/categories');
+const status = require('../enums/status');
+const data = require('../data');
+const { fs } = require('file-system');
 
 
+let relationshipsData = data.relationships;
+let placeholderfile = "/uploads/placeholder.txt";
 
 // Seeds users
 async function seedUsers(){
@@ -437,7 +444,7 @@ async function seedRelationships(){
         "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
         "mentor": user1id,
         "mentor": user7id,
-        "status": "PENDING",
+        "status": status.PENDING,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -453,7 +460,7 @@ async function seedRelationships(){
     const userInfo7_1 = await usersCollection.updateOne({"_id": user7id}, {"$push": {"menteeRelations": relInfo1.insertedId}});
     if(!userInfo7_1.acknowledged) throw "Could not update user 7 when seeding relationships";
 
-    // Relationship 2: 2->8 ACTIVE
+    // Relationship 2: 2->8 APPROVED
     let chat2 = {
         "messages": [
             {
@@ -479,7 +486,7 @@ async function seedRelationships(){
         "relationshipDescription": "A newbie at painting is learning from Bob Ross.",
         "mentor": user2id,
         "mentor": user8id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -536,7 +543,7 @@ async function seedRelationships(){
         "relationshipDescription": "Some kid wants to learn how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
         "mentor": user9id,
-        "status": "REJECTED",
+        "status": status.REJECTED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -598,7 +605,7 @@ async function seedRelationships(){
         "relationshipDescription": "A slots addict became more addicted to gambling after Chuck E Cheese apparently taught him how to win.",
         "mentor": user4id,
         "mentor": user10id,
-        "status": "COMPLETED",
+        "status": status.COMPLETED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -630,7 +637,7 @@ async function seedRelationships(){
         "relationshipDescription": "A gaming enthusiast wants to learn how to make their own game from an experienced developer.",
         "mentor": user5id,
         "mentor": user11id,
-        "status": "PENDING",
+        "status": status.PENDING,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -646,7 +653,7 @@ async function seedRelationships(){
     const userInfo11_5 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"menteeRelations": relInfo5.insertedId}});
     if(!userInfo11_5.acknowledged) throw "Could not update user 11 when seeding relationships";
 
-    // Relationship 6: 2->12 ACTIVE
+    // Relationship 6: 2->12 APPROVED
     let chat6 = {
         "messages": [
             {
@@ -687,7 +694,7 @@ async function seedRelationships(){
         "relationshipDescription": "An art fan is learning how to paint from Bob Ross",
         "mentor": user2id,
         "mentor": user12id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -703,7 +710,7 @@ async function seedRelationships(){
     const userInfo12_2 = await usersCollection.updateOne({"_id": user12id}, {"$push": {"menteeRelations": relInfo6.insertedId}});
     if(!userInfo12_2.acknowledged) throw "Could not update user 12 when seeding relationships";
 
-    // Relationship 7: 3->16 ACTIVE
+    // Relationship 7: 3->16 APPROVED
     let chat7 = {
         "messages": [
             {
@@ -724,7 +731,7 @@ async function seedRelationships(){
         "relationshipDescription": "A shake drinker is learning how to make better shakes from Johnny Rocket.",
         "mentor": user3id,
         "mentor": user16id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -740,6 +747,18 @@ async function seedRelationships(){
     const userInfo16_3 = await usersCollection.updateOne({"_id": user16id}, {"$push": {"menteeRelations": relInfo7.insertedId}});
     if(!userInfo16_3.acknowledged) throw "Could not update user 16 when seeding relationships";
 
+
+    /// ADD FILES FOR RELATIONSHIP
+
+
+   async function copyFileToRelationship(relationshipID){
+        if (fs.existsSync(placeholderfile)){
+            await relationshipsData.uploadfile(relationshipID, 'placeholder.txt');
+        }
+   }
+   await copyFileToRelationship(relInfo7.insertedId);
+   await copyFileToRelationship(relInfo6.insertedId);
+
     // Relationship 8: 2->17 REJECTED
     let chat8 = {
         "messages": []
@@ -750,7 +769,7 @@ async function seedRelationships(){
         "relationshipDescription": "Bob Ross couldn't bear to teach a literal paintbrush how to paint better.",
         "mentor": user2id,
         "mentor": user17id,
-        "status": "REJECTED",
+        "status": status.REJECTED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -807,7 +826,7 @@ async function seedRelationships(){
         "relationshipDescription": "Super Mario learned how to paint from Bob Ross, then starred in Mario Artist.",
         "mentor": user2id,
         "mentor": user18id,
-        "status": "COMPLETED",
+        "status": status.COMPLETED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -823,7 +842,7 @@ async function seedRelationships(){
     const userInfo18_2 = await usersCollection.updateOne({"_id": user18id}, {"$push": {"menteeRelations": relInfo9.insertedId}});
     if(!userInfo18_2.acknowledged) throw "Could not update user 18 when seeding relationships";
 
-    // Relationship 10: 1->19 ACTIVE
+    // Relationship 10: 1->19 APPROVED
     let chat10 = {
         "messages": [
             {
@@ -849,7 +868,7 @@ async function seedRelationships(){
         "relationshipDescription": "Colonel Sanders is learning new techniques in chicken cooking from General Tso.",
         "mentor": user1id,
         "mentor": user19id,
-        "status": "ACTIVE",
+        "status": status.APPROVED,
         "files": [],
         "createdOn": new Date(),
         "updatedOn": new Date(),
@@ -1627,7 +1646,23 @@ async function seedAllData(){
     console.log("Done seeding data.");
 }
 
+
 async function main(){
+    if (process.argv.length > 2 && process.argv[2] == '-d') { // clear command
+        // then drop the database before reseeding
+        console.log("Dropping database collections");
+        let dropRelationships = mongoCollections.dropRelationships;
+        let dropUsers = mongoCollections.dropUsers;
+        let dropPosts = mongoCollections.dropPosts;
+        let dropChats = mongoCollections.dropChats;
+
+        dropChats();
+        dropPosts();
+        dropUsers();
+        dropRelationships();
+    }
+    
+
     console.log("Seeding data...");
     try{
         await seedAllData();
@@ -1635,6 +1670,8 @@ async function main(){
         console.log("Something went wrong with seeding data. Error below:");
         console.log(e);
     }
+    console.log("Completed task, exiting");
+    process.exit(0);
 }
 
 main();

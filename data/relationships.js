@@ -39,7 +39,7 @@ const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
     let relationshipDB = await relationshipCollection();
 
-    let files = null;
+    let files = [];
     let chatChannel = null;
 
     let createdOn = new Date(); // a new Date object
