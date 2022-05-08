@@ -41,7 +41,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Not a mentee, but I used to be.",
         "mentorBio": "Mentor at cooking chicken in the best sauce imaginable.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Chicken"
     };
     let user2 = {
         "name": "Bob Ross",
@@ -54,7 +54,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Not a mentee for anything now, but I may take up something later.",
         "mentorBio": "Let's relax with some painting.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Painting"
     };
     let user3 = {
         "name": "Johnny Rocket",
@@ -67,7 +67,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function,
         "menteeBio": "Haven't been a mentee for a long time.",
         "mentorBio": "As long as the shakes are decent, it doesn't matter if the burgers are mediocre.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Milkshakes"
     };
     let user4 = {
         "name": "Chuck Cheese",
@@ -80,7 +80,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "No need to be a mentee when I can help others get more addicted to gambling.",
         "mentorBio": "Gambling addiction? No problem! I'll teach you how to win",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Fun"
     };
     let user5 = {
         "name": "Red Digit",
@@ -93,7 +93,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Not a mentee myself, but a mentee in spirit",
         "mentorBio": "Experienced game developer.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Gaming"
     };
     let user6 = {
         "name": "Lloyd Beige",
@@ -106,7 +106,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Probably going to be a mentee in the future, but not at the moment.",
         "mentorBio": "Archeologist and generally fun guy.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Hobbies"
     };
     let user7 = {
         "name": "Cooking Noob",
@@ -119,7 +119,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "I want to learn about cooking",
         "mentorBio": "Not a mentor yet, but once I learn enough about cooking, I may teach others.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Cooking"
     };
     let user8 = {
         "name": "Painting Newbie",
@@ -132,7 +132,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "I like painting.",
         "mentorBio": "Not a mentor. I don't have skills",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Painting"
     };
     let user9 = {
         "name": "Shake Beginner",
@@ -145,7 +145,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "One time, I tried to shake a cup of milk. It spilled.",
         "mentorBio": "I can totally do everything",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Milkshakes"
     };
     let user10 = {
         "name": "Slots Addict",
@@ -158,7 +158,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "I'm here to win at gambling.",
         "mentorBio": "Some day I'll teach you all how to get rich.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Gambling"
     };
     let user11 = {
         "name": "Gaming Enthusiast",
@@ -171,7 +171,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Video games are my passion.",
         "mentorBio": "I'll get really good at games, but I'm not mentoring that",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Gaming"
     };
     let user12 = {
         "name": "Art Fan",
@@ -184,7 +184,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Art is great.",
         "mentorBio": "I could teach others how to be better art fans, but I wouldn't recommend that.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Art"
     };
     let user13 = {
         "name": "Sports Fan",
@@ -197,7 +197,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Sports are great! I hope someone on here is a mentor in something sports-related.",
         "mentorBio": "Is there anyone on here that wants to learn about curling?",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Sports"
     };
     let user14 = {
         "name": "Grandma Basketweaver",
@@ -210,7 +210,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "My granddaughter told me I should check this site out.",
         "mentorBio": "No mentoring for me yet",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Hobbies"
     };
     let user15 = {
         "name": "Internet Explorer",
@@ -223,7 +223,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "#Kony2012",
         "mentorBio": "#Kony2012",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "SoftwareDevelopment"
     };
     let user16 = {
         "name": "Shake Drinker",
@@ -236,7 +236,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Glug",
         "mentorBio": "I can teach you to chug drinks faster.",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Milkshakes"
     };
     let user17 = {
         "name": "Magic Paintbrush",
@@ -249,7 +249,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "I can't wait to turn rainbow colors and assist on an adventure.",
         "mentorBio": "Who wants to turn into a literal paintbrush?",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Painting"
     };
     let user18 = {
         "name": "Mario Mario",
@@ -262,7 +262,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "It's a-me.",
         "mentorBio": "Thank you so much for playing my games!",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Gaming"
     };
     let user19 = {
         "name": "Colonel Sanders",
@@ -275,7 +275,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": "Yum yum chicken.",
         "mentorBio": "Eat at KFC",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Chicken"
     };
     let user20 = {
         "name": "King Hippo",
@@ -288,7 +288,7 @@ async function seedUsers(){
         "myPosts": [], // Updated later in the posts seeding function
         "menteeBio": ",xclcxlkdsldlkslkdsacxewlkr",
         "mentorBio": "kjcsaxlkxaelknx",
-        "myPreferredFeed": "PLACEHOLDER" // PLACEHOLDER STRING
+        "myPreferredFeed": "Help"
     };
 
     // Insert user objects
