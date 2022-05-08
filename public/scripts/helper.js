@@ -9,6 +9,23 @@ function deleteAllCookies() {
     }
 }
 
+function getUserFromCookie(){
+    let user;
+    if  (document.cookie.match(/user=/)){
+        user = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('user='));
+
+        if (user.length > 0){
+            user = user.split('=', 1)[1]; // limit the regex to single match
+        }
+        return user;
+    }
+    else {
+        return null;
+    }
+}
+
 // if only I'd realized I could do this sooner
 
 const CHECKMARK = '✓';

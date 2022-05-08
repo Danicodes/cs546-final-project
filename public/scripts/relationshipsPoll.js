@@ -1,19 +1,4 @@
-function getUserFromCookie(){
-    let user;
-    if  (document.cookie.match(/user=/)){
-        user = document.cookie
-        .split('; ')
-        .find(row => row.startsWith('user='));
 
-        if (user.length > 0){
-            user = user.split('=')[1];
-        }
-        return user;
-    }
-    else {
-        return null;
-    }
-}
 
 function relationshipPollAjax(){
     console.log("Poll is working");

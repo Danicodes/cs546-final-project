@@ -16,5 +16,10 @@ function toggleUserView() {
         $('#profile-mentee-ID').show();
     }
 }
+
+$('#new-relationship').on('click', function(event){
+    let mentee = getUserFromCookie();
+    $('#new-relationship').append($(`<input type="text" name="menteeId" value="${mentee}" hidden>`));
+});
 /*(function ($){  
 })(window.jQuery);*/
