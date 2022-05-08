@@ -19,7 +19,14 @@ function toggleUserView() {
 
 $('#new-relationship').on('click', function(event){
     let mentee = getUserFromCookie();
-    $('#new-relationship').append($(`<input type="text" name="menteeId" value="${mentee}" hidden>`));
+    if ($('#new-relationship').children('#menteeId-value').length > 0){
+        $($('#new-relationship').children('#menteeId-value')[0].replaceWith($(`<input id="menteeId-value" type="text" name="menteeId" value="${mentee}" hidden>`)));
+    }
+    else {
+        $('#new-relationship').append($(`<input id="menteeId-value" type="text" name="menteeId" value="${mentee}" hidden>`));
+    }
+    
+    //$($('#new-relationship').children('input')[0]).replaceWith($("<p>testing</p>"))
 });
 /*(function ($){  
 })(window.jQuery);*/

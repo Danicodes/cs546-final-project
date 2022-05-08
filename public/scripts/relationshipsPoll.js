@@ -1,4 +1,25 @@
+function getUserFromCookie(){
+    let user;
+    if  (document.cookie.match(/user=/)){
+        user = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('user='));
 
+        if (user.length > 0){
+            let userSplit = user.split('=')[1]; // limit the regex to single match
+            if (userSplit.includes('=')){
+                user = user.split('=', 1)[1];
+            }
+            else{
+                return userSplit;
+            }
+        }
+        return user;
+    }
+    else {
+        return null;
+    }
+}
 
 function relationshipPollAjax(){
     console.log("Poll is working");
