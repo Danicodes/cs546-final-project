@@ -1,16 +1,18 @@
 <div class="container">
     <h2>Login</h2>
     <form action="/login" method="post" id="login-form">
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" placeholder="Enter your username"><br>
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" placeholder="Enter your password"><br>
+        <label for="username-login-input">Username:</label>
+        <input type="text" name="username" id="username-login-input" placeholder="Enter your username"><br>
+        <label for="password-login-input">Password:</label>
+        <input type="password" name="password" id="password-login-input" placeholder="Enter your password"><br>
         {{#if errors}}
             <div class="errorDiv">
                 <p>{{error}}</p>
             </div>
         {{/if}}
-        <button type="submit" class="submitBtn">Submit</button><br>
+        <p id="login-error-container" class="error-message"></p>
+        <button type="submit" class="submitBtn" id="login-submit-button">Submit</button><br>
         <a href="/signup">Need to register? Click here to sign-up</a>
     </form>
 </div>
+<script src="/public/scripts/loginScript.js"></script>

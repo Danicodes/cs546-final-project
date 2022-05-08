@@ -6,6 +6,7 @@ const validations = require("../validations/validations");
 const {ObjectId} = require("mongodb");
 const validate = require('../validations/data');
 const constants = require('../constants/constants');
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 async function getPersonById(id){
     validations.validateId(id);
@@ -13,32 +14,38 @@ async function getPersonById(id){
     const userCollection = await users();
     const person = await userCollection.findOne({ _id: ObjectId(id) });
     // Return the whole person
+    if(person == null)
+        throw new UnprocessibleRequest(`${id} is a invalid User ID`);
     person._id = person._id.toString();
+    delete person.password;
     return person;
 }
 
-async function updateUser(id, name, bio, age){
+async function updateUser(id, name, mentorBio, menteeBio, age, myPreferredFeed){
     validations.validateId(id);
-    currentuser = getPersonById(id);
-    validate.checks(name, bio, age);
+    validate.checks(name, mentorBio, menteeBio, age, myPreferredFeed, searchTags);
     // I need to get the password/username for the given id to put in updateduser here
     const updateduser = {
         name : name,
-        bio : bio,
-        age : age
+        mentorBio : mentorBio,
+        menteeBio : menteeBio,
+        age : age,
+        myPreferredFeed: myPreferredFeed,
+        searchTags: searchTags
     };
     let userCollection = await users();
     const updated = await userCollection.updateOne(
         { _id : ObjectId(id) },
         {$set : updateduser}
-        );
+    );
     if (updated.modifiedCount == 0){
-        throw "Error: nothing to be updated."
+        throw new UnprocessibleRequest("Error: nothing to be updated.");
     }
     let ret = await userCollection.findOne({_id : ObjectId(id)});
     ret._id = ret._id.toString();
     console.log("Updated:");
     console.log(ret);
+    delete ret.password;
     return ret;
 }
     
@@ -56,6 +63,7 @@ async function updatePassword(id, password){
     }
     const ret = await userCollection.findOne({_id : ObjectId(id)});
     ret._id = ret._id.toString();
+    delete ret.password;
     return ret;
 }
 
@@ -173,7 +181,7 @@ async function getUserRelationships(userId){
  */
 async function updateUserRelationships(userId, relationshipObj){
     validate.checkArgLength(arguments, 2);
-    userId = validate.convertID();
+    userId = validate.convertID(userId);
 
     let mentorId = validate.convertID(relationshipObj.mentor);
     let menteeId = validate.convertID(relationshipObj.mentee);
@@ -209,9 +217,13 @@ async function updateUserRelationships(userId, relationshipObj){
     
     userId = validate.convertID(userId);
     if (userId.toString() === mentorId.toString()){
+        updatedMentor._id = updatedMentor._id.toString();
+        delete updatedMentor.password;
         return updatedMentor;
     }
     else {
+        updatedMentee._id = updatedMentee._id.toString();
+        delete updatedMentee.password;
         return updatedMentee;
     }
 }
@@ -238,8 +250,9 @@ let addToMyPosts = async function(userId, postId) {
         );
         if(updatedUser == null) 
             throw `Failed to update user - ${userId} with the new Post ${postId}`;
-        else 
-            return updatedUser;
+        updatedUser._id = updatedUser._id.toString();
+        delete updatedUser.password;
+        return updatedUser;
     };
     
     

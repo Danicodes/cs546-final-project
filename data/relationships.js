@@ -1,12 +1,15 @@
 const mongoCollections = require('../config/mongoCollections');
 const relationshipCollection = mongoCollections.relationships;
 const { ObjectId } = require('mongodb');
+const constants = require('../constants/constants');
+const fs = require('fs');
 
 const enums = require('../enums');
 const status = enums.status;
 const Category = enums.categories;
 const validate = require('../validations/data');
-
+const chat = require('./chat');
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 
 /**
@@ -20,20 +23,22 @@ const validate = require('../validations/data');
  * @param {Category|string} relationshipCategory the profession under which this relationship belongs
  * @returns relationship object of the newly created relationship
  */
- async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory){
-    validate.checkArgLength(arguments, 4);
+ async function createRelationship(relationshipDescription, mentor, mentee, relationshipCategory, timelineInterval){
+    validate.checkArgLength(arguments, 5);
     validate.checkIsEmptyString(relationshipDescription); // Cannot be empty
     mentor = validate.convertID(mentor);
     mentee = validate.convertID(mentee);
+    
+    // validate array content relationshipCategory
     if (typeof(relationshipCategory) === 'string'){
        relationshipCategory = new Category(relationshipCategory.trim()); //convert to Category object
     }
 
-    // validate array content relationshipCategory
+    timelineInterval = validate.parseTimeInterval(timelineInterval); // milliseconds
 
     let relationshipDB = await relationshipCollection();
 
-    let workspaceId = null;
+    let files = null;
     let chatChannel = null;
 
     let createdOn = new Date(); // a new Date object
@@ -45,11 +50,13 @@ const validate = require('../validations/data');
         mentor: mentor,
         mentee: mentee,
         status: status.PENDING,
-        workspaceId: workspaceId,
+        files: files,
         createdOn: createdOn,
         updatedOn: updatedOn,
         relationshipCategory: relationshipCategory,
-        chatChannel: chatChannel
+        chatChannel: chatChannel,
+        timelineInterval: timelineInterval,
+        lastCheckInTime: timelineInterval != null ? new Date() : null
     }
 
     let insertedRelationship = await relationshipDB.insertOne(relationshipObject);
@@ -58,6 +65,52 @@ const validate = require('../validations/data');
     return relationship; // returns the relationship object
  }
 
+ async function updateRelationshipTimeline(relationshipId, timelineInterval){
+   validate.checkArgLength(arguments, 2);
+   relationshipId = validate.convertID(relationshipId);
+
+   if (timelineInterval == null){
+      throw `Cannot update timeline with null interval`;
+   }
+
+   timelineInterval = validate.parseTimeInterval(timelineInterval);
+
+   let relationshipDB = await relationshipCollection();
+   
+   let updateObj = {
+      $set: {
+         timelineInterval: timelineInterval
+      }
+   };
+   let updated = await relationshipDB.findOneAndUpdate({ _id: relationshipId }, updateObj);
+   if (updated.value == null) throw `Could not update ${relationshipId} `;
+   let newObj = await relationshipDB.findOne({_id: relationshipId});
+   
+   return newObj; 
+ }
+
+ async function updateLastCheckin(relationshipId, lastcheckin){
+   validate.checkArgLength(2);
+   relationshipId = validate.convertID(relationshipId);
+   
+   if (!(lastcheckin instanceof Date)){
+      validate.parseCheckin(lastcheckin);
+    }
+
+    let relationshipDB = await relationshipCollection();
+
+    let updateObj = {
+       $set: {
+          lastCheckInTime: lastcheckin
+       }
+    };
+
+    let updated = await relationshipDB.findOneAndUpdate({_id: relationshipId}, updateObj);
+    if (updated.value == null) throw `Could not update ${relationshipId}`;
+    let newObj = await relationshipDB.findOne({_id: relationshipId});
+   
+    return newObj; 
+ }
  /**
   * Retrieve a relationship object given an object ID
   * @param {string} relationshipId An objectId associated with a relationship
@@ -106,6 +159,15 @@ const validate = require('../validations/data');
     delete updateRelationshipObj._id // remove _id property from updateObject
 
     updateRelationshipObj.status = newStatus;
+    if (newStatus === status.APPROVED){
+      // Generate a chat channel and a workspace id
+      let chatChannel = await chat.newChannel();
+      let workspaceId = new ObjectId(); // TODO: update with the actual create workspace function
+
+      updateRelationshipObj.chatChannel = validate.convertID(chatChannel); // convert back to object Id for storage
+      updateRelationshipObj.workspaceId = workspaceId; // where to get files
+    } 
+
     updateRelationshipObj.updatedOn = new Date(); // new date object
 
     let updatedObj = await relationshipDB.replaceOne({ '_id': relationshipId }, updateRelationshipObj);
@@ -138,9 +200,68 @@ const validate = require('../validations/data');
    return filteredRelationshipList;
  }
 
+ /**
+  * If the file is not present in that relation, 
+  *     File is saved to <projectDir>/uploads/<relationshipId>/<filename>
+  *     Filename added to the relationships.files property
+  * @param {string|ObjectId} relationshipId 
+  * @param {file} uploadedFile 
+  * @returns latest list of files in the relationship
+  */
+ async function uploadfile(relationshipId, uploadedFile) {
+    // validations
+    relationshipId = validate.convertID(relationshipId);
+
+    let relationshipDB = await relationshipCollection();
+    let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
+    if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' to update`;
+    if (foundRelationships.length > 1) throw `Error: Database returned multiple relationships`;
+
+     // To save the file to local folder
+     const uploadDir = `uploads/${relationshipId}`;
+     const uploadPath = uploadDir + `/${uploadedFile.name}`;
+     if(fs.existsSync(uploadPath))
+        throw new UnprocessibleRequest("Filename already exist");
+    
+     if(!fs.existsSync(uploadDir))
+        fs.mkdir(uploadDir, { recursive: true }, (error) => console.log(`Directory cannot be created`));
+     uploadedFile.mv(uploadPath, async function (err) {
+        if (err) {
+            throw {"code" : 500, "Error" : "File couldn't be copied to local"};
+        }
+      });
+
+      let updateResult = await relationshipDB.findOneAndUpdate(
+        { _id: relationshipId },
+        { $addToSet: { files: uploadedFile.name } },     // Makes sure the userId is not duplicated
+        {returnDocument: 'after', returnNewDocument: true}         // Options to ensure the function to return updated user Object 
+    );
+
+      return updateResult.value.files;
+ }
+
+ /**
+  * Returns the Path of the file if it exists
+  * @param {string|ObjectId} relationshipId 
+  * @param {string} filename 
+  * @returns 
+  */
+ let downloadfile = async function(relationshipId, filename) {
+    const uploadDir = `uploads/${relationshipId}`;
+    const uploadPath = uploadDir + `/${filename}`;
+    if(!fs.existsSync(uploadPath))
+        throw new UnprocessibleRequest("Mentioned File doesn't exist in this Relationship");
+    else 
+        return uploadPath;
+ }
+
  module.exports = {
     createRelationship,
     getRelationshipById,
     updateRelationshipStatus,
-    filterRelationshipsByStatus
+    filterRelationshipsByStatus,
+    uploadfile,
+    downloadfile,
+    updateRelationshipTimeline,
+    updateLastCheckin
  }

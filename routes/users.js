@@ -4,10 +4,16 @@ const data = require('../data');
 const userData = data.users;
 const validations = require("../validations/validations");
 const validate = require('../validations/data');
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
+
+router.get('/', async (req, res) => {
+    let userId = req.session.user.id;
+    res.redirect(`/${userId}`);
+});
 
 router.get('/:userid', async (req, res) => {
     // Show profile information
-    let userId = req.params['userid'];
+    let userId = req.params.userid;
     try {
         userId = validations.validateId(userId);
     } catch (e) {
@@ -19,39 +25,43 @@ router.get('/:userid', async (req, res) => {
         //return res.status(200).json(ret);
     }
     catch(e){
-        console.log(e);
+        if(e instanceof UnprocessibleRequest)
+            return res.status(e.status).json({error: e.message});
         res.status(500).json(e);
     }
 });
 
-router.put('/:userid', async (req, res) => {
+router.put('/', async (req, res) => {
     // Update user in database
-    let userId = req.params['userid'];
+    let userId = req.session.user.id; 
     const name = req.body['name'];
-    const bio = req.body['bio'];
+    const mentorBio = req.body['mentorBio'];
+    const menteeBio = req.body['menteeBio'];
     const age = req.body['age'];
-    let person = await userData.getPersonById(userId);
+    const myPreferredFeed = req.body['myPreferredFeed'];
+    const searchTags = req.body['searchTags'];
     try {
-        userId = validations.validateId(userId);
-        validate.checks(name, bio, parseInt(age));
+        validations.validateId(userId);
+        validate.checks(name, mentorBio, menteeBio, age, myPreferredFeed);
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
 
     try {
-        const ret = await userData.updateUser(userId, name, bio, parseInt(age));
+        const ret = await userData.updateUser(userId, name, mentorBio, menteeBio, parseInt(age), myPreferredFeed);
         return res.render('layouts/users', {person : ret});
-        //return res.status(200).json(ret);
     }
     catch(e){
+        if(e instanceof UnprocessibleRequest)
+            return res.status(e.status).json({error: e.message});
         console.log(e);
         res.status(500).json(e);
     }
 });
 
-router.put('/:userid/reset', async (req, res) => {
+router.put('/reset', async (req, res) => {
     // Update user in database
-    let userId = req.params['userid'];
+    let userId = req.session.user.id;
     const newpassword = req.body['newpassword'];
     const password1 = req.body['password1'];
     const password2 = req.body['password2'];

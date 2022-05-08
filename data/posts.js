@@ -1,9 +1,11 @@
 const mongoCollections = require('../config/mongoCollections');
 const getPostsCollection = mongoCollections.posts;
+const getRelationshipsCollection = mongoCollections.relationships;
 const validations = require("../validations/validations");
 const usersData = require("./users");
 const {ObjectId} = require("mongodb");
 const constants = require("../constants/constants");
+const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 /**
  * Inserts a new Post into Database
@@ -31,7 +33,8 @@ let addPost = async function(author, visibility, content, searchTags) {
         createdOn: new Date(),      // created on is initialized to current Date
         comments: [],               // Comments are be empty initially
         reportedBy: [],             // Reporters are empty initially
-        likedBy: []                 // Liked Persons List is empty initially
+        likedBy: [],                 // Liked Persons List is empty initially
+        dislikedBy: []
     };
 
     // Update myPosts attribute in Users Collection
@@ -50,31 +53,35 @@ let addPost = async function(author, visibility, content, searchTags) {
     return insertedPost;
 }
 
+let areUsersRelated = async function(userIdA, userIdB) {
+    let relationshipCollection = await getRelationshipsCollection();
+    let relationships = await relationshipCollection.find({mentor: ObjectId(userIdA), mentee: ObjectId(userIdB)}).toArray();
+    if(relationships.length > 0) return true;
+    relationships = await relationshipCollection.find({mentor: ObjectId(userIdB), mentee: ObjectId(userIdA)}).toArray();
+    if(relationships.length > 0) return true;
+    return false;
+}
+
 /**
  * Retrieve the posts (along with the pagination)
  * @param {number} pageNo - S.No of the page requesting
  * @param {number} limit - Number of posts considered per page
  * @returns The array of posts sorted REVERSE as per the field - createdOn
  */
-let getPosts = async function(pageNo, limit){
+let getPosts = async function(sessionUserId){
     let postsCollection = await getPostsCollection();
-    // Return all posts when there are no option provided
-    if(pageNo == null && limit == null)
-        return await postsCollection.find().sort({createdOn : -1}).toArray();
-    
-    // Assign the parameters to default values if any one is not provided
-    if(pageNo == null) pageNo = constants.DEFAULT_PAGE_NO;
-    if(limit == null) limit = constants.DEFAULT_POSTS_PER_PAGE;
-
-    // Validate and parse the query parameter to Number
-    pageNo = validations.validateNumber(pageNo, "pageNo");
-    limit = validations.validateNumber(limit, "limit");
-
     // Retrieve and Return the latest posts
-    // TODO: Can add indexing with the createdOn for performance Improvise
-    let skip = (pageNo) * limit;
-    let posts = await postsCollection.find().sort({createdOn : -1}).skip(skip).limit(limit).toArray();
-    return posts;
+    let posts = await postsCollection.find({}).sort({createdOn : -1}).toArray();
+    let accesiblePosts = [];
+    for(let post of posts) {
+        post._id = post._id.toString();
+        let author = post.author.toString();
+        let visibility = post.visibility.toLowerCase();
+        // All public posts and private posts which are posted by someone userId is in relation with are returned
+        if(visibility === "public" || await areUsersRelated(sessionUserId, author));
+            accesiblePosts.push(post);
+    }
+    return accesiblePosts;
 }
 
 
@@ -116,6 +123,58 @@ let likeAPost = async function(userId, postId) {
         throw new Error(`Failed to add like to post - ${postId} by the user ${userId}`);
     else 
         return updatedPost.likedBy.length;
+};
+
+
+/**
+ * Post with postId's reportedBy is updated with the userId provided
+ * @param {string|ObjectId} userId - ID of the user reporting the post
+ * @param {string|ObjectId} postId - ID of the post reported
+ * @returns the lengthof the reportedBy list of this particular post
+ */
+ let reportAPost = async function(userId, postId) {
+    userId = validations.validateId(userId);
+    postId = validations.validateId(postId);
+
+    if(!usersData.isValidUser(userId))
+        throw new Error(`Invalid User Id - ${userId}`);
+
+    let postsCollection = await getPostsCollection();
+    let {value: updatedPost} = await postsCollection.findOneAndUpdate(
+        { _id: postId },
+        { $addToSet: { reportedBy: userId } },     // Makes sure the userId is not duplicated
+        {returnDocument: 'after', returnNewDocument: true}         // Options to ensure the function to return updated user Object 
+    );
+    if(updatedPost == null)     // Only if postId is not found
+        throw new Error(`Failed to report to post - ${postId} by the user ${userId}`);
+    else
+        return updatedPost.reportedBy.length;
+};
+
+
+/**
+ * Post with postId's reportedBy is updated with the userId provided
+ * @param {string|ObjectId} userId - ID of the user reporting the post
+ * @param {string|ObjectId} postId - ID of the post reported
+ * @returns the lengthof the reportedBy list of this particular post
+ */
+ let disLikeAPost = async function(userId, postId) {
+    userId = validations.validateId(userId);
+    postId = validations.validateId(postId);
+
+    if(!usersData.isValidUser(userId))
+        throw new UnprocessibleRequest(`Invalid User Id - ${userId}`);
+
+    let postsCollection = await getPostsCollection();
+    let {value: updatedPost} = await postsCollection.findOneAndUpdate(
+        { _id: postId },
+        { $addToSet: { dislikedBy: userId } },     // Makes sure the userId is not duplicated
+        {returnDocument: 'after', returnNewDocument: true}         // Options to ensure the function to return updated user Object 
+    );
+    if(updatedPost == null)     // Only if postId is not found
+        throw new Error(`Failed to dislike to post - ${postId} by the user ${userId}`);
+    else
+        return updatedPost.disLikedBy.length;
 };
 
 /**
@@ -171,6 +230,8 @@ module.exports = {
     getPosts        : getPosts,
     getPostsByUser  : getPostsByUser,
     likeAPost       : likeAPost,
+    disLikeAPost    : disLikeAPost,
+    reportAPost     : reportAPost,
     addComment      : addComment,
     getComments     : getComments
 }

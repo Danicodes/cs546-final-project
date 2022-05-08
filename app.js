@@ -6,10 +6,13 @@ const { engine } = require("express-handlebars");
 const session = require("express-session");
 var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
+const fileUpload = require("express-fileupload");
 
 app.use("/public", static);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(fileUpload());
 
 app.engine(
   "handlebars",
@@ -20,22 +23,12 @@ app.set("view engine", "handlebars");
 app.use(
   session({
     name: "AuthCookie",
-    secret: "some secret string!",
+    secret: "dakjsfgokj34io2j3i2hjr8h0d9hadjaf!!a11213", // some difficult to decode string
     resave: false,
     saveUninitialized: true,
+    cookie: {maxAge: 30 * 600 * 1000} // 30 minutes
   })
 );
-
-// AUTHENTICATION MIDDLEWARE
-app.use("/private", (req, res, next) => {
-  if (!req.session.login) {
-    return res
-      .status(403)
-      .render("frames/errors", { notLogged: true, title: "403: Forbidden" });
-  }
-  // res.render('users/private')
-  next();
-});
 
 // LOGGING MIDDLEWARE
 app.use((req, res, next) => {

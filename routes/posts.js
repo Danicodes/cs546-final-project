@@ -5,6 +5,7 @@ const postsData = data.posts;
 const validations = require("../validations/validations");
 const {ObjectId} = require("mongodb");
 const constants = require("../constants/constants");
+const UnprocessibleRequest = require("../errors/UnprocessibleRequest");
 
 /**
  * Creates a new Post in the database under the user logged into session
@@ -15,9 +16,8 @@ const constants = require("../constants/constants");
  *          in case of any other issue 
  */
 let addPost = async function(req, res) {
-    let {author, visibility, content, searchTags} = req.body;
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
+    let {visibility, content, searchTags} = req.body;
+    let author = req.session.user.id;
     try {
         // Validations of the properties
         author = validations.validateId(author, "author");
@@ -40,30 +40,22 @@ let addPost = async function(req, res) {
 
 
 /**
- * Returns the list of all pages (paginated) for the feed page of the user
+ * Returns the list of all posts (paginated) for the feed page of the user
  * @param {Request} req 
  * @param {Response} res 
  * @returns in case of success (200) - Returns the list of Posts
  *          in case of invalid parameters (400) - pageNo and limit (optional)
  */
+let getPostsPage = async function(req, res) {
+    return res.status(200).render("frames/feed", {pageTitle: "Feed Page", userSessionId: "6274526c073570c18813243f"}); // TODO: From Session
+};
+
 let getPosts = async function(req, res) {
+    // let sessionUserId = req.session.user.id;
+    let sessionUserId = "6274526c073570c188132441";
     try{
-        let pageNo = req.query.pageNo;
-        let limit = req.query.limit;
-
-        // Assign the parameters to default values if not provided 
-        if(pageNo == null) pageNo = constants.DEFAULT_PAGE_NO;
-        if(limit == null) limit = constants.DEFAULT_POSTS_PER_PAGE;
-
-        // Validate and parse the query parameter to Number
-        pageNo = validations.validateNumber(pageNo, "pageNo");
-        limit = validations.validateNumber(limit, "limit");
-
-        let posts = await postsData.getPosts(pageNo, limit);
-        if(posts.length === 0)
-            return res.status(200).json("No Posts available on this page");
-        else 
-            return res.status(200).json(posts);
+        let posts = await postsData.getPosts(sessionUserId);
+        return res.status(200).json(posts);
     } catch(e) {
         return res.status(400).json("getAllPosts - Error: " + e);
     }
@@ -79,11 +71,9 @@ let getPosts = async function(req, res) {
  *          in case of update failure (500)
  */
 let getPostsByUser = async function(req, res) {
-    // TODO: get the author from expression-session instead of query param
-    // let userId = req.session.user;
-    let userId = req.params.id;
+    let userId = req.session.user.id;
     try {
-        userId = validations.validateId(userId);
+        userId = validations.validateId(userId, "User ID");
     } catch (e) {
         return res.status(400).json("Error: " + e);     // Failed in validation
     }
@@ -106,9 +96,7 @@ let getPostsByUser = async function(req, res) {
  *          in case of update failure (500)
  */
 let likeAPost = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let userId = req.query.user;
+    let userId = req.session.user.id;
     let postId = req.params.id;
     try{
         postId = validations.validateId(postId, "PostId");
@@ -125,6 +113,61 @@ let likeAPost = async function(req, res) {
 };
 
 
+
+/**
+ * Report a post 
+ * @param {Request} req 
+ * @param {Response} res 
+ * @returns in case of success (200) - The number of reports does this post have
+ *          in case of validation failure (400)
+ *          in case of update failure (500)
+ */
+ let reportAPost = async function(req, res) {
+    let userId = req.session.user.id;
+    let postId = req.params.id;
+    try{
+        postId = validations.validateId(postId, "PostId");
+    } catch(e) {
+        return res.status(400).json(`likeAPost - Error: PostId provided in the URL - ${req.params.id} is not valid - ${e}`);
+    }
+    
+    try{
+        let reports = await postsData.reportAPost(userId, postId);
+        return res.status(200).json(reports); 
+    } catch(e){
+        return res.status(500).json(`reportAPost - Error: ${e}`);
+    }
+};
+
+
+/**
+ * Report a post 
+ * @param {Request} req 
+ * @param {Response} res 
+ * @returns in case of success (200) - The number of reports does this post have
+ *          in case of validation failure (400)
+ *          in case of update failure (500)
+ */
+ let disLikeAPost = async function(req, res) {
+    let userId = req.session.user.id;
+    let postId = req.params.id;
+    try{
+        postId = validations.validateId(postId, "PostId");
+    } catch(e) {
+        return res.status(400).json(`disLikeAPost - Error: PostId provided in the URL - ${req.params.id} is not valid - ${e}`);
+    }
+    
+    try{
+        let disLikes = await postsData.disLikeAPost(userId, postId);
+        return res.status(200).json(disLikes); 
+    } catch(e){
+        if(e instanceof UnprocessibleRequest)
+            return res.status(e.status).json({error: e.message});
+        return res.status(500).json(`disLikeAPost - Error: ${e}`);
+    }
+};
+
+
 /**
  * Adds a comment to the post created
  * @param {Request} req 
@@ -134,15 +177,13 @@ let likeAPost = async function(req, res) {
  *          in case of any other Issue (500)
  */
 let addComment = async function(req, res) {
-    // TODO: get the author from expression-session instead of body
-    // let userId = req.session.user;
-    let author = req.query.user;
+    let author = req.session.user.id;
     let postId = req.params.id;
     let message = req.body.message;
     
     try{
-        author = validations.validateId(author, "Author");
-        postId = validations.validateId(postId, "Post ID");
+        validations.validateId(author, "Author");
+        validations.validateId(postId, "Post ID");
         message = validations.validateString(message, "Message");
     } catch (e) {
         return res.status(400).json("addComment - Error: " + (e.stack || e));
@@ -191,18 +232,27 @@ let deleteComments = async function(req, res) {
     // TODO: Need to be implemented!
 };
 
-router.route("/")
-.post(addPost)
-.get(getPosts);
+router.route("/html")
+    .get(getPostsPage);
 
-router.route("/user/:id")
+router.route("/user")
     .get(getPostsByUser);
 
 router.route("/:id/like")
-.post(likeAPost);
+    .post(likeAPost);
 
+router.route("/:id/report")
+    .post(reportAPost);
+
+router.route("/:id/dislike")
+    .post(disLikeAPost);
+    
 router.route("/:id/comments")
     .post(addComment)
     .get(getComments);
-
+    
+router.route("/")
+    .post(addPost)
+    .get(getPosts);
+    
 module.exports = router;
