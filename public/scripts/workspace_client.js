@@ -291,13 +291,13 @@ function createNotificationElement(item){
                   
                     if (userID.toString() === relationshipObject.mentor._id.toString()){
                         // return a mentee
-                        let menteeLink = createUserProfileLink(relationshipObject.mentee._id, relationshipObject.mentee.name);
+                        let menteeLink = createUserProfileLink(relationshipObject.mentee._id, relationshipObject.mentee.name + "(Mentee)");
                         $(element).append(menteeLink);
                         currUl.append(element)
                         workspaceName = relationshipObject.mentee;
                     }
                     else {
-                        $(element).append(createUserProfileLink(relationshipObject.mentor._id, relationshipObject.mentor.name));
+                        $(element).append(createUserProfileLink(relationshipObject.mentor._id, relationshipObject.mentor.name + "(Mentor)"));
                         currUl.append(element);
                         workspaceName = relationshipObject.mentor;
                     }
@@ -312,11 +312,10 @@ function createNotificationElement(item){
                         bindDisplayPendingWS(element);
                     }
                     else if (status === 'completed') {
-                        showWS.attr('disabled', true); // Double check this
                         bindDisplayWorkspaceEvent(element);
                     }
                     else {
-                        showWS.attr('disabled', true);
+                        showWS.attr('href', '#'); 
                     }
                         
                 }
@@ -327,10 +326,74 @@ function createNotificationElement(item){
         workspaceDiv.append(relationshipsDiv);
     }
 
+    function createRelationshipDetailsElement(relationship){
+        return $(`<div class='relationship-description'>
+                <h3>Relationship Description</h3>
+                    <p class='relationship-description'>${relationship.relationshipDescription}<p>
+                <h3>Relationship Category</h3>
+                     <p class='relationship-category'>${relationship.relationshipCategory.name}<p>
+                </div>`);
+    }
+
     function getWorkSpaceDataCallback(res){
         let chat = res.relationship.chatChannel;
-        let files = res.relationship.files;
+        let thisStatus = res.relationship.status.name.toLowerCase();
         let chatWindow, fileWindow;
+        let showRelationshipDetails = $('#show-relationship-details');
+        showRelationshipDetails.append(createRelationshipDetailsElement(res.relationship));
+
+        if (thisStatus === 'approved'){
+            // Include a date submission form
+            $('#edit-timeline-interval').show();
+            $('#submit-timeline-interval-form').on('click', function(event){
+                event.preventDefault();
+                let newtime;
+                let setting = $('input[name="interval-setting"]:checked').val();
+
+                if (setting === "days"){
+                    newtime = ONE_DAY;
+                }
+                else if (setting === "hours") {
+                    newtime = ONE_HOUR;
+                }
+                else if (setting === "minutes"){
+                    newtime = ONE_MINUTE;
+                }
+
+                let multiple = $('#input-timeline-interval').val();
+                newtime *= parseInt(multiple);
+
+                $.ajax({
+                    method: 'post',
+                    url: `/relationships/interval/${res.relationship._id}`,
+                    data: {
+                        timeline: newtime
+                    },
+                    success: function(response) {
+                        if (response.success === true){
+                            let btn = $('#submit-timeline-interval-form');
+                            let successful_check = get_successful_request_element();
+                            successful_check.addClass('style=\'color:grey\'');
+                            btn.append(successful_check);
+                        }
+                    },
+                    failure: function(err, errMessage){
+                        console.log(errMessage);
+                    }
+                })
+                
+            });
+
+        }
+
+        let endBtn = createEndRelationshipBtn();
+        if (thisStatus === 'completed'){
+            endBtn = $(`<button class=\"end-status-request-btn btn btn-secondary\">Relationship Was Archived</button>`);
+            endBtn.addClass('disabled');
+            endBtn.attr('disabled', 'true');
+        }
+        
+        showRelationshipDetails.append(endBtn);
 
         if (chat == null){ // null or undefined
             // When there is no chat yet
@@ -349,24 +412,49 @@ function createNotificationElement(item){
                     let element = $(`<div class=\"workspace-chat-window\"></div>`);
                     element.append($(response));
                     if (element.find('script').length > 1){
-                        element.find('script')[0].remove();
+                        element.find('script')[0].remove(); // Doesn't seem to be removing ***** @10:35AM
                     }
                     singleWorkspaceDiv.append(element);
+                    if (thisStatus === 'completed'){
+                        $('#submit-chat-message-btn').attr('type', 'button'); // Override submit
+                        $('#submit-chat-message-btn').attr('disabled'); // Override submit
+                        $('#submit-chat-message-btn').addClass('disabled'); 
+                    }
+                   
                 },
                 failure: function(err, errMessage){
-                    return $(`<p class='chat-window-placeholder'>Could not load chat window ${errMessage}</p>`);
+                    singleWorkspaceDiv.append($(`<p class='chat-window-placeholder'>Could not load chat window ${errMessage}</p>`));
                 }
             }); // chats/:relationshipId/mesages
            // chatWindow = $(`<p class='chat-window'>${chat.toString()}</p>`); // placeholder
         }
 
-        if (files == null){
-            //when there are no files yet
-            fileWindow = $(`<p class='file-window'>No files to display yet</p>`);
-        }
-        else {
-            fileWindow = $(`<p class='file-window'>${files.toString()}</p>`);
-        }
+        let selected_relationship = getElementFromCookie('selected_relationship');
+        //let newtimeStamp = (new Date()).getTime();
+        $.ajax({
+            url: `/workspaces/${selected_relationship}/files`,
+            method: 'GET',
+            success: function(response) {
+                let element = $(`<div class=\"workspace-file-window\"></div>`);
+                element.append($(response));
+                singleWorkspaceDiv.append(element);
+                if (thisStatus === 'completed'){
+                    $('#label-for-uploadfile').text("File Upload Unavailable in Archived Relationship");
+                    // Override submit
+                    $('#submit-file-upload-btn').attr('type', 'button');
+                    $('#submit-file-upload-btn').addClass('disabled'); 
+                    $('#submit-file-upload-btn').attr('disabled'); 
+
+                    $('#uploadfile').attr('type', 'button'); 
+                    $('#uploadfile').addClass('disabled'); 
+                    $('#uploadfile').attr('disabled'); 
+                } 
+            },
+            failure: function(err, errMessage){
+                singleWorkspaceDiv.append($(`<p class='file-window-placeholder'>Could not load files ${errMessage}</p>`)); // /:relationshipId/files"
+            }
+        }); // chats/:relationshipId/mesages
+    
 
         singleWorkspaceDiv.append(chatWindow);
         singleWorkspaceDiv.append(fileWindow);
@@ -384,6 +472,34 @@ function createNotificationElement(item){
             notificationElem.hide();
         })
     }
+
+    function createEndRelationshipBtn(){
+        let btn = $(`<button class=\"end-status-request-btn btn btn-secondary\">End Relationship</button>`);
+    
+        btn.on('click', function(e){
+            e.preventDefault();
+            let selected_relationship = getElementFromCookie('selected_relationship');
+            let endroute = `/relationships/${selected_relationship}/`  + 'completed';
+            $.ajax({
+                type: 'POST',
+                url: endroute,
+                success: function(result) {
+                    btn.addClass('disabled');
+                    btn.attr('disabled', 'true');
+                    let successful_check = get_successful_request_element();
+                    successful_check.addClass('style=\'color:grey\'');
+                    btn.append(successful_check);
+                },
+                error: function(result, message) {
+                    alert(`${message ? message : "Could not process request"}`);
+                }
+
+            });
+        });
+
+        return btn;
+    }
+
 
     function bindDisplayWorkspaceEvent(listItem) {
         $(listItem).children('a.show-workspace-link').on('click', function(event) {
@@ -406,14 +522,15 @@ function createNotificationElement(item){
             let otherUser = profile_link.match(/(?<=\/profile\/).*$/)[0];
             let setCookieExpression = `document.cookie = \'selected_user=${otherUser}\'; `;
             $(this).attr('onclick', `${setCookieExpression}`);
-            //console.log("Set selected user from bindDisplayWorkspaceEvent....");
 
             singleWorkspaceDiv.append(h2);
 
+            let showRelationshipDetails = $(`<div id='show-relationship-details'></div>`);
+            singleWorkspaceDiv.append(showRelationshipDetails);
             var currentLink = this.getAttribute("href"); // workspaces/relationships/:relationshipID
             
             // Do things to display a single workspace
-            let res = getWorkSpaceData(currentLink, getWorkSpaceDataCallback);
+            getWorkSpaceData(currentLink, getWorkSpaceDataCallback);
 
             $('.workspace-content-placeholder').hide(); // Hide the placeholder class
             $(listItem).children('input:not(:checked)').hide(); // hide notification when pressed

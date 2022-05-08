@@ -79,6 +79,31 @@
 
                 $.ajax(requestConfig).then(function (responseMessage) {
                     var newElement = $(responseMessage);
+
+                    if (window.localStorage.relationships) {
+                        let currauthor;
+                        let curr_relationhsips = JSON.parse(window.localStorage.relationships);
+                        let thisRelationship = curr_relationhsips.filter(function(relationship) {
+                                                        return (relationshipId === relationship._id);
+                                                    });
+                        thisRelationship = thisRelationship[0];
+                        if (thisRelationship) {                          
+                            if (getUserFromCookie() === thisRelationship.mentor._id){
+                                currauthor = thisRelationship.mentor.username;
+                            }
+                            else {
+                                currauthor = thisRelationship.mentee.username;
+                            }
+                                                    
+                            for (let element of $(newElement).find('li:has(>p)')){
+                                if (element.innerHTML.includes(`${currauthor}`)) {
+                                    element.setAttribute('style', 'text-align:right;');
+                                }
+                            }
+                        }
+                        console.log("Current Author" + currauthor);
+                    }
+
                     $("#chat-section").replaceWith(newElement);
                 })
             }
@@ -104,9 +129,37 @@
                     timestamp: datetime
                 }
             }
+            /***
+             * (this.children[0].innerHTML.includes('(Mentee):')) this.setAttribute('style', 'text-align:right;') });
+             */
 
             $.ajax(requestConfig).then(function (responseMessage) {
                 var newElement = $(responseMessage);
+                
+                if (window.localStorage.relationships) {
+                    let currauthor;
+                    let curr_relationhsips = JSON.parse(window.localStorage.relationships);
+                    let thisRelationship = curr_relationhsips.filter(function(relationship) {
+                                                    return (relationshipId === relationship._id);
+                                                });
+                    thisRelationship = thisRelationship[0];
+                    if (thisRelationship) {                             
+                        if (getUserFromCookie() === thisRelationship.mentor._id){
+                            currauthor = thisRelationship.mentor.username;
+                        }
+                        else {
+                            currauthor = thisRelationship.mentee.username;
+                        }
+
+                        for (let element of $(newElement).find('li:has(>p)')){
+
+                            if (element.innerHTML.includes(`${currauthor}`)) {
+                                element.setAttribute('style', 'text-align:right;');
+                            }
+                        }
+                    }
+                } 
+                
                 $("#chat-section").replaceWith(newElement);
             })
         });

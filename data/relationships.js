@@ -85,15 +85,19 @@ const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
    };
    let updated = await relationshipDB.findOneAndUpdate({ _id: relationshipId }, updateObj);
    if (updated.value == null) throw `Could not update ${relationshipId} `;
+   await updateLastCheckin(relationshipId);
    let newObj = await relationshipDB.findOne({_id: relationshipId});
    
    return newObj; 
  }
 
  async function updateLastCheckin(relationshipId, lastcheckin){
-   validate.checkArgLength(2);
    relationshipId = validate.convertID(relationshipId);
    
+   if (!lastcheckin){
+      lastcheckin = new Date();
+   }
+
    if (!(lastcheckin instanceof Date)){
       validate.parseCheckin(lastcheckin);
     }
@@ -172,7 +176,7 @@ const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
     updateRelationshipObj.updatedOn = new Date(); // new date object
 
-    let updatedObj = await relationshipDB.updateOne({ '_id': relationshipId }, updateRelationshipObj);
+    let updatedObj = await relationshipDB.updateOne({ '_id': relationshipId }, { $set: updateRelationshipObj });
     if (updatedObj.modifiedCount == 0) throw `Error: could not update object`;
 
     updatedObj = await relationshipDB.find({'_id': relationshipId}).toArray();

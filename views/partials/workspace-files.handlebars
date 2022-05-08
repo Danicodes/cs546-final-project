@@ -1,6 +1,6 @@
 <div id="workspace-files">
     <div id="workspace-files-section">
-        <h3 id="relationshipId">{{relationship._id}}</h3>
+        <h3 id="file-window-header">Share Files</h3>
         {{#if relationship.files}}
             <ul>
                 {{#each relationship.files}}
@@ -12,14 +12,14 @@
         {{/if}}
     </div>
     <form id="workspace-files-form">
-        <label for="uploadfile">Choose a file to share:
+        <label id="label-for-uploadfile" for="uploadfile">Choose a file to share:
             {{#if relationship.status}}
-                <input type="file" id="uploadfile" name="uploadfile" />
+                <input type="file" class="btn btn-primary" id="uploadfile" name="uploadfile" />
             {{else}}
-                <input type="file" id="uploadfile" name="uploadfile" />
+                <input type="file" class="btn btn-primary" id="uploadfile" name="uploadfile" />
             {{/if}}
         </label>
-        <button type="submit"> Submit a Post </button>
+        <button type="submit" class="btn btn-primary" id="submit-file-upload-btn"> Submit File </button>
     </form>
 </div>
 

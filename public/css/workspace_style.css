@@ -143,6 +143,15 @@ header h1 {
   border-left: 1px solid #CCCCCC;
 }
 
+#message-list {
+    width: 300px;
+    height: 100%;
+    list-style-type: disc;
+}
+.a_list li {
+    padding-left: 20px;
+}
+
 /* .link-that-looks-like-button:visited {
 
 } */

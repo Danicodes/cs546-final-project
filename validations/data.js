@@ -43,7 +43,7 @@ function convertID(id){
 function parseTimeInterval(timelineInterval){
     if (timelineInterval != null) {
         if (typeof(timelineInterval) === 'string'){
-           timelineInterval = Date.parse(timelineInterval);
+           timelineInterval = parseInt(timelineInterval);
         }
         
         if (timelineInterval < constants.MIN_CHECKIN_INTERVAL || timelineInterval > constants.MAX_CHECKIN_INTERVAL){

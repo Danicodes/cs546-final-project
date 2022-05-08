@@ -173,15 +173,17 @@ async function getWorkspaceFilesPage(req, res) {
 }
 
 router.route('/getMentors')
-.get(getMentors); // API enpoint, if this is in users url, redirect to workspaces
+.get(getMentors); // API enpoint, if this is in users url, redirect to workspaces 
 
 router.route('/') // / My workspaces
 .get(getWorkspaceLandingPage);
 
+router.route("/:relationshipId/files")
+.get(getWorkspaceFilesPage);
+
 router.route('/relationships/:relationshipId') // get the single workspace relationship based on the relationship Id passed -- will determine whether or not the user can access based on the session userid
 .get(getWorkspaceRelationship);
 
-router.route("/:relationshipId/files")
-.get(getWorkspaceFilesPage);
+
 
 module.exports = router;
