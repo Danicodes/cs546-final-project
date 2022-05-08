@@ -1,0 +1,31 @@
+<div id="workspace-files">
+    <div id="workspace-files-section">
+        <h3 id="relationshipId">{{relationship._id}}</h3>
+        {{#if relationship.files}}
+            <ul>
+                {{#each relationship.files}}
+                    <li><a href="/relationships/{{relationship._id}}/download/{{this}}">{{this}}</a></li>
+                {{/each}}
+            </ul>
+        {{else}}
+            <p class="warning"> No files Shared Yet! </p>
+        {{/if}}
+    </div>
+    <form id="workspace-files-form">
+        <label for="uploadfile">Choose a file to share:
+            {{#if relationship.status}}
+                <input type="file" id="uploadfile" name="uploadfile" />
+            {{else}}
+                <input type="file" id="uploadfile" name="uploadfile" />
+            {{/if}}
+        </label>
+        <button type="submit"> Submit a Post </button>
+    </form>
+</div>
+
+
+{{!-- Script for reloading and handling the display of files--}}
+<script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+        crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+<script src="/public/scripts/workspace_files.js"></script>

@@ -20,7 +20,7 @@ class Status {
             case "completed":
                 return this.COMPLETED;
             default:
-                throw `Error: Undefined status`;
+                throw new Error(`Error: Undefined status`);
         }
     }
 }

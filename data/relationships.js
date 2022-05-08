@@ -10,6 +10,7 @@ const Category = enums.categories;
 const validate = require('../validations/data');
 const chat = require('./chat');
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
+const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
 
 /**
@@ -256,6 +257,17 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
         return uploadPath;
  }
 
+ const isUserAuthorizedForPost = async function(userId, relationshipId) {
+    validate.convertID(userId);
+    validate.convertID(relationshipId);
+
+    let relationship = await getRelationshipById(relationshipId);
+    if(userId === relationship.mentor.toString() || userId === relationship.mentee.toString())
+        return relationship;
+    else
+        throw new UnauthorizedRequest(`${userId} Not Authorized to update ${relationshipId}`);
+}
+
  module.exports = {
     createRelationship,
     getRelationshipById,
@@ -264,5 +276,6 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     uploadfile,
     downloadfile,
     updateRelationshipTimeline,
-    updateLastCheckin
+    updateLastCheckin,
+    isUserAuthorizedForPost
  }
