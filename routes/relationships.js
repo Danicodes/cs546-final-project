@@ -27,10 +27,17 @@ const chatData = data.chat;
  * @param {Object} res - response object
  */
 async function getAllRelationships(req, res){
-    // No arguments from req params or body
-    let user = req.session.user;
+    let userId;
+
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
+
     let returnList = [];
-    let userId = user.id;
     try {
         userId = validate.convertID(userId); 
     }
@@ -58,31 +65,41 @@ async function getAllRelationships(req, res){
         };
 
         // TODO: Not set on any of these layouts/frames being rendered since we're not yet sure exactly where these routes will be used
-       res.render('partials/relationships', {layout: 'workspaces', relationships: returnList}); 
+       res.render('partials/relationships', {layout: 'workspaces', relationships: returnObjects}); 
        //res.status(200).json(jsonObj);
     }
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
         res.status(500).json({error:e});
+        return;
     }
 };
 
 /**
- * Post a new relationship object 
+ * Post a new relationship object from mentee to mentor always
+ * A mentee 
  * @param {Object} req - request object
  * @param {Object} res - response object
  * @returns void
  */
 async function postNewRelationship(req, res){
     let menteeId, mentorId, userId, timeline;
+
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
+
     try {
-        userId = validate.convertID(req.session.user.id);
-       // validate.checkArgLength(req.body, 4);
+        userId = validate.convertID(userId);
         validate.checkIsEmptyString(req.body.relationshipDescription);
         mentorId = validate.convertID(req.body.mentorId); 
-        menteeId = validate.convertID(req.body.menteeId);
+        menteeId = validate.convertID(req.body.menteeId); //
         validate.checkIsEmptyString(req.body.relationshipCategory);
-        timeline = validate.parseTimeInterval(req.body.timeline);
+        timeline = validate.parseTimeInterval(req.body.timeline); // allowed to be null
 
         enums.categories.get(req.body.relationshipCategory); // will throw an error if the category is not in the list
     }
@@ -93,7 +110,7 @@ async function postNewRelationship(req, res){
     }
 
     try {
-        if ((userId.toString() !== mentorId.toString()) && (userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
+        if ((userId.toString() !== menteeId.toString())) throw `Error: Unauthorized user`;
     }
     catch(e){
         res.status(403).json({error: e});
@@ -108,16 +125,26 @@ async function postNewRelationship(req, res){
        
         //res.render('frame/request', {layout: 'profile', relationship: relationshipObj, created: true});
         res.status(200).json({success: true, relationship: relationshipObj, added: added}); // used for testing
+        return;
     }
     catch(e){
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
         res.status(500).json({error:e});
+        return;
     }
 };
 
 
 async function postUpdateTimeline(req, res){
-    let timeline, relationshipId, userid;
+    let timeline, relationshipId, userId;
+
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
 
     try {
         timeline = validate.parseTimeInterval(req.body.timeline);
@@ -132,24 +159,41 @@ async function postUpdateTimeline(req, res){
     }
 
     try{
-        //TODO: Ensure that user is the MENTOR of the relationship
+        let relationshipObject = await relationships.getRelationshipById(relationshipId);
+        if (userId.toString() !== relationshipObject.mentor.toString()){
+            throw `Error: User is not authorized to edit the check in time intervals`;
+        }
+    }
+    catch(e) {
+        res.status(403).json({error: e});
+        return;
+    }
+
+    try{
         let response = await relationships.updateRelationshipTimeline(relationshipId, timeline);
         res.status(200).json({ success: true, relationship: response });
+        return;
     }
     catch(e){
         res.status(500).json({error:e});
     }
 }
 
-async function postLastCheckin(req, res){
+async function postLastCheckin(req, res){ // Check in is only updated when the mentor checks on the mentee
     let checkin, relationshipId, userId;
+
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
 
     try {
         checkin = new Date(req.body.lastCheckIn);
         //checkin = validate.parseCheckin(req.body.lastCheckIn);
         relationshipId = validate.convertID(req.body.relationshipId);
-        userId = validate.convertID(req.body.userId);
-
         if (checkin == null){
             throw `checkin cannot be null`;
         }
@@ -160,9 +204,20 @@ async function postLastCheckin(req, res){
     }
 
     try{
-        //TODO: Ensure that user is the MENTOR of the relationship
+        let relationshipObject = await relationships.getRelationshipById(relationshipId);
+        if (userId.toString() !== relationshipObject.mentor.toString()){
+            throw `Error: User is not authorized to edit the check in time intervals`;
+        }
+    }
+    catch(e) {
+        res.status(403).json({error: e});
+        return;
+    }
+
+    try{
         let response = await relationships.updateLastCheckin(relationshipId, checkin);
         res.status(200).json({ success: true, relationship: response });
+        return;
     }
     catch(e){
         res.status(500).json({error:e});
@@ -203,19 +258,28 @@ async function getRelationshipByStatus(req, res){
     // Show only the relationships in requested status
     let returnList;
     let userId;
+
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
     // if req.session.view == mentor/mentee
     try {
-        userId = validate.convertID(req.session.user.id);
+        userId = validate.convertID(userId);
         enums.status.get(req.params.status);
-        // TODO: if in mentor view, show all your mentees
+        // TODO: if in mentor view, show all your mentees -- possibly in req.body.view
         let menteeList = await users.getMenteeList(userId);
         returnList = await relationships.filterRelationshipsByStatus(menteeList, req.params.status);
        
         // TODO:if in mentee view, show all your mentors
         let mentorList = await users.getMentorList(userId);
-        returnList.concat(await relationships.filterRelationshipsByStatus(mentorList, req.params.status));
+        let filteredMentorList = await relationships.filterRelationshipsByStatus(mentorList, req.params.status);
+        returnList = returnList.concat(filteredMentorList);
         
-        let relationshipObjects = []
+        let relationshipObjects = [];
         for (let relationshipId of returnList){
             let relationshipObject = await relationships.getRelationshipById(relationshipId);
             
@@ -231,6 +295,7 @@ async function getRelationshipByStatus(req, res){
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
         console.log("success");
         res.status(200).json({success: true, relationships: relationshipObjects});
+        return;
     }
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
@@ -244,17 +309,25 @@ async function getRelationshipByStatus(req, res){
  * @param {Object} res - response object
  */
 async function getMentors(req, res){
-    let returnList;
+    // let returnList;
     let userId;
 
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
+
     try {
-        userId = validate.convertID(req.session.user.id);
+        userId = validate.convertID(userId);
         let mentorRelationships = await users.getMentorList(userId);
         
         let relationshipObjects = []
         for (let relationshipId of mentorRelationships){
             relationshipObjects.push(await relationships.getRelationshipById(relationshipId));
-        };
+        }
 
         for (let relationship of relationshipObjects){
             let mentoruserId = relationship.mentor;
@@ -264,10 +337,12 @@ async function getMentors(req, res){
         //return relationship objects
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
         res.status(200).json({success: true, relationships: relationshipObjects});
+        return;
     }
     catch(e) {
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
         res.status(500).json({error:e});
+        return;
     }
 };
 
@@ -277,8 +352,15 @@ async function getMentors(req, res){
  * @param {Object} res 
  */
 async function getMentees(req, res){
-    let returnList;
     let userId;
+
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
 
     try {
         userId = validate.convertID(req.session.user.id);
@@ -298,6 +380,7 @@ async function getMentees(req, res){
         //res.render('frames/relationships', {layout: 'profile', relationships: relationshipObjects});
 
         res.status(200).json({success: true, relationships: relationshipObjects});
+        return;
         
     }
     catch(e) {
@@ -317,12 +400,25 @@ async function getMentees(req, res){
     let relationshipID;
     let userId;
 
+    if (req.session.user){
+        userId = req.session.user.id;
+    }
+    else {
+        res.redirect('/');
+        return;
+    }
+
     try {
-        userId = validate.convertID(req.session.user.id);
-        relationshipID = validate.convertID(req.params.relationshipID); // Changed to get value from body
+        userId = validate.convertID(userId);
+        relationshipID = validate.convertID(req.params.relationshipID);
         validate.checkIsEmptyString(req.params.status);
+        let relationshipObject = await relationships.getRelationshipById(relationshipID);
         enums.status.get(req.params.status); // will throw an error if status is invalid
-        validate.isUserAuthorizedForPost(userId, relationshipID); // User Should be a mentor or mentee of this relationship
+        if (req.params.status === 'approved' && relationshipObject.mentor.toString() != userId.toString()){
+            // the requesting user must be a mentor
+            throw `Error: unauthorized to make this request`;
+        }
+        //validate.isUserAuthorizedForPost(userId, relationshipID); // User Should be a mentor or mentee of this relationship
     }    
     catch(e) {
         if(e instanceof UnauthorizedRequest)
@@ -346,10 +442,12 @@ async function getMentees(req, res){
         //return relationship objects
         let updatedUser = await users.updateUserRelationships(userId, updatedRelationship); 
         res.status(200).json({success: true, updatedRelationship: updatedRelationship, updatedUser: updatedUser});
+        return;
     }
     catch(e){
         //res.status(500).render('frames/error', {layout: 'profile', error: "Internal server error"});
         res.status(403).json({error:e});
+        return;
     }
 };
 
@@ -461,32 +559,28 @@ let getStatusOfRelationship = async function(req, res){
     }
 }
 
-router.route("/:id/status")
+router.route("/:id/status") // Get the status of a given relationship  -- :relationshipid/status
 .get(getStatusOfRelationship);
 
-router.route('/:relationshipID/:status')
+router.route('/:relationshipID/:status(approved|rejected|pending|completed)')// change the state of a relationship instead of /accept/reject
 .post(postRelationshipStatusUpdate);
 
 router.route('/$')
-.get(getAllRelationships)
-.post(postNewRelationship);
+.get(getAllRelationships) // Get my relationships
+.post(postNewRelationship); // Request a new relationship, the other person's id will be in req.body
 
-router.route('/:userId/mentors')
+router.route('/mentors') // get my list of mentors
 .get(getMentors);
 
-router.route('/:userId/mentees')
+router.route('/mentees') // get my list of mentees
 .get(getMentees);
 
-router.route('/:status')
+router.route('/:status(approved|rejected|pending|completed)') //  get my relationships by status
 .get(getRelationshipByStatus);
 
-router.route('/:userId/:relationshipId$')
-.post(postUpdateTimeline);
-
-//router.route('/mentors')
-
-router.route('/:userId/:status')
-.get(getRelationshipByStatus);
+/**
+ * File updates
+ */
 
 router.route("/:id/upload")
 .post(fileUpload);
@@ -494,10 +588,14 @@ router.route("/:id/upload")
 router.route("/:id/download/:filename")
 .get(fileDownload);
 
+/**
+ * Timeline updates
+ */
+
 router.route('/updateCheckin')
 .post(postLastCheckin);
 
-router.route('/interval/:relationshipId')
+router.route('/interval/:relationshipId$') // post an update to the checkin interval
 .post(postUpdateTimeline);
 
 module.exports = router;
