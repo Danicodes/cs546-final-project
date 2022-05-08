@@ -421,8 +421,6 @@ async function seedRelationships(){
         ]
     }
     const chatInfo1 = await chatsCollection.insertOne(chat1);
-    //console.log("chatInfo1:"); // debug
-    //console.log(chatInfo1); // debug
     if(!chatInfo1.acknowledged || !chatInfo1.insertedId) throw "Could not insert chat 1 when seeding chats and relationships.";
     let relationship1 = {
         "relationshipDescription": "Cooking Noob wants to learn the ways of cooking chicken from General Tso.",
@@ -439,9 +437,9 @@ async function seedRelationships(){
     }
     const relInfo1 = await relationshipsCollection.insertOne(relationship1);
     if(!relInfo1.acknowledged || !relInfo1.insertedId) throw "Could not insert relationship 1 when seeding relationships";
-    const userInfo1_7 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"mentorRelationships": relInfo1.insertedId}});
+    const userInfo1_7 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"mentorRelations": relInfo1.insertedId}});
     if(!userInfo1_7.acknowledged) throw "Could not update user 1 when seeding relationships";
-    const userInfo7_1 = await usersCollection.updateOne({"_id": user7id}, {"$push": {"menteeRelationships": relInfo1.insertedId}});
+    const userInfo7_1 = await usersCollection.updateOne({"_id": user7id}, {"$push": {"menteeRelations": relInfo1.insertedId}});
     if(!userInfo7_1.acknowledged) throw "Could not update user 7 when seeding relationships";
 
     // Relationship 2: 2->8 ACTIVE
@@ -481,9 +479,9 @@ async function seedRelationships(){
     }
     const relInfo2 = await relationshipsCollection.insertOne(relationship2);
     if(!relInfo2.acknowledged || !relInfo2.insertedId) throw "Could not insert relationship 2 when seeding relationships";
-    const userInfo2_8 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo2.insertedId}});
+    const userInfo2_8 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelations": relInfo2.insertedId}});
     if(!userInfo2_8.acknowledged) throw "Could not update user 2 when seeding relationships";
-    const userInfo8_2 = await usersCollection.updateOne({"_id": user8id}, {"$push": {"menteeRelationships": relInfo2.insertedId}});
+    const userInfo8_2 = await usersCollection.updateOne({"_id": user8id}, {"$push": {"menteeRelations": relInfo2.insertedId}});
     if(!userInfo8_2.acknowledged) throw "Could not update user 8 when seeding relationships";
 
     // Relationship 3: 3->9 REJECTED
@@ -538,9 +536,9 @@ async function seedRelationships(){
     }
     const relInfo3 = await relationshipsCollection.insertOne(relationship3);
     if(!relInfo3.acknowledged || !relInfo3.insertedId) throw "Could not insert relationship 3 when seeding relationships";
-    const userInfo3_9 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"mentorRelationships": relInfo3.insertedId}});
+    const userInfo3_9 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"mentorRelations": relInfo3.insertedId}});
     if(!userInfo3_9.acknowledged) throw "Could not update user 3 when seeding relationships";
-    const userInfo9_3 = await usersCollection.updateOne({"_id": user9id}, {"$push": {"menteeRelationships": relInfo3.insertedId}});
+    const userInfo9_3 = await usersCollection.updateOne({"_id": user9id}, {"$push": {"menteeRelations": relInfo3.insertedId}});
     if(!userInfo9_3.acknowledged) throw "Could not update user 9 when seeding relationships";
 
     // Relationship 4: 4->10 COMPLETED
@@ -600,9 +598,9 @@ async function seedRelationships(){
     }
     const relInfo4 = await relationshipsCollection.insertOne(relationship4);
     if(!relInfo4.acknowledged || !relInfo4.insertedId) throw "Could not insert relationship 4 when seeding relationships";
-    const userInfo4_10 = await usersCollection.updateOne({"_id": user4id}, {"$push": {"mentorRelationships": relInfo4.insertedId}});
+    const userInfo4_10 = await usersCollection.updateOne({"_id": user4id}, {"$push": {"mentorRelations": relInfo4.insertedId}});
     if(!userInfo4_10.acknowledged) throw "Could not update user 4 when seeding relationships";
-    const userInfo10_4 = await usersCollection.updateOne({"_id": user10id}, {"$push": {"menteeRelationships": relInfo4.insertedId}});
+    const userInfo10_4 = await usersCollection.updateOne({"_id": user10id}, {"$push": {"menteeRelations": relInfo4.insertedId}});
     if(!userInfo10_4.acknowledged) throw "Could not update user 10 when seeding relationships";
 
     // Relationship 5: 5->11 PENDING
@@ -632,9 +630,9 @@ async function seedRelationships(){
     }
     const relInfo5 = await relationshipsCollection.insertOne(relationship5);
     if(!relInfo5.acknowledged || !relInfo5.insertedId) throw "Could not insert relationship 5 when seeding relationships";
-    const userInfo5_11 = await usersCollection.updateOne({"_id": user5id}, {"$push": {"mentorRelationships": relInfo5.insertedId}});
+    const userInfo5_11 = await usersCollection.updateOne({"_id": user5id}, {"$push": {"mentorRelations": relInfo5.insertedId}});
     if(!userInfo5_11.acknowledged) throw "Could not update user 5 when seeding relationships";
-    const userInfo11_5 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"menteeRelationships": relInfo5.insertedId}});
+    const userInfo11_5 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"menteeRelations": relInfo5.insertedId}});
     if(!userInfo11_5.acknowledged) throw "Could not update user 11 when seeding relationships";
 
     // Relationship 6: 2->12 ACTIVE
@@ -689,9 +687,9 @@ async function seedRelationships(){
     }
     const relInfo6 = await relationshipsCollection.insertOne(relationship6);
     if(!relInfo6.acknowledged || !relInfo6.insertedId) throw "Could not insert relationship 6 when seeding relationships";
-    const userInfo2_12 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo6.insertedId}});
+    const userInfo2_12 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelations": relInfo6.insertedId}});
     if(!userInfo2_12.acknowledged) throw "Could not update user 2 when seeding relationships";
-    const userInfo12_2 = await usersCollection.updateOne({"_id": user12id}, {"$push": {"menteeRelationships": relInfo6.insertedId}});
+    const userInfo12_2 = await usersCollection.updateOne({"_id": user12id}, {"$push": {"menteeRelations": relInfo6.insertedId}});
     if(!userInfo12_2.acknowledged) throw "Could not update user 12 when seeding relationships";
 
     // Relationship 7: 3->16 ACTIVE
@@ -726,9 +724,9 @@ async function seedRelationships(){
     }
     const relInfo7 = await relationshipsCollection.insertOne(relationship7);
     if(!relInfo7.acknowledged || !relInfo7.insertedId) throw "Could not insert relationship 7 when seeding relationships";
-    const userInfo3_16 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"mentorRelationships": relInfo7.insertedId}});
+    const userInfo3_16 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"mentorRelations": relInfo7.insertedId}});
     if(!userInfo3_16.acknowledged) throw "Could not update user 3 when seeding relationships";
-    const userInfo16_3 = await usersCollection.updateOne({"_id": user16id}, {"$push": {"menteeRelationships": relInfo7.insertedId}});
+    const userInfo16_3 = await usersCollection.updateOne({"_id": user16id}, {"$push": {"menteeRelations": relInfo7.insertedId}});
     if(!userInfo16_3.acknowledged) throw "Could not update user 16 when seeding relationships";
 
     // Relationship 8: 2->17 REJECTED
@@ -752,9 +750,9 @@ async function seedRelationships(){
     }
     const relInfo8 = await relationshipsCollection.insertOne(relationship8);
     if(!relInfo8.acknowledged || !relInfo8.insertedId) throw "Could not insert relationship 8 when seeding relationships";
-    const userInfo2_17 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo8.insertedId}});
+    const userInfo2_17 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelations": relInfo8.insertedId}});
     if(!userInfo2_17.acknowledged) throw "Could not update user 2 when seeding relationships";
-    const userInfo17_2 = await usersCollection.updateOne({"_id": user17id}, {"$push": {"menteeRelationships": relInfo8.insertedId}});
+    const userInfo17_2 = await usersCollection.updateOne({"_id": user17id}, {"$push": {"menteeRelations": relInfo8.insertedId}});
     if(!userInfo17_2.acknowledged) throw "Could not update user 17 when seeding relationships";
 
     // Relationship 9: 2->18 COMPLETED
@@ -809,9 +807,9 @@ async function seedRelationships(){
     }
     const relInfo9 = await relationshipsCollection.insertOne(relationship9);
     if(!relInfo9.acknowledged || !relInfo9.insertedId) throw "Could not insert relationship 9 when seeding relationships";
-    const userInfo2_18 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelationships": relInfo9.insertedId}});
+    const userInfo2_18 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"mentorRelations": relInfo9.insertedId}});
     if(!userInfo2_18.acknowledged) throw "Could not update user 2 when seeding relationships";
-    const userInfo18_2 = await usersCollection.updateOne({"_id": user18id}, {"$push": {"menteeRelationships": relInfo9.insertedId}});
+    const userInfo18_2 = await usersCollection.updateOne({"_id": user18id}, {"$push": {"menteeRelations": relInfo9.insertedId}});
     if(!userInfo18_2.acknowledged) throw "Could not update user 18 when seeding relationships";
 
     // Relationship 10: 1->19 ACTIVE
@@ -851,15 +849,460 @@ async function seedRelationships(){
     }
     const relInfo10 = await relationshipsCollection.insertOne(relationship10);
     if(!relInfo10.acknowledged || !relInfo10.insertedId) throw "Could not insert relationship 10 when seeding relationships";
-    const userInfo1_19 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"mentorRelationships": relInfo10.insertedId}});
+    const userInfo1_19 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"mentorRelations": relInfo10.insertedId}});
     if(!userInfo1_19.acknowledged) throw "Could not update user 1 when seeding relationships";
-    const userInfo19_1 = await usersCollection.updateOne({"_id": user19id}, {"$push": {"menteeRelationships": relInfo10.insertedId}});
+    const userInfo19_1 = await usersCollection.updateOne({"_id": user19id}, {"$push": {"menteeRelations": relInfo10.insertedId}});
     if(!userInfo19_1.acknowledged) throw "Could not update user 19 when seeding relationships";
 }
 
 // Seeds posts
 async function seedPosts(){
-    // Implement
+
+    const usersCollection = await usersCol();
+    const postsCollection = await postsCol();
+
+    // Get users
+    const user1 = await usersCollection.findOne({"name": "General Tso"});
+    if(!user1) throw "Could not get user 1 when seeding posts.";
+    let user1id = user1["_id"];
+    const user2 = await usersCollection.findOne({"name": "Bob Ross"});
+    if(!user2) throw "Could not get user 2 when seeding posts.";
+    let user2id = user2["_id"];
+    const user3 = await usersCollection.findOne({"name": "Johnny Rocket"});
+    if(!user3) throw "Could not get user 3 when seeding posts.";
+    let user3id = user3["_id"];
+    const user4 = await usersCollection.findOne({"name": "Chuck Cheese"});
+    if(!user4) throw "Could not get user 4 when seeding posts";
+    let user4id = user4["_id"];
+    const user5 = await usersCollection.findOne({"name": "Red Digit"});
+    if(!user5) throw "Could not get user 5 when seeding posts.";
+    let user5id = user5["_id"];
+    const user6 = await usersCollection.findOne({"name": "Lloyd Beige"});
+    if(!user6) throw "Could not get user 6 when seeding posts.";
+    let user6id = user6["_id"];
+    const user7 = await usersCollection.findOne({"name": "Cooking Noob"});
+    if(!user7) throw "Could not get user 7 when seeding posts.";
+    let user7id = user7["_id"];
+    const user8 = await usersCollection.findOne({"name": "Painting Newbie"});
+    if(!user8) throw "Could not get user 8 when seeding posts.";
+    let user8id = user8["_id"];
+    const user9 = await usersCollection.findOne({"name": "Shake Beginner"});
+    if(!user9) throw "Could not get user 9 when seeding posts.";
+    let user9id = user9["_id"];
+    const user10 = await usersCollection.findOne({"name": "Slots Addict"});
+    if(!user10) throw "Could not get user 10 when seeding posts.";
+    let user10id = user10["_id"];
+    const user11 = await usersCollection.findOne({"name": "Gaming Enthusiast"});
+    if(!user11) throw "Could not get user 11 when seeding posts.";
+    let user11id = user11["_id"];
+    const user12 = await usersCollection.findOne({"name": "Art Fan"});
+    if(!user12) throw "Could not get user 12 when seeding posts.";
+    let user12id = user12["_id"];
+    const user13 = await usersCollection.findOne({"name": "Sports Fan"});
+    if(!user13) throw "Could not get user 13 when seeding posts.";
+    let user13id = user13["_id"];
+    const user14 = await usersCollection.findOne({"name": "Grandma Basketweaver"});
+    if(!user14) throw "Could not get user 14 when seeding posts.";
+    let user14id = user14["_id"];
+    const user15 = await usersCollection.findOne({"name": "Internet Explorer"});
+    if(!user15) throw "Could not get user 15 when seeding posts.";
+    let user15id = user15["_id"];
+    const user16 = await usersCollection.findOne({"name": "Shake Drinker"});
+    if(!user16) throw "Could not get user 16 when seeding posts.";
+    let user16id = user16["_id"];
+    const user17 = await usersCollection.findOne({"name": "Magic Paintbrush"});
+    if(!user17) throw "Could not get user 17 when seeding posts.";
+    let user17id = user17["_id"];
+    const user18 = await usersCollection.findOne({"name": "Mario Mario"});
+    if(!user18) throw "Could not get user 18 when seeding posts.";
+    let user18id = user18["_id"];
+    const user19 = await usersCollection.findOne({"name": "Colonel Sanders"});
+    if(!user19) throw "Could not get user 19 when seeding posts.";
+    let user19id = user19["_id"];
+    const user20 = await usersCollection.findOne({"name": "King Hippo"});
+    if(!user20) throw "Could not get user 20 when seeding posts.";
+    let user20id = user20["_id"];
+
+    // Create post objects
+    let post1 = {
+        "author": user1id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "My chicken is the best. So many people these days don't make it as well. Seriously, why can't people make chicken like me?",
+        "createdOn": new Date(),
+        "searchTags": ["Cooking", "Chicken"],
+        "visibility": "public",
+        "likedBy": [user4id, user13id, user19id],
+        "disLikedBy": [user16id],
+        "reportedBy": []
+    };
+    let post2 = {
+        "author": user2id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I welcome anybody who would like to learn how to paint better. It is a wonderful experience to paint.",
+        "createdOn": new Date(),
+        "searchTags": ["Painting", "Art"],
+        "visibility": "public",
+        "likedBy": [user6id, user8id, user12id, user17id, user18id],
+        "disLikedBy": [user20id],
+        "reportedBy": []
+    };
+    let post3 = {
+        "author": user3id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Come to my restaurants, which have the best shakes around! Burgers are secondary.",
+        "createdOn": new Date(),
+        "searchTags": ["Cooking", "Milkshakes", "Restaurants"],
+        "visibility": "public",
+        "likedBy": [user9id, user16id],
+        "disLikedBy": [user4id],
+        "reportedBy": [user14id]
+    };
+    let post4 = {
+        "author": user4id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Come on down to Chuck E Cheese's to have a lot of fun! It's the #1 party spot!",
+        "createdOn": new Date(),
+        "searchTags": ["Party", "Fun", "Enjoyment", "Birthday"],
+        "visibility": "public",
+        "likedBy": [user4id, user11id, user20id],
+        "disLikedBy": [user18id],
+        "reportedBy": [user3id]
+    };
+    let post5 = {
+        "author": user5id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "If anybody would like to learn about game development, let me know! I'm mentoring in that right now.",
+        "createdOn": new Date(),
+        "searchTags": ["GameDevelopment"],
+        "visibility": "public",
+        "likedBy": [user10id, user11id, user15id, user18id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post6 = {
+        "author": user6id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I'll be at the medieval swords convention this Saturday, if anybody is interested in meeting me there.",
+        "createdOn": new Date(),
+        "searchTags": ["Events", "Medieval", "Hobbies"],
+        "visibility": "private",
+        "likedBy": [],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post7 = {
+        "author": user7id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Just joined this site. I think I'll get into cooking. Cooking is a really fun hobby, I've been told.",
+        "createdOn": new Date(),
+        "searchTags": ["Cooking", "Hobbies"],
+        "visibility": "public",
+        "likedBy": [user1id, user19id, user14id],
+        "disLikedBy": [user16id],
+        "reportedBy": []
+    };
+    let post8 = {
+        "author": user8id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Learning to paint is really hard, but I guess I'll keep working at this until I get better. I have a long road ahead of me, but I have tons of free time to walk that road.",
+        "createdOn": new Date(),
+        "searchTags": [],
+        "visibility": "public",
+        "likedBy": [user2id, user12id, user18id],
+        "disLikedBy": [user13id],
+        "reportedBy": []
+    };
+    let post9 = {
+        "author": user9id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Trying to find a mentor is soooo annoying!!! I tried to get someone  to help me, but they rejected! How can I stop that??",
+        "createdOn": new Date(),
+        "searchTags": ["Help", "Rejected"],
+        "visibility": "public",
+        "likedBy": [user9id],
+        "disLikedBy": [user1id, user5id],
+        "reportedBy": [user3id]
+    };
+    let post10 = {
+        "author": user10id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I came to this site trying to win at slots, and I got some great advice, but I'm not seeing any results. What should I do? I feel hopeless",
+        "createdOn": new Date(),
+        "searchTags": [],
+        "visibility": "private",
+        "likedBy": [],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post11 = {
+        "author": user11id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I might start mentoring video game skills soon. Who would be interested in learning gaming skills, and which games would you like to learn to get better at?",
+        "createdOn": new Date(),
+        "searchTags": ["Gaming", "Hobbies"],
+        "visibility": "public",
+        "likedBy": [user18id, user20id, user4id],
+        "disLikedBy": [user13id],
+        "reportedBy": []
+    };
+    let post12 = {
+        "author": user13id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Does anyone on this site have any sense of taste?! Nobody is into curling! You're all idiots who don't have lives! This site sucks. Video game players are dumb, and they all need to be banned from this site.",
+        "createdOn": new Date(),
+        "searchTags": ["Sports", "Hobbies", "Curling", "Gaming"],
+        "visibility": "public",
+        "likedBy": [user14id],
+        "disLikedBy": [user4id, user5id, user10id, user18id],
+        "reportedBy": [user5id, user18id]
+    };
+    let post13 = {
+        "author": user14id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Hello! This is my first post on any social media website. Can someone tell me where to ask for a request?",
+        "createdOn": new Date(),
+        "searchTags": ["Hello", "Post"],
+        "visibility": "public",
+        "likedBy": [user6id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post14 = {
+        "author": user15id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I currently accept mentorship requests for learning how to make highly-optimized software.",
+        "createdOn": new Date(),
+        "searchTags": ["Request", "SoftwareDevelopment"],
+        "visibility": "public",
+        "likedBy": [user20id],
+        "disLikedBy": [user17id, user4id],
+        "reportedBy": []
+    };
+    let post15 = {
+        "author": user17id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Once I learn to paint better, where should I go to improve other people's lives? I can't just stay where I am; I need to go on an adventure. I have a higher purpose!",
+        "createdOn": new Date(),
+        "searchTags": ["Adventure", "Hobbies", "Art"],
+        "visibility": "public",
+        "likedBy": [user2id, user14id, user18id],
+        "disLikedBy": [user11id],
+        "reportedBy": []
+    };
+    let post16 = {
+        "author": user18id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I just a-wanted to say thank you all for playing my games and enjoying them a-so much! Please buy my upcoming games. They're a lot of fun!",
+        "createdOn": new Date(),
+        "searchTags": ["Gaming", "Fun", "Hobbies"],
+        "visibility": "public",
+        "likedBy": [user11id, user5id],
+        "disLikedBy": [user4id],
+        "reportedBy": []
+    };
+    let post17 = {
+        "author": user19id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "I'm excited to make more different kinds of chicken recipes! Fried chicken is great, but variety is the spice of life.",
+        "createdOn": new Date(),
+        "searchTags": ["Cooking", "Chicken"],
+        "visibility": "public",
+        "likedBy": [user13id, user16id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post18 = {
+        "author": user20id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "dsklskjwqmnadsffdsds;ldsfa;lkjfdsafdqrewrewew2eedf98cs98cxivojscoyresoimkesrp98rtypevdcfaimh3xwa harrddlk;jfdsa",
+        "createdOn": new Date(),
+        "searchTags": [],
+        "visibility": "public",
+        "likedBy": [user18id],
+        "disLikedBy": [user11id, user5id, user12id, user19id],
+        "reportedBy": [user5id, user12id, user13id]
+    };
+    let post19 = {
+        "author": user20id,
+        "comments": [], // FILL THIS IN LATER
+        "content": ";lkjdsaca4awo7svdiusadliumvachhasahellpppppplkjfsafxem",
+        "createdOn": new Date(),
+        "searchTags": ["Help"],
+        "visibility": "public",
+        "likedBy": [user20id],
+        "disLikedBy": [user11id, user5id, user12id, user19id],
+        "reportedBy": [user5id, user12id]
+    };
+    let post20 = {
+        "author": user20id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "dslkjsoheeeelpasdclkasadscwanjal",
+        "createdOn": new Date(),
+        "searchTags": ["Help"],
+        "visibility": "public",
+        "likedBy": [],
+        "disLikedBy": [user11id, user5id, user12id],
+        "reportedBy": [user5id, user12id, user13id]
+    };
+    let post21 = {
+        "author": user9id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Just spilled another shake. Why does this keep happening?",
+        "createdOn": new Date(),
+        "searchTags": ["Milkshakes"],
+        "visibility": "public",
+        "likedBy": [user13id, user16id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post22 = {
+        "author": user4id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Some people say that gambling is a crippling addiction. I say that it's an amazing pastime that can make you money!",
+        "createdOn": new Date(),
+        "searchTags": ["Gambling", "Hobbies"],
+        "visibility": "public",
+        "likedBy": [user10id, user15id, user13id],
+        "disLikedBy": [user1id, user7id, user17id, user19id, user18id, user3id],
+        "reportedBy": []
+    };
+    let post23 = {
+        "author": user8id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Just finished my 17th painting of the same shrub. I think I'm getting slightly better over time! It's amazing how practice makes perfect.",
+        "createdOn": new Date(),
+        "searchTags": ["Hobbies", "Painting"],
+        "visibility": "private",
+        "likedBy": [user2id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post24 = {
+        "author": user11id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Just downloaded the newest fad game. I'm going to go live on my livestream if anybody wants to see me wreck some noobs!",
+        "createdOn": new Date(),
+        "searchTags": ["Gaming"],
+        "visibility": "public",
+        "likedBy": [user13id, user18id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+    let post25 = {
+        "author": user20id,
+        "comments": [], // FILL THIS IN LATER
+        "content": "Finally took boxing gloves off. Much better now",
+        "createdOn": new Date(),
+        "searchTags": ["Hobbies"],
+        "visibility": "public",
+        "likedBy": [user1id, user2id, user3id, user4id, user5id, user6id, user7id, user8id, user9id, user10id, user11id, user12id, user13id, user14id, user15id, user16id, user17id, user18id, user19id],
+        "disLikedBy": [],
+        "reportedBy": []
+    };
+
+    // Insert post objects into database
+    const postInfo1 = await postsCollection.insertOne(post1);
+    if(!postInfo1.acknowledged || !postInfo1.insertedId) throw "Could not insert post 1 when seeding posts.";
+    const postInfo2 = await postsCollection.insertOne(post2);
+    if(!postInfo2.acknowledged || !postInfo2.insertedId) throw "Could not insert post 2 when seeding posts.";
+    const postInfo3 = await postsCollection.insertOne(post3);
+    if(!postInfo3.acknowledged || !postInfo3.insertedId) throw "Could not insert post 3 when seeding posts.";
+    const postInfo4 = await postsCollection.insertOne(post4);
+    if(!postInfo4.acknowledged || !postInfo4.insertedId) throw "Could not insert post 4 when seeding posts.";
+    const postInfo5 = await postsCollection.insertOne(post5);
+    if(!postInfo5.acknowledged || !postInfo5.insertedId) throw "Could not insert post 5 when seeding posts.";
+    const postInfo6 = await postsCollection.insertOne(post6);
+    if(!postInfo6.acknowledged || !postInfo6.insertedId) throw "Could not insert post 6 when seeding posts.";
+    const postInfo7 = await postsCollection.insertOne(post7);
+    if(!postInfo7.acknowledged || !postInfo7.insertedId) throw "Could not insert post 7 when seeding posts.";
+    const postInfo8 = await postsCollection.insertOne(post8);
+    if(!postInfo8.acknowledged || !postInfo8.insertedId) throw "Could not insert post 8 when seeding posts.";
+    const postInfo9 = await postsCollection.insertOne(post9);
+    if(!postInfo9.acknowledged || !postInfo9.insertedId) throw "Could not insert post 9 when seeding posts.";
+    const postInfo10 = await postsCollection.insertOne(post10);
+    if(!postInfo10.acknowledged || !postInfo10.insertedId) throw "Could not insert post 10 when seeding posts.";
+    const postInfo11 = await postsCollection.insertOne(post11);
+    if(!postInfo11.acknowledged || !postInfo11.insertedId) throw "Could not insert post 11 when seeding posts.";
+    const postInfo12 = await postsCollection.insertOne(post12);
+    if(!postInfo12.acknowledged || !postInfo12.insertedId) throw "Could not insert post 12 when seeding posts.";
+    const postInfo13 = await postsCollection.insertOne(post13);
+    if(!postInfo13.acknowledged || !postInfo13.insertedId) throw "Could not insert post 13 when seeding posts.";
+    const postInfo14 = await postsCollection.insertOne(post14);
+    if(!postInfo14.acknowledged || !postInfo14.insertedId) throw "Could not insert post 14 when seeding posts.";
+    const postInfo15 = await postsCollection.insertOne(post15);
+    if(!postInfo15.acknowledged || !postInfo15.insertedId) throw "Could not insert post 15 when seeding posts.";
+    const postInfo16 = await postsCollection.insertOne(post16);
+    if(!postInfo16.acknowledged || !postInfo16.insertedId) throw "Could not insert post 16 when seeding posts.";
+    const postInfo17 = await postsCollection.insertOne(post17);
+    if(!postInfo17.acknowledged || !postInfo17.insertedId) throw "Could not insert post 17 when seeding posts.";
+    const postInfo18 = await postsCollection.insertOne(post18);
+    if(!postInfo18.acknowledged || !postInfo18.insertedId) throw "Could not insert post 18 when seeding posts.";
+    const postInfo19 = await postsCollection.insertOne(post19);
+    if(!postInfo19.acknowledged || !postInfo19.insertedId) throw "Could not insert post 19 when seeding posts.";
+    const postInfo20 = await postsCollection.insertOne(post20);
+    if(!postInfo20.acknowledged || !postInfo20.insertedId) throw "Could not insert post 20 when seeding posts.";
+    const postInfo21 = await postsCollection.insertOne(post21);
+    if(!postInfo21.acknowledged || !postInfo21.insertedId) throw "Could not insert post 21 when seeding posts.";
+    const postInfo22 = await postsCollection.insertOne(post22);
+    if(!postInfo22.acknowledged || !postInfo22.insertedId) throw "Could not insert post 22 when seeding posts.";
+    const postInfo23 = await postsCollection.insertOne(post23);
+    if(!postInfo23.acknowledged || !postInfo23.insertedId) throw "Could not insert post 23 when seeding posts.";
+    const postInfo24 = await postsCollection.insertOne(post24);
+    if(!postInfo24.acknowledged || !postInfo24.insertedId) throw "Could not insert post 24 when seeding posts.";
+    const postInfo25 = await postsCollection.insertOne(post25);
+    if(!postInfo25.acknowledged || !postInfo25.insertedId) throw "Could not insert post 25 when seeding posts.";
+
+    // Update users' myPosts arrays with post ids
+    const userInfo1 = await usersCollection.updateOne({"_id": user1id}, {"$push": {"myPosts": postInfo1.insertedId}});
+    if(!userInfo1.acknowledged) throw "Could not update user 1 when seeding posts";
+    const userInfo2 = await usersCollection.updateOne({"_id": user2id}, {"$push": {"myPosts": postInfo2.insertedId}});
+    if(!userInfo2.acknowledged) throw "Could not update user 2 when seeding posts";
+    const userInfo3 = await usersCollection.updateOne({"_id": user3id}, {"$push": {"myPosts": postInfo3.insertedId}});
+    if(!userInfo3.acknowledged) throw "Could not update user 3 when seeding posts";
+    const userInfo4 = await usersCollection.updateOne({"_id": user4id}, {"$push": {"myPosts": postInfo4.insertedId}});
+    if(!userInfo4.acknowledged) throw "Could not update user 4 when seeding posts";
+    const userInfo5 = await usersCollection.updateOne({"_id": user5id}, {"$push": {"myPosts": postInfo5.insertedId}});
+    if(!userInfo5.acknowledged) throw "Could not update user 5 when seeding posts";
+    const userInfo6 = await usersCollection.updateOne({"_id": user6id}, {"$push": {"myPosts": postInfo6.insertedId}});
+    if(!userInfo6.acknowledged) throw "Could not update user 6 when seeding posts";
+    const userInfo7 = await usersCollection.updateOne({"_id": user7id}, {"$push": {"myPosts": postInfo7.insertedId}});
+    if(!userInfo7.acknowledged) throw "Could not update user 7 when seeding posts";
+    const userInfo8 = await usersCollection.updateOne({"_id": user8id}, {"$push": {"myPosts": postInfo8.insertedId}});
+    if(!userInfo8.acknowledged) throw "Could not update user 8 when seeding posts";
+    const userInfo9 = await usersCollection.updateOne({"_id": user9id}, {"$push": {"myPosts": postInfo9.insertedId}});
+    if(!userInfo9.acknowledged) throw "Could not update user 9 when seeding posts";
+    const userInfo10 = await usersCollection.updateOne({"_id": user10id}, {"$push": {"myPosts": postInfo10.insertedId}});
+    if(!userInfo10.acknowledged) throw "Could not update user 10 when seeding posts";
+    const userInfo11 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"myPosts": postInfo11.insertedId}});
+    if(!userInfo11.acknowledged) throw "Could not update user 11 when seeding posts";
+    const userInfo12 = await usersCollection.updateOne({"_id": user13id}, {"$push": {"myPosts": postInfo12.insertedId}});
+    if(!userInfo12.acknowledged) throw "Could not update user 13 when seeding posts";
+    const userInfo13 = await usersCollection.updateOne({"_id": user14id}, {"$push": {"myPosts": postInfo13.insertedId}});
+    if(!userInfo13.acknowledged) throw "Could not update user 14 when seeding posts";
+    const userInfo14 = await usersCollection.updateOne({"_id": user15id}, {"$push": {"myPosts": postInfo14.insertedId}});
+    if(!userInfo14.acknowledged) throw "Could not update user 15 when seeding posts";
+    const userInfo15 = await usersCollection.updateOne({"_id": user17id}, {"$push": {"myPosts": postInfo15.insertedId}});
+    if(!userInfo15.acknowledged) throw "Could not update user 17 when seeding posts";
+    const userInfo16 = await usersCollection.updateOne({"_id": user18id}, {"$push": {"myPosts": postInfo16.insertedId}});
+    if(!userInfo16.acknowledged) throw "Could not update user 18 when seeding posts";
+    const userInfo17 = await usersCollection.updateOne({"_id": user19id}, {"$push": {"myPosts": postInfo17.insertedId}});
+    if(!userInfo17.acknowledged) throw "Could not update user 19 when seeding posts";
+    const userInfo18 = await usersCollection.updateOne({"_id": user20id}, {"$push": {"myPosts": postInfo18.insertedId}});
+    if(!userInfo18.acknowledged) throw "Could not update user 20 when seeding posts";
+    const userInfo19 = await usersCollection.updateOne({"_id": user20id}, {"$push": {"myPosts": postInfo19.insertedId}});
+    if(!userInfo19.acknowledged) throw "Could not update user 20 when seeding posts";
+    const userInfo20 = await usersCollection.updateOne({"_id": user20id}, {"$push": {"myPosts": postInfo20.insertedId}});
+    if(!userInfo20.acknowledged) throw "Could not update user 20 when seeding posts";
+    const userInfo21 = await usersCollection.updateOne({"_id": user9id}, {"$push": {"myPosts": postInfo21.insertedId}});
+    if(!userInfo21.acknowledged) throw "Could not update user 9 when seeding posts";
+    const userInfo22 = await usersCollection.updateOne({"_id": user5id}, {"$push": {"myPosts": postInfo22.insertedId}});
+    if(!userInfo22.acknowledged) throw "Could not update user 5 when seeding posts";
+    const userInfo23 = await usersCollection.updateOne({"_id": user8id}, {"$push": {"myPosts": postInfo23.insertedId}});
+    if(!userInfo23.acknowledged) throw "Could not update user 8 when seeding posts";
+    const userInfo24 = await usersCollection.updateOne({"_id": user11id}, {"$push": {"myPosts": postInfo24.insertedId}});
+    if(!userInfo24.acknowledged) throw "Could not update user 11 when seeding posts";
+    const userInfo25 = await usersCollection.updateOne({"_id": user20id}, {"$push": {"myPosts": postInfo25.insertedId}});
+    if(!userInfo25.acknowledged) throw "Could not update user 20 when seeding posts";
 }
 
 // Seeds all data

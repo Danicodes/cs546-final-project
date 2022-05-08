@@ -51,7 +51,7 @@ async function logPosts(){
 
 // Logs all data in the database
 async function logData(){
-    /*
+    
     try{
         console.log("Users in database:");
         await logUsers();
@@ -60,7 +60,8 @@ async function logData(){
         console.log("Something went wrong with logging the users. Error below:");
         console.log(e);
     }
-    */
+    
+    /*
     try{
         console.log("Relationships in database:");
         await logRelationships();
@@ -69,6 +70,7 @@ async function logData(){
         console.log("Something went wrong with logging the relationships. Error below:");
         console.log(e);
     }
+    */
     /*
     try{
         console.log("Chats in database:");
@@ -79,7 +81,7 @@ async function logData(){
         console.log(e);
     }
     */
-   /*
+    /*
     try{
         console.log("Posts in database:");
         await logPosts();
