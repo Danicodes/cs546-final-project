@@ -8,7 +8,7 @@ const validate = require('../validations/data');
 const constants = require('../constants/constants');
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
-async function getPersonById(id){
+async function getPersonById(id, fromBack){
     validations.validateId(id);
     // In this function we need to find the user for a given id and return them.
     const userCollection = await users();
@@ -17,21 +17,21 @@ async function getPersonById(id){
     if(person == null)
         throw new UnprocessibleRequest(`${id} is a invalid User ID`);
     person._id = person._id.toString();
+    if (!fromBack){
     delete person.password;
+    }
     return person;
 }
 
 async function updateUser(id, name, mentorBio, menteeBio, age, myPreferredFeed){
     validations.validateId(id);
-    validate.checks(name, mentorBio, menteeBio, age, myPreferredFeed, searchTags);
-    // I need to get the password/username for the given id to put in updateduser here
+    validate.checks(name, mentorBio, menteeBio, parseInt(age), myPreferredFeed);
     const updateduser = {
         name : name,
         mentorBio : mentorBio,
         menteeBio : menteeBio,
         age : age,
-        myPreferredFeed: myPreferredFeed,
-        searchTags: searchTags
+        myPreferredFeed: myPreferredFeed
     };
     let userCollection = await users();
     const updated = await userCollection.updateOne(
@@ -54,12 +54,17 @@ async function updatePassword(id, password){
     password = validations.validateString(password);
     let hashedpassword = await bcrypt.hash(password, constants.BCRYPT_VAL);
     const userCollection = await users();
+    let person = await getPersonById(id, true);
+    let valid = await bcrypt.compare(password, person['password']);
+    if (valid){
+        throw "Error: The password is the same as the one in the database."
+    }
     const updated = await userCollection.updateOne(
         { _id : ObjectId(id)},
         {$set: {password : hashedpassword} }
         );
     if (updated.modifiedCount == 0){
-        throw "Error: could not update password."
+        throw "Error: Password is the same as previous password."
     }
     const ret = await userCollection.findOne({_id : ObjectId(id)});
     ret._id = ret._id.toString();
@@ -69,7 +74,7 @@ async function updatePassword(id, password){
 
 async function addTag(userId, searchTag){
     validations.validateId(userId);
-    let person = await getPersonById(userId);
+    let person = await getPersonById(userId, true);
     let searchTags = person['searchTags'];
     temp = [];
     for (let i = 0; i < searchTags.length; i++){
@@ -94,7 +99,7 @@ async function addTag(userId, searchTag){
 
 async function removeTag(userId, searchTag){
     validations.validateId(userId);
-    let person = await getPersonById(userId);
+    let person = await getPersonById(userId, true);
     let searchTags = person['searchTags'];
     let temp = [];
     for (let i = 0; i<searchTags.length; i++){

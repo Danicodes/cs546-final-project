@@ -1,23 +1,38 @@
+<head>
+        <meta charset="utf-8">
+        <title>MentorMe</title>
+        <link rel="stylesheet" href="/public/css/workspace_style.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <!-- Bootstrap CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+</head>
 <h1>User Profile</h1>
 <div>
+    <button onclick="toggleUserView();">Change View</button>
     <form action="/users/?_method=PUT" method="POST" id="edit-user">
             <label>Username:
-                <input type="text" name="username" value={{person.username}} readonly>
+                <input type="text" readonly="readonly" name="username" value={{person.username}}>
             </label>
             <label>Age:
-                <input type="number" name="age" value={{person.age}}>
+                <input type="number" {{#if bool}} readonly="readonly" {{/if}} name="age" value={{person.age}}>
             </label>
             <label>Name:
-                <input type="text" name="name" value={{person.name}}>
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="name" value={{person.name}}>
             </label>
-            <label>Bio:
-                <input type="text" name="bio" value={{person.bio}}>
+            <label id="profile-mentee-ID">Mentee bio:
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="menteeBio" value={{person.menteeBio}}>
+            </label>
+            <label id="profile-mentor-ID" style="display:none;">Mentor bio:
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="mentorBio" value={{person.mentorBio}}>
+            </label>
+            <label>My preferred feed:
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="myPreferredFeed" value={{person.myPreferredFeed}}>
             </label>
         <button type="submit" form="edit-user">Submit</button>
     </form>
 </div>
-<h2>Search Tags</h2>
-<div>
+<h2 {{#if bool}} hidden {{/if}}>Search Tags</h2>
+<div {{#if bool}} hidden {{/if}}>
         Current Search Tags:
         <ul>
             {{#each person.searchTags}}
@@ -41,8 +56,8 @@
         <button type="submit" form="removeTag">Submit</button>
     </form>
     </div>
-    <h3>Password</h3>
-    <div>
+    <h3 {{#if bool}} hidden {{/if}}>Password</h3>
+    <div {{#if bool}} hidden {{/if}}>
     {{#if updated}}
         Password has been updated!
     {{/if}}
@@ -63,3 +78,13 @@
         <button type="submit" form="change-password">Submit</button>
     </form>
 </div>
+{{#if bool}}
+<div>
+<form action="/relationships" method="POST" id="new-relationship">
+    Would you like to request mentorship from this user?
+        <button type="submit" form="new-relationship">Request mentorship</button>
+</form>
+</div>
+{{else}}
+{{/if}}
+<script src="/public/scripts/users_client.js"></script>

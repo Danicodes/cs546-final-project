@@ -8,20 +8,24 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 
 router.get('/', async (req, res) => {
     let userId = req.session.user.id;
-    res.redirect(`/${userId}`);
+    res.redirect(`/users/${userId}`);
 });
 
 router.get('/:userid', async (req, res) => {
     // Show profile information
     let userId = req.params.userid;
+    let bool = true;
+    if (req.session.user.id == userId){
+        bool = false;
+    }
     try {
         userId = validations.validateId(userId);
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
     try {
-        const ret = await userData.getPersonById(userId);
-        return res.render('layouts/users', {person : ret});
+        const ret = await userData.getPersonById(userId, false);
+        return res.render('layouts/users', {person : ret, bool : bool});
         //return res.status(200).json(ret);
     }
     catch(e){
@@ -34,15 +38,14 @@ router.get('/:userid', async (req, res) => {
 router.put('/', async (req, res) => {
     // Update user in database
     let userId = req.session.user.id; 
-    const name = req.body['name'];
-    const mentorBio = req.body['mentorBio'];
-    const menteeBio = req.body['menteeBio'];
-    const age = req.body['age'];
-    const myPreferredFeed = req.body['myPreferredFeed'];
-    const searchTags = req.body['searchTags'];
+    let name = req.body['name'];
+    let mentorBio = req.body['mentorBio'];
+    let menteeBio = req.body['menteeBio'];
+    let age = req.body['age'];
+    let myPreferredFeed = req.body['myPreferredFeed'];
     try {
         validations.validateId(userId);
-        validate.checks(name, mentorBio, menteeBio, age, myPreferredFeed);
+        validate.checks(name, mentorBio, menteeBio, parseInt(age), myPreferredFeed);
     } catch (e) {
         return res.status(400).json("Error: " + e);
     }
@@ -59,14 +62,12 @@ router.put('/', async (req, res) => {
     }
 });
 
-router.put('/reset', async (req, res) => {
+router.put('/:userid/reset', async (req, res) => {
     // Update user in database
-    let userId = req.session.user.id;
-    const newpassword = req.body['newpassword'];
-    const password1 = req.body['password1'];
-    const password2 = req.body['password2'];
-    const user = await userData.getPersonById(userId);
-    const userPass = user['password'];
+    let userId = req.params['userid'];
+    let newpassword = req.body['newpassword'];
+    let password1 = req.body['password1'];
+    let password2 = req.body['password2'];
     try {
         userId = validations.validateId(userId);
         validations.validateString(newpassword);
@@ -74,7 +75,7 @@ router.put('/reset', async (req, res) => {
         return res.status(400).json("Error: " + e);
     }
     try{
-        validate.passCheck(userPass, password1, password2, newpassword);
+        await validate.passCheck(userId, password1, password2, newpassword);
     }
     catch(e){
         console.log(e);

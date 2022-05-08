@@ -42,15 +42,14 @@ function convertID(id){
     return id;
 }
 
-const passCheck = async function passCheck(userPass, password1, password2, newpassword){
+const passCheck = async function passCheck(userId, password1, password2, newpassword){
     if (!(password1 == password2)){
         throw "Error: Passwords do not match!";
     }
-    let same = await bcrypt.compare(newpassword, userPass);
-    console.log(same);
-    if (same){
-        throw "Error: The password is the same as the one in the database."
+    if (newpassword.length < 6){
+        throw "Error: Password must be at least 6 characters long.";
     }
+    return ({authenticated: true});
 }
 /*const checks = function checks(name, bio, age){
     if (!(typeof name == 'string') || (name == '')){
@@ -92,20 +91,10 @@ function parseCheckin(lastcheckin){
 
 const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed){
     checkIsEmptyString(name);
-    checkIsEmptyString(mentorBio);
-    checkIsEmptyString(menteeBio);
-    checkIsEmptyString(myPreferredFeed);
-
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
         throw new Error("age must be a number between 0 and 100");
     }
-
-    /*if (!Array.isArray(searchTags)){
-        throw new Error("searchTags must be an array of strings");
-    }
-    for(let searchTag of searchTags) 
-        checkIsEmptyString(searchTag);
-    let flag = false;*/
+    return true;
 }
 
 const isUserAuthorizedForPost = async function(userId, relationshipId) {
