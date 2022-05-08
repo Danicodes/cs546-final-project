@@ -926,7 +926,18 @@ async function seedPosts(){
     // Create post objects
     let post1 = {
         "author": user1id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user4id,
+                "message": "You said it! It's great to be prideful in one's trade. Keep it up!",
+                "timestamp": new Date()
+            },
+            {
+                "author": user16id,
+                "message": "Dude, you're gloating.",
+                "timestamp": new Date()
+            }
+        ],
         "content": "My chicken is the best. So many people these days don't make it as well. Seriously, why can't people make chicken like me?",
         "createdOn": new Date(),
         "searchTags": ["Cooking", "Chicken"],
@@ -937,7 +948,23 @@ async function seedPosts(){
     };
     let post2 = {
         "author": user2id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user8id,
+                "message": "You're famous for a reason. You would make a great mentor.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user17id,
+                "message": "Spoken like a true artist!",
+                "timestamp": new Date()
+            },
+            {
+                "author": user18id,
+                "message": "It's a-super that you want to help with painting.",
+                "timestamp": new Date()
+            }
+        ],
         "content": "I welcome anybody who would like to learn how to paint better. It is a wonderful experience to paint.",
         "createdOn": new Date(),
         "searchTags": ["Painting", "Art"],
@@ -948,7 +975,13 @@ async function seedPosts(){
     };
     let post3 = {
         "author": user3id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user4id,
+                "message": "Everybody should come to Chuck E Cheese's instead!!",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Come to my restaurants, which have the best shakes around! Burgers are secondary.",
         "createdOn": new Date(),
         "searchTags": ["Cooking", "Milkshakes", "Restaurants"],
@@ -959,7 +992,18 @@ async function seedPosts(){
     };
     let post4 = {
         "author": user4id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user20id,
+                "message": "caces;nkxzfzskj",
+                "timestamp": new Date()
+            },
+            {
+                "author": user11id,
+                "message": "Maybe I'll check this place out sometime",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Come on down to Chuck E Cheese's to have a lot of fun! It's the #1 party spot!",
         "createdOn": new Date(),
         "searchTags": ["Party", "Fun", "Enjoyment", "Birthday"],
@@ -970,7 +1014,28 @@ async function seedPosts(){
     };
     let post5 = {
         "author": user5id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user10id,
+                "message": "If I designed a game, I would make the player win a lot more.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user14id,
+                "message": "What would be the point in that? You youngsters have it so easy these days",
+                "timestamp": new Date()
+            },
+            {
+                "author": user10id,
+                "message": "People like winning, and besides, it's much more accessible that way.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user14id,
+                "message": "Lazy! That's what you are!",
+                "timestamp": new Date()
+            }
+        ],
         "content": "If anybody would like to learn about game development, let me know! I'm mentoring in that right now.",
         "createdOn": new Date(),
         "searchTags": ["GameDevelopment"],
@@ -981,7 +1046,13 @@ async function seedPosts(){
     };
     let post6 = {
         "author": user6id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user20id,
+                "message": "4aw98pmixleszdflkjdsaaaaa",
+                "timestamp": new Date()
+            }
+        ],
         "content": "I'll be at the medieval swords convention this Saturday, if anybody is interested in meeting me there.",
         "createdOn": new Date(),
         "searchTags": ["Events", "Medieval", "Hobbies"],
@@ -992,7 +1063,13 @@ async function seedPosts(){
     };
     let post7 = {
         "author": user7id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user13id,
+                "message": "Lame",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Just joined this site. I think I'll get into cooking. Cooking is a really fun hobby, I've been told.",
         "createdOn": new Date(),
         "searchTags": ["Cooking", "Hobbies"],
@@ -1003,7 +1080,18 @@ async function seedPosts(){
     };
     let post8 = {
         "author": user8id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user2id,
+                "message": "It takes time, but you'll get better",
+                "timestamp": new Date()
+            },
+            {
+                "author": user13id,
+                "message": "Lame!",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Learning to paint is really hard, but I guess I'll keep working at this until I get better. I have a long road ahead of me, but I have tons of free time to walk that road.",
         "createdOn": new Date(),
         "searchTags": [],
@@ -1014,7 +1102,13 @@ async function seedPosts(){
     };
     let post9 = {
         "author": user9id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user1id,
+                "message": "You must have more patience if you're going to gain wisdom.",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Trying to find a mentor is soooo annoying!!! I tried to get someone  to help me, but they rejected! How can I stop that??",
         "createdOn": new Date(),
         "searchTags": ["Help", "Rejected"],
@@ -1025,7 +1119,13 @@ async function seedPosts(){
     };
     let post10 = {
         "author": user10id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user4id,
+                "message": "You'll be winning in no time! Don't worry!",
+                "timestamp": new Date()
+            }
+        ],
         "content": "I came to this site trying to win at slots, and I got some great advice, but I'm not seeing any results. What should I do? I feel hopeless",
         "createdOn": new Date(),
         "searchTags": [],
@@ -1036,7 +1136,23 @@ async function seedPosts(){
     };
     let post11 = {
         "author": user11id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user18id,
+                "message": "How about a-some of my games?",
+                "timestamp": new Date()
+            },
+            {
+                "author": user13id,
+                "message": "Of course you would recommend your own games, Mario.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user4id,
+                "message": "How about some slot machine games? We can collaborate on this effort.",
+                "timestamp": new Date()
+            }
+        ],
         "content": "I might start mentoring video game skills soon. Who would be interested in learning gaming skills, and which games would you like to learn to get better at?",
         "createdOn": new Date(),
         "searchTags": ["Gaming", "Hobbies"],
@@ -1047,7 +1163,23 @@ async function seedPosts(){
     };
     let post12 = {
         "author": user13id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user5id,
+                "message": "We can have different tastes, but blatantly disrespecting everybody isn't nice.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user13id,
+                "message": "Whatever, dude",
+                "timestamp": new Date()
+            },
+            {
+                "author": user10id,
+                "message": "We all have different pastimes, and that's okay. Mine is losing money to slot machines",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Does anyone on this site have any sense of taste?! Nobody is into curling! You're all idiots who don't have lives! This site sucks. Video game players are dumb, and they all need to be banned from this site.",
         "createdOn": new Date(),
         "searchTags": ["Sports", "Hobbies", "Curling", "Gaming"],
@@ -1058,7 +1190,7 @@ async function seedPosts(){
     };
     let post13 = {
         "author": user14id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [],
         "content": "Hello! This is my first post on any social media website. Can someone tell me where to ask for a request?",
         "createdOn": new Date(),
         "searchTags": ["Hello", "Post"],
@@ -1069,7 +1201,13 @@ async function seedPosts(){
     };
     let post14 = {
         "author": user15id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user17id,
+                "message": "Keep on telling yourself that, buddy",
+                "timestamp": new Date()
+            }
+        ],
         "content": "I currently accept mentorship requests for learning how to make highly-optimized software.",
         "createdOn": new Date(),
         "searchTags": ["Request", "SoftwareDevelopment"],
@@ -1080,7 +1218,18 @@ async function seedPosts(){
     };
     let post15 = {
         "author": user17id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user11id,
+                "message": "Some kid's pocket",
+                "timestamp": new Date()
+            },
+            {
+                "author": user18id,
+                "message": "I would love to have fun with you in my artist side-games",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Once I learn to paint better, where should I go to improve other people's lives? I can't just stay where I am; I need to go on an adventure. I have a higher purpose!",
         "createdOn": new Date(),
         "searchTags": ["Adventure", "Hobbies", "Art"],
@@ -1091,7 +1240,13 @@ async function seedPosts(){
     };
     let post16 = {
         "author": user18id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user11id,
+                "message": "Thank you for the games to play!",
+                "timestamp": new Date()
+            }
+        ],
         "content": "I just a-wanted to say thank you all for playing my games and enjoying them a-so much! Please buy my upcoming games. They're a lot of fun!",
         "createdOn": new Date(),
         "searchTags": ["Gaming", "Fun", "Hobbies"],
@@ -1102,7 +1257,7 @@ async function seedPosts(){
     };
     let post17 = {
         "author": user19id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [],
         "content": "I'm excited to make more different kinds of chicken recipes! Fried chicken is great, but variety is the spice of life.",
         "createdOn": new Date(),
         "searchTags": ["Cooking", "Chicken"],
@@ -1113,7 +1268,18 @@ async function seedPosts(){
     };
     let post18 = {
         "author": user20id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user5id,
+                "message": "Are you okay there?",
+                "timestamp": new Date()
+            },
+            {
+                "author": user19id,
+                "message": "This is total nonsense.",
+                "timestamp": new Date()
+            }
+        ],
         "content": "dsklskjwqmnadsffdsds;ldsfa;lkjfdsafdqrewrewew2eedf98cs98cxivojscoyresoimkesrp98rtypevdcfaimh3xwa harrddlk;jfdsa",
         "createdOn": new Date(),
         "searchTags": [],
@@ -1124,7 +1290,13 @@ async function seedPosts(){
     };
     let post19 = {
         "author": user20id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user12id,
+                "message": "Looks like someone messed with this guy's computer",
+                "timestamp": new Date()
+            }
+        ],
         "content": ";lkjdsaca4awo7svdiusadliumvachhasahellpppppplkjfsafxem",
         "createdOn": new Date(),
         "searchTags": ["Help"],
@@ -1135,7 +1307,23 @@ async function seedPosts(){
     };
     let post20 = {
         "author": user20id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user11id,
+                "message": "Dude, are you wearing boxing gloves while typing this or something?",
+                "timestamp": new Date()
+            },
+            {
+                "author": user5id,
+                "message": "Judging by the name, he might be.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user20id,
+                "message": "Oh! That's a good idea",
+                "timestamp": new Date()
+            }
+        ],
         "content": "dslkjsoheeeelpasdclkasadscwanjal",
         "createdOn": new Date(),
         "searchTags": ["Help"],
@@ -1146,7 +1334,13 @@ async function seedPosts(){
     };
     let post21 = {
         "author": user9id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user13id,
+                "message": "lol",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Just spilled another shake. Why does this keep happening?",
         "createdOn": new Date(),
         "searchTags": ["Milkshakes"],
@@ -1157,18 +1351,45 @@ async function seedPosts(){
     };
     let post22 = {
         "author": user4id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user4id,
+                "message": "Eloquently said",
+                "timestamp": new Date()
+            },
+            {
+                "author": user7id,
+                "message": "You need help",
+                "timestamp": new Date()
+            },
+            {
+                "author": user15id,
+                "message": "Great tradition",
+                "timestamp": new Date()
+            },
+            {
+                "author": user17id,
+                "message": "Disappointing",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Some people say that gambling is a crippling addiction. I say that it's an amazing pastime that can make you money!",
         "createdOn": new Date(),
         "searchTags": ["Gambling", "Hobbies"],
         "visibility": "public",
-        "likedBy": [user10id, user15id, user13id],
+        "likedBy": [user10id, user15id, user13id, user4id],
         "disLikedBy": [user1id, user7id, user17id, user19id, user18id, user3id],
         "reportedBy": []
     };
     let post23 = {
         "author": user8id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user2id,
+                "message": "That's good progress.",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Just finished my 17th painting of the same shrub. I think I'm getting slightly better over time! It's amazing how practice makes perfect.",
         "createdOn": new Date(),
         "searchTags": ["Hobbies", "Painting"],
@@ -1179,7 +1400,13 @@ async function seedPosts(){
     };
     let post24 = {
         "author": user11id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user13id,
+                "message": "LAMEEEEEE",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Just downloaded the newest fad game. I'm going to go live on my livestream if anybody wants to see me wreck some noobs!",
         "createdOn": new Date(),
         "searchTags": ["Gaming"],
@@ -1190,7 +1417,28 @@ async function seedPosts(){
     };
     let post25 = {
         "author": user20id,
-        "comments": [], // FILL THIS IN LATER
+        "comments": [
+            {
+                "author": user1id,
+                "message": "Finally, we can watch posts in peace.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user7id,
+                "message": "It looks like you're learning how to use websites! Lots of learning.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user16id,
+                "message": "Cool. Glug.",
+                "timestamp": new Date()
+            },
+            {
+                "author": user18id,
+                "message": "Wahoo!",
+                "timestamp": new Date()
+            }
+        ],
         "content": "Finally took boxing gloves off. Much better now",
         "createdOn": new Date(),
         "searchTags": ["Hobbies"],
