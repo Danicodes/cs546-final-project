@@ -3,9 +3,11 @@ function getUserFromCookie(){
     if  (document.cookie.match(/user=/)){
         user = document.cookie
         .split('; ')
-        .find(row => row.startsWith('user='))
-        .split('=')[1];
+        .find(row => row.startsWith('user='));
 
+        if (user.length > 0){
+            user = user.split('=')[1];
+        }
         return user;
     }
     else {
@@ -25,7 +27,7 @@ function relationshipPollAjax(){
             ) { // if one element in the array has a checkin time within one minute show the main workspace notif
                 // check window.location to determine which should show???
                 console.log("At least one checkin upcoming");
-                $(`.workspace-notification`).show(); // .css("color", "red");
+                $(`#nav-workspace-notification`).show(); // Just show the main nav notif here
             }
         // else { // Don't hide here, this should persist til clicked
         //     console.log("No upcoming checkins");
@@ -56,18 +58,22 @@ function relationshipPollAjax(){
 
                 if ((Date.now() - Date.parse(scheduledcheckin)) > (interval - ONE_MINUTE) ){ 
                 //if (nowtime > nextCheckin){   
-                    //alert user -- THIS WORKS BUT is not disappearing.. can't tell if due to the short interval i'd set
                     //$(`.workspace-notification`).show(); // .css("color", "red");
-                    if (window.location.pathname.startsWith('/workspaces')){
-                        $(`#workspace-notification-${relationship.mentor._id}`).show(); // Show both only the relevant one will appear
-                        $(`#workspace-notification-${relationship.mentee._id}`).show();
+                    $(`#workspace-notification-${relationship.mentor._id}`).show(); // Show both only the relevant one will appear
+                    $(`#workspace-notification-${relationship.mentee._id}`).show();
+                    
+                    // If a user is not on a workspace related page, then show in nav bar as well
+                    if (!window.location.pathname.startsWith('/workspaces')){
+                        $(`#nav-workspace-notification`).show();
                     }
 
+                    // --------------------------------------       ADD attr checked in atxxx
+
                     nextCheckin.setTime(nowtime.getTime() + interval); // if nexttime < nowtime we have to set the interval according to the current time
-                    
 
                     let user = getUserFromCookie();
                     //make request to update last checkin time to next checkin
+                    if (user === relationship.mentor._id){ // Prevent constant 403s
                     $.ajax(
                         {
                             method: 'POST',
@@ -78,8 +84,9 @@ function relationshipPollAjax(){
                             success: function() {
                                 console.log("Updated check in time");
                             }
-                        }
+                        }   
                     );
+                    }
 
                 }
 
@@ -113,11 +120,15 @@ function getUsersRelationships(){
     // Ajax req to get all active user relationships for me
     $.ajax({
         method: 'GET',
-        url: `/relationships/${user}/approved`,
+        url: `/relationships/approved`,
         success: function(res){
             console.log("Updating relationships");
             if (res.relationships.length > 0){
                 window.localStorage.setItem('relationships', JSON.stringify(res.relationships)); // Store a list of relationships
+                $('.workspace-content-placeholder')[0].innerHTML = "Select a workspace to join";
+            }
+            else {
+                $('.workspace-content-placeholder')[0].innerHTML = "No workspaces to show";
             }
             return;
         } 

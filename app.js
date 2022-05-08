@@ -28,23 +28,6 @@ app.use(
   })
 );
 
-// LOGGING MIDDLEWARE
-app.use((req, res, next) => {
-  let timeStamp = new Date().toUTCString();
-  let reqMethod = req.method;
-  let reqRoute = req.originalUrl;
-  if (req.session.login) {
-    console.log(
-      `[${timeStamp}]: ${reqMethod} ${reqRoute} (Authenticated User: true)`
-    );
-  } else {
-    console.log(
-      `[${timeStamp}]: ${reqMethod} ${reqRoute} (Authenticated User: false)`
-    );
-  }
-  next();
-});
-
 configRoutes(app);
 
 app.listen(3000, () => {

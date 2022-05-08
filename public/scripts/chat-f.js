@@ -9,13 +9,13 @@
 */
 
 (function ($) {
-    const messageForm = document.getElementById('message-form');
+    const messageForm = document.getElementById('workspace-message-form');
     if(messageForm){
         // Get elements
         let messageInput = $('#message');
         const errorElement = document.getElementById('error-message');
         const chatSection = document.getElementById('chat-section');
-        let refreshButton = document.getElementById("refresh");
+        let refreshButton = document.getElementById("refresh-messages");
         const MAX_MESSAGE_LENGTH = 256;
 
         // Add event listener for the message input form that does error checking
@@ -63,8 +63,8 @@
                 datetime = datetime.getTime();
             
                 // Get user id of current user (change this later so that it gets this from the user session)
-                let userId = "6274764cc51174666940512b"; // A placeholder value that worked for my testing
-                let relationshipId = "6274764cc51174666940513a"; // A placeholder value that worked for my testing
+                let userId = getUserFromCookie();
+                let relationshipId = getElementFromCookie('selected_relationship'); 
 
                 // Send a "POST /chats/:id/messages" request to server, then display updated message page
                 var requestConfig = {
@@ -89,7 +89,7 @@
         refreshButton.addEventListener('click', (event) => {
             event.preventDefault();
 
-            let relationshipId = "6274764cc51174666940513a"; // A placeholder value that worked for my testing
+            let relationshipId = getElementFromCookie('selected_relationship'); 
 
             // Create a timestamp
             let datetime = new Date();

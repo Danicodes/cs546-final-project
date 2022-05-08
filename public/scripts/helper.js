@@ -1,10 +1,3 @@
-// Milliseconds vars
-var FIVE_MINUTES = 300000;
-var ONE_MINUTE = 60000; 
-var FIVE_SECONDS = 5000;
-
-const CHECKMARK = '✓';
-
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
 
@@ -18,7 +11,7 @@ function deleteAllCookies() {
 
 // if only I'd realized I could do this sooner
 
-
+const CHECKMARK = '✓';
 function get_successful_request_element(){
     return $(`<i class="successful-request material-icons">check_circle</i>`);
 }

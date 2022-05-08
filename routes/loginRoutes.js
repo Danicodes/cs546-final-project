@@ -45,7 +45,8 @@ router.post("/signup", async (req, res) => {
         id: result.user._id,
         username: result.user.username
     };
-    res.redirect("/");
+    console.log(`SETTING COOKIE TO ${result.user._id}`);
+    res.cookie('user', result.user._id.toString()).redirect("/");
   } catch (e) {
       if (e.code) {
         res.status(e.code).render("frames/signup", { // Have form persist
@@ -70,7 +71,7 @@ router.post("/login", async (req, res) => {
       id: result.user._id,
       username: result.user.username
     };
-    res.redirect("/"); 
+    res.cookie('user', result.user._id.toString()).redirect("/"); 
   } catch (e) {
     if (e.code) {
       res.status(e.code).render("frames/login", {

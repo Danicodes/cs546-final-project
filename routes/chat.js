@@ -31,6 +31,7 @@ const relationshipsCol = mongoCollections.relationships;
 const chatsCol = mongoCollections.chats;
 const validate = require("../validations/data");
 const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
+const { users } = require('../data');
 
 
 router
@@ -54,10 +55,12 @@ router
             if(!errorFlag && !id){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Missing id.", title: "Chat"});
+                return;
             }
             if(!errorFlag && !ObjectId.isValid(id)){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "ID must be a valid ObjectId.", title: "Chat"}); 
+                return;
             }
             let foundRelationship = null;
             if(!errorFlag){
@@ -66,6 +69,7 @@ router
                 if(foundRelationship === null){
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Relationship not found.", title: "Chat"}); 
+                    return;
                 }
                 if(foundRelationship.mentor.toString() !== req.session.user.id
                     && foundRelationship.mentee.toString() !== req.session.user.id)
@@ -75,6 +79,7 @@ router
             if(!errorFlag && !timestamp){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Missing timestamp.", title: "Chat"});
+                return;
             }
             // The timestamp is passed as a string representing the integer number of milliseconds (since midnight on January 1st, 1970)
             if(!errorFlag){
@@ -82,11 +87,13 @@ router
                 if(isNaN(timestamp)){
                     errorFlag = true;
                     res.render('frames/400error', {layout: null, errorMessage: "Timestamp must be an integer.", title: "Chat"});
+                    return;
                 }
             }
             if(!errorFlag && timestamp < 0){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Timestamp must be nonnegative.", title: "Chat"});
+                return;
             }
             let foundChat = null;
             if(!errorFlag){
@@ -95,6 +102,7 @@ router
                 if(foundChat === null){
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Chat channel not found.", title: "Chat"});
+                    return;
                 }
             }
             if(!errorFlag){
@@ -103,6 +111,7 @@ router
                 if(chatCreated > timestamp){
                     errorFlag = true;
                     res.render('frames/400error', {layout: null, errorMessage: "Timestamp given must be after relationship start.", title: "Chat"});
+                    return;
                 }
             }
 
@@ -116,22 +125,27 @@ router
                 let mentorId = foundRelationship["mentor"].toString();
                 let menteeId = foundRelationship["mentee"].toString();
 
+                let mentorObj = await users.getPersonById(mentorId);
+                let menteeObj = await users.getPersonById(menteeId);
+
                 for(let i = 0; i < chatMessages.length; i++){
                     let messageAuthor = chatMessages[i]["author"].toString();
                     if(messageAuthor.localeCompare(mentorId) === 0){
-                        chatMessages[i]["author"] = "Mentor";
+                        chatMessages[i]["author"] = `${mentorObj.username}(Mentor)`;
                     }
                     else if(messageAuthor.localeCompare(menteeId) === 0){
-                        chatMessages[i]["author"] = "Mentee";
+                        chatMessages[i]["author"] = `${menteeObj.username}(Mentee)`;
                     }
                     else{
                         chatMessages[i]["author"] = "Other User"; // Default case for if a message from some other user somehow gets into the chat channel
                     }
                 }
                 res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat", relationshipId: id});
+                return;
             }
         } catch (e) {
             res.render('frames/500error', {layout: null, title: "Chat"});
+            return;
         }
         
 
@@ -159,10 +173,12 @@ router
             if(!errorFlag && !id){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Missing id.", title: "Chat"});
+                return;
             }
             if(!errorFlag && !ObjectId.isValid(id)){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "ID must be a valid ObjectId.", title: "Chat"});
+                return;
             }
             let foundRelationship = null;
             if(!errorFlag){
@@ -171,6 +187,7 @@ router
                 if(foundRelationship === null){
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Relationship not found.", title: "Chat"});
+                    return;
                 }
                 if(foundRelationship.mentor.toString() !== req.session.user.id
                     && foundRelationship.mentee.toString() !== req.session.user.id)
@@ -180,10 +197,12 @@ router
             if(!errorFlag && !author){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Missing author.", title: "Chat"});
+                return;
             }
             if(!errorFlag && !ObjectId.isValid(author)){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Author must be a valid ObjectId.", title: "Chat"});
+                return;
             }
             if(!errorFlag){
                 const usersCollection = await usersCol();
@@ -191,27 +210,32 @@ router
                 if(!errorFlag && foundUser === null){
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Author not found.", title: "Chat"});
+                    return;
                 }
             }
             if(!errorFlag && foundRelationship["mentor"].toString().localeCompare(author) !== 0 && foundRelationship["mentee"].toString().localeCompare(author) !== 0){
                 errorFlag = true;
                 res.render('frames/404error', {layout: null, errorMessage: "Author not found in relationship.", title: "Chat"});
+                return;
             }
             // Check that timestamp is provided, it is a valid timestamp, it's not before the chat was created, and that the chat for the relationship can be found
             if(!errorFlag && !timestamp){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Missing timestamp.", title: "Chat"});
+                return;
             }
             if(!errorFlag){
                 timestamp = parseInt(timestamp);
                 if(isNaN(timestamp)){
                     errorFlag = true;
                     res.render('frames/400error', {layout: null, errorMessage: "Timestamp must be a number.", title: "Chat"});
+                    return;
                 }
             }
             if(!errorFlag && timestamp < 0){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Timestamp must be nonnegative.", title: "Chat"});
+                return;
             }
             if(!errorFlag){
                 const chatsCollection = await chatsCol();
@@ -219,6 +243,7 @@ router
                 if(foundChat === null){
                     errorFlag = true;
                     res.render('frames/404error', {layout: null, errorMessage: "Chat channel not found.", title: "Chat"});
+                    return;
                 }
             }
             if(!errorFlag){
@@ -227,26 +252,31 @@ router
                 if(relationshipCreated > timestamp){
                     errorFlag = true;
                     res.render('frames/400error', {layout: null, errorMessage: "Timestamp given must be after relationship start.", title: "Chat"});
+                    return;
                 }
             }
             // Check that message is provided, it is not empty, it is not just spaces, and that it is not longer than the maximum message length
             if(!errorFlag && !message){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Missing message.", title: "Chat"});
+                return;
             }
             if(!errorFlag && message === ""){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Message must not be empty.", title: "Chat"});
+                return;
             }
             if(!errorFlag && message.trim() === ""){
                 errorFlag = true;
                 res.render('frames/400error', {layout: null, errorMessage: "Message must not be just spaces.", title: "Chat"});
+                return;
             }
             if(!errorFlag){
                 message = message.trim();
                 if(message.length > MAX_MESSAGE_LENGTH){
                     errorFlag = true;
                     res.render('frames/400error', {layout: null, errorMessage: "Message is too long.", title: "Chat"});
+                    return;
                 }
             }
 
@@ -262,22 +292,27 @@ router
                 let mentorId = foundRelationship["mentor"].toString();
                 let menteeId = foundRelationship["mentee"].toString();
 
+                let mentorObj = await users.getPersonById(mentorId);
+                let menteeObj = await users.getPersonById(menteeId);
+
                 for(let i = 0; i < chatMessages.length; i++){
                     let messageAuthor = chatMessages[i]["author"].toString();
                     if(messageAuthor.localeCompare(mentorId) === 0){
-                        chatMessages[i]["author"] = "Mentor";
+                        chatMessages[i]["author"] = `${mentorObj.username}(Mentor)`;
                     }
                     else if(messageAuthor.localeCompare(menteeId) === 0){
-                        chatMessages[i]["author"] = "Mentee";
+                        chatMessages[i]["author"] = `${menteeObj.username}(Mentee)`;
                     }
                     else{
                         chatMessages[i]["author"] = "Other-User"; // Default case for if some wrong data gets into the database
                     }
                 }
                 res.render('frames/chatMessages', {layout: null, messages: chatMessages, title: "Chat"});
+                return;
             }
         } catch (e) {
             res.render('frames/500error', {layout: null, title: "Chat"});
+            return;
         }
     })
 
