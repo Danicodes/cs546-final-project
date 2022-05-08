@@ -1,6 +1,7 @@
 <div id="workspace-files">
     <div id="workspace-files-section">
         <h3 id="file-window-header">Share Files</h3>
+        <p id="relationshipId" hidden>{{relationship._id}}</p>
         {{#if relationship.files}}
             <ul>
                 {{#each relationship.files}}
@@ -8,6 +9,7 @@
                 {{/each}}
             </ul>
         {{else}}
+        <ul></ul>
             <p class="warning"> No files Shared Yet! </p>
         {{/if}}
     </div>

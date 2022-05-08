@@ -243,22 +243,28 @@
                 method : "GET",
                 url : `http://localhost:3000/posts/user` // This UserID will be taken from session in future
             };
+            $.ajax(request).then((posts) => renderPosts(posts)).fail(function(error) {
+                console.log("Error while loading the Posts - " + error);
+            });
         } else if(typeof postSearchText === "string" && postSearchText.length > 0) {
             // Hit search posts URL
             request = {
                 method : "GET",
                 url : `http://localhost:3000/search/posts/?searchTerm=${postSearchText}`,
             };
+            $.ajax(request).then((posts) => renderPosts(posts.results)).fail(function(error) {
+                console.log("Error while loading the Posts - " + error);
+            });
         } else {
             // Hit Get All Posts URL
             request = {
                 method : "GET",
                 url : `http://localhost:3000/posts/`,
             };
+            $.ajax(request).then((posts) => renderPosts(posts)).fail(function(error) {
+                console.log("Error while loading the Posts - " + error);
+            });
         }
-        $.ajax(request).then((posts) => renderPosts(posts)).fail(function(error) {
-            console.log("Error while loading the Posts - " + error);
-        });
     }
 
     postSearchForm.submit(function(event) {

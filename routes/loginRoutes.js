@@ -45,7 +45,6 @@ router.post("/signup", async (req, res) => {
         id: result.user._id,
         username: result.user.username
     };
-    console.log(`SETTING COOKIE TO ${result.user._id}`);
     res.cookie('user', result.user._id.toString()).redirect("/");
   } catch (e) {
       if (e.code) {
