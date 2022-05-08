@@ -10,6 +10,7 @@ const Category = enums.categories;
 const validate = require('../validations/data');
 const chat = require('./chat');
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
+const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
 
 /**
@@ -84,15 +85,19 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
    };
    let updated = await relationshipDB.findOneAndUpdate({ _id: relationshipId }, updateObj);
    if (updated.value == null) throw `Could not update ${relationshipId} `;
+   await updateLastCheckin(relationshipId);
    let newObj = await relationshipDB.findOne({_id: relationshipId});
    
    return newObj; 
  }
 
  async function updateLastCheckin(relationshipId, lastcheckin){
-   validate.checkArgLength(2);
    relationshipId = validate.convertID(relationshipId);
    
+   if (!lastcheckin){
+      lastcheckin = new Date();
+   }
+
    if (!(lastcheckin instanceof Date)){
       validate.parseCheckin(lastcheckin);
     }
@@ -157,20 +162,21 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     let updateRelationshipObj = foundRelationships[0]; // Should have the id in string format for updating?
 
     delete updateRelationshipObj._id // remove _id property from updateObject
+    let oldstatus = status.get(updateRelationshipObj.status.name);
 
     updateRelationshipObj.status = newStatus;
-    if (newStatus === status.APPROVED){
+    if (oldstatus === status.PENDING && newStatus === status.APPROVED){
       // Generate a chat channel and a workspace id
       let chatChannel = await chat.newChannel();
-      let workspaceId = new ObjectId(); // TODO: update with the actual create workspace function
-
       updateRelationshipObj.chatChannel = validate.convertID(chatChannel); // convert back to object Id for storage
-      updateRelationshipObj.workspaceId = workspaceId; // where to get files
     } 
+    else if (oldstatus === status.REJECTED) {
+       throw `Cannot change state of a rejected relationship`;
+    }
 
     updateRelationshipObj.updatedOn = new Date(); // new date object
 
-    let updatedObj = await relationshipDB.replaceOne({ '_id': relationshipId }, updateRelationshipObj);
+    let updatedObj = await relationshipDB.updateOne({ '_id': relationshipId }, { $set: updateRelationshipObj });
     if (updatedObj.modifiedCount == 0) throw `Error: could not update object`;
 
     updatedObj = await relationshipDB.find({'_id': relationshipId}).toArray();
@@ -187,7 +193,7 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
  async function filterRelationshipsByStatus(relationshipList, statusFilter){
     validate.checkArgLength(arguments, 2);
     relationshipList.map((relationshipId) => {
-         relationshipId = validate.convertID(relationshipId);
+         return validate.convertID(relationshipId);
     });
 
     statusFilter = status.get(statusFilter);
@@ -255,6 +261,17 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
         return uploadPath;
  }
 
+ const isUserAuthorizedForPost = async function(userId, relationshipId) {
+    validate.convertID(userId);
+    validate.convertID(relationshipId);
+
+    let relationship = await getRelationshipById(relationshipId);
+    if(userId === relationship.mentor.toString() || userId === relationship.mentee.toString())
+        return relationship;
+    else
+        throw new UnauthorizedRequest(`${userId} Not Authorized to update ${relationshipId}`);
+}
+
  module.exports = {
     createRelationship,
     getRelationshipById,
@@ -263,5 +280,6 @@ const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
     uploadfile,
     downloadfile,
     updateRelationshipTimeline,
-    updateLastCheckin
+    updateLastCheckin,
+    isUserAuthorizedForPost
  }

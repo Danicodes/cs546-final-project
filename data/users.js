@@ -46,6 +46,7 @@ async function updateUser(id, name, mentorBio, menteeBio, age, myPreferredFeed){
     console.log("Updated:");
     console.log(ret);
     delete ret.password;
+    console.log("Updated: " + ret);
     return ret;
 }
     
@@ -139,7 +140,7 @@ async function getMentorList(userId){
     let userObj = await usersDB.findOne({_id: userId});
     if (userObj == null) throw `Error: Could not find ${userId}`;
 
-    return userObj.mentorRelationships;
+    return userObj.mentorRelationships ? userObj.mentorRelationships : [];
 }
 
 /**
@@ -155,7 +156,7 @@ async function getMenteeList(userId){
     let userObj = await usersDB.findOne({_id: userId});
     if (userObj == null) throw `Error: Could not find ${userId}`;
 
-    return userObj.menteeRelationships;
+    return userObj.menteeRelationships ? userObj.menteeRelationships : []; // A newly created user has no relationships
 }
 
 /**
@@ -171,8 +172,12 @@ async function getUserRelationships(userId){
     let userObj = await usersDB.findOne({_id: userId});
 
     let relationships = [];
-    relationships.push(...userObj.mentorRelationships);
-    relationships.push(...userObj.menteeRelationships);
+    if (userObj.mentorRelationships){
+        relationships.push(...userObj.mentorRelationships);
+    }
+    if (userObj.menteeRelationships){
+        relationships.push(...userObj.menteeRelationships);
+    }
 
     return relationships;
 }   
@@ -199,20 +204,20 @@ async function updateUserRelationships(userId, relationshipObj){
     let mentor = await usersDB.findOne({_id: mentorId});
     let mentee = await usersDB.findOne({_id: menteeId});
     if (mentor == null || mentee == null) throw `Error: Could not find user ${mentor} or ${mentee}`;
-    mentor.menteeRelationships.push(relationshipObj._id);
-    mentee.mentorRelationships.push(relationshipObj._id);
-
+    // mentor.menteeRelationships.push(relationshipObj._id);
+    // mentee.mentorRelationships.push(relationshipObj._id);
+    // TODO : ADD TO SET
     let setMentorObj = {
-        $set: {
-            menteeRelationships: mentor.menteeRelationships
+        $addToSet: {
+            menteeRelationships: relationshipObj._id
         }
     };
 
     let updatedMentor = await usersDB.findOneAndUpdate({_id: mentorId}, setMentorObj);
 
     let setMenteeObj = {
-        $set: {
-            mentorRelationships: mentee.mentorRelationships
+        $addToSet: {
+            mentorRelationships: relationshipObj._id
         }
     };
 
@@ -222,14 +227,14 @@ async function updateUserRelationships(userId, relationshipObj){
     
     userId = validate.convertID(userId);
     if (userId.toString() === mentorId.toString()){
-        updatedMentor._id = updatedMentor._id.toString();
-        delete updatedMentor.password;
-        return updatedMentor;
+        updatedMentor.value._id = updatedMentor.value._id.toString();
+        delete updatedMentor.value.password;
+        return updatedMentor.value;
     }
     else {
-        updatedMentee._id = updatedMentee._id.toString();
-        delete updatedMentee.password;
-        return updatedMentee;
+        updatedMentee.value._id = updatedMentee.value._id.toString();
+        delete updatedMentee.value.password;
+        return updatedMentee.value;
     }
 }
 

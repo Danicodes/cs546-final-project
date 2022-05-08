@@ -3,7 +3,6 @@
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
 const constants = require('../constants/constants');
-const relationshipsData = require('../data/relationships');
 const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
 /**
@@ -65,7 +64,7 @@ const passCheck = async function passCheck(userId, password1, password2, newpass
 function parseTimeInterval(timelineInterval){
     if (timelineInterval != null) {
         if (typeof(timelineInterval) === 'string'){
-           timelineInterval = Date.parse(timelineInterval);
+           timelineInterval = parseInt(timelineInterval);
         }
         
         if (timelineInterval < constants.MIN_CHECKIN_INTERVAL || timelineInterval > constants.MAX_CHECKIN_INTERVAL){
@@ -89,10 +88,15 @@ function parseCheckin(lastcheckin){
      return lastcheckin;
 }
 
-const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed){
+const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed, searchTags){
     checkIsEmptyString(name);
+    //checkIsEmptyString(mentorBio);
+    //checkIsEmptyString(menteeBio);
+    //checkIsEmptyString(myPreferredFeed);
+
+
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
-        throw new Error("age must be a number between 0 and 100");
+        throw "Error: age must be a number between 0 and 100";
     }
     return true;
 }
@@ -117,5 +121,5 @@ module.exports = {
     passCheck,
     parseTimeInterval,
     parseCheckin,
-    isUserAuthorizedForPost
+    passCheck
 }

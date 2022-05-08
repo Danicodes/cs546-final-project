@@ -7,6 +7,8 @@ const session = require("express-session");
 var methodOverride = require('method-override');
 app.use(methodOverride('_method'));
 const fileUpload = require("express-fileupload");
+var methodOverride = require('method-override');
+app.use(methodOverride('_method'));
 
 app.use("/public", static);
 app.use(express.json());
@@ -29,23 +31,6 @@ app.use(
     cookie: {maxAge: 30 * 600 * 1000} // 30 minutes
   })
 );
-
-// LOGGING MIDDLEWARE
-app.use((req, res, next) => {
-  let timeStamp = new Date().toUTCString();
-  let reqMethod = req.method;
-  let reqRoute = req.originalUrl;
-  if (req.session.login) {
-    console.log(
-      `[${timeStamp}]: ${reqMethod} ${reqRoute} (Authenticated User: true)`
-    );
-  } else {
-    console.log(
-      `[${timeStamp}]: ${reqMethod} ${reqRoute} (Authenticated User: false)`
-    );
-  }
-  next();
-});
 
 configRoutes(app);
 

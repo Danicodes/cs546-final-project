@@ -1,12 +1,3 @@
-// Milliseconds vars
-var FIVE_MINUTES = 300000;
-var FIVE_SECONDS = 5000;
-var ONE_DAY = 86400 * 1000; // One day 86400 * 1000 ms
-var ONE_HOUR = 3600 * 1000;
-var ONE_MINUTE = 60000; 
-
-const CHECKMARK = '✓';
-
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
 
@@ -20,7 +11,7 @@ function deleteAllCookies() {
 
 // if only I'd realized I could do this sooner
 
-
+const CHECKMARK = '✓';
 function get_successful_request_element(){
     return $(`<i class="successful-request material-icons">check_circle</i>`);
 }
