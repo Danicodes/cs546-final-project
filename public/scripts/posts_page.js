@@ -14,7 +14,7 @@
     async function getUserObject(userId) {
         request = {
             method : "GET",
-            url : `http://localhost:3000/users/${userId}`,
+            url : `http://localhost:3000/users/post/${userId}`,
             error: function(error) {return error;}
         }
         return $.ajax(request);
@@ -138,7 +138,7 @@
         if(!append)
             commentsDiv.empty();
         for(let comment of comments){
-            let user = await getUserObject(comment.author);
+            let user = await getUserObject(comment.author).person;
             let username = user.name;
             let commentHtml =
             `<section class="comment">
@@ -194,7 +194,8 @@
         else 
             postsDiv.find(".warning").remove();
         for(let post of posts) {
-            let username = (await getUserObject(post.author)).name;
+            let username = (await getUserObject(post.author));
+            username = username.person ? username.person.name : "PlaceHolder";//.person.name;
             let postHtml = 
             `<li class="card" id=${post._id}>
                 <div class="card-header">
@@ -297,7 +298,7 @@
             return ;
         }
          
-        let myUser = await getUserObject(sessionUserId);
+        let myUser = await getUserObject(sessionUserId).person;
         let postSearchText = myUser.myPreferredFeed;
         postSearchInput.val(postSearchText);
         loadPosts(postSearchtext, false);

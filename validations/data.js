@@ -1,6 +1,7 @@
 // Functions for checking data going into the database and checking params passed from routes
 // universally common helper functions
 const { ObjectId } = require('mongodb');
+const bcrypt = require('bcrypt');
 const constants = require('../constants/constants');
 const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
 
@@ -40,6 +41,26 @@ function convertID(id){
     return id;
 }
 
+const passCheck = async function passCheck(userId, password1, password2, newpassword){
+    if (!(password1 == password2)){
+        throw "Error: Passwords do not match!";
+    }
+    if (newpassword.length < 6){
+        throw "Error: Password must be at least 6 characters long.";
+    }
+    return ({authenticated: true});
+}
+/*const checks = function checks(name, bio, age){
+    if (!(typeof name == 'string') || (name == '')){
+        throw "Error: name needs to be a non-zero string";
+    }
+    if (!(typeof bio == 'string')){
+        throw "Error: bio needs to be a string";
+    }
+    if (!(typeof age == 'number') || (age > 100) || (age < 0)){
+        throw "Error: age must be a number between 0 and 100";
+    }*/
+
 function parseTimeInterval(timelineInterval){
     if (timelineInterval != null) {
         if (typeof(timelineInterval) === 'string'){
@@ -69,20 +90,26 @@ function parseCheckin(lastcheckin){
 
 const checks = function checks(name, mentorBio, menteeBio, age, myPreferredFeed, searchTags){
     checkIsEmptyString(name);
-    checkIsEmptyString(mentorBio);
-    checkIsEmptyString(menteeBio);
-    checkIsEmptyString(myPreferredFeed);
+    //checkIsEmptyString(mentorBio);
+    //checkIsEmptyString(menteeBio);
+    //checkIsEmptyString(myPreferredFeed);
+
 
     if (!(typeof age == 'number') || (age > 100) || (age < 0)){
-        throw new Error("age must be a number between 0 and 100");
+        throw "Error: age must be a number between 0 and 100";
     }
+    return true;
+}
 
-    if (!Array.isArray(searchTags)){
-        throw new Error("searchTags must be an array of strings");
-    }
-    for(let searchTag of searchTags) 
-        checkIsEmptyString(searchTag);
-    let flag = false;
+const isUserAuthorizedForPost = async function(userId, relationshipId) {
+    convertID(userId);
+    convertID(relationshipId);
+
+    let relationship = relationshipsData.getRelationshipById(relationshipId);
+    if(userId === relationship.mentor.toString() || userId === relationship.mentee.toString())
+        return ;
+    else
+        throw UnauthorizedRequest(`${userId} Not Authorized to update ${relationshipId}`);
 }
 
 module.exports = {
@@ -91,6 +118,8 @@ module.exports = {
     checkIsEmptyString,
     convertID,
     checks,
+    passCheck,
     parseTimeInterval,
-    parseCheckin
+    parseCheckin,
+    passCheck
 }
