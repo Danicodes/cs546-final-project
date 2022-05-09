@@ -38,7 +38,7 @@ const getPostsCollection = mongoCollections.posts;
 const Category = require('../enums/categories');
 const status = require('../enums/status');
 const data = require('../data');
-const { fs } = require('file-system');
+const fs = require('fs');
 const bcrypt = require('bcrypt');
 
 let relationshipsData = data.relationships;

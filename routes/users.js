@@ -35,6 +35,30 @@ router.get('/:userid', async (req, res) => {
     }
 });
 
+router.get('/post/:userid', async (req, res) => {
+    // Show profile information
+    let userId = req.params.userid;
+    let bool = true;
+    if (req.session.user.id == userId){
+        bool = false;
+    }
+    try {
+        userId = validations.validateId(userId);
+    } catch (e) {
+        return res.status(400).json("Error: " + e);
+    }
+    try {
+        const ret = await userData.getPersonById(userId, false);
+        return res.json({person : ret});
+        //return res.status(200).json(ret);
+    }
+    catch(e){
+        if(e instanceof UnprocessibleRequest)
+            return res.status(e.status).json({error: e.message});
+        res.status(500).json(e);
+    }
+});
+
 router.put('/', async (req, res) => {
     // Update user in database
     let userId = req.session.user.id; 
