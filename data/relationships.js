@@ -202,7 +202,7 @@ const Status = require('../enums/status');
     let filteredRelationshipList = [];
     for(let relationshipId of relationshipList) {
         let relationshipObj = await getRelationshipById(relationshipId);
-       if (relationshipObj.status.name === statusFilter.name) filteredRelationshipList.push(relationshipObj._id);
+       if (relationshipObj.status.name.toLowerCase() === statusFilter.name.toLowerCase()) filteredRelationshipList.push(relationshipObj._id);
     }
    return filteredRelationshipList;
  }
@@ -223,7 +223,7 @@ const Status = require('../enums/status');
     let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
     if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' to update`;
     if (foundRelationships.length > 1) throw `Error: Database returned multiple relationships`;
-    if(foundRelationships.status.name !== Status.APPROVED)
+    if(status.get(foundRelationships.status.name) !== Status.APPROVED)
         throw new UnprocessibleRequest(`Current Relationship state - ${foundRelationships.status.toString()} doesn't approve file upload`);
 
      // To save the file to local folder
