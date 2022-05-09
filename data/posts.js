@@ -72,6 +72,8 @@ let getPosts = async function(sessionUserId){
     let postsCollection = await getPostsCollection();
     // Retrieve and Return the latest posts
     let posts = await postsCollection.find({}).sort({createdOn : -1}).toArray();
+    if(!sessionUserId) return posts;
+
     let accesiblePosts = [];
     for(let post of posts) {
         post._id = post._id.toString();
@@ -174,7 +176,7 @@ let likeAPost = async function(userId, postId) {
     if(updatedPost == null)     // Only if postId is not found
         throw new Error(`Failed to dislike to post - ${postId} by the user ${userId}`);
     else
-        return updatedPost.disLikedBy.length;
+        return updatedPost.dislikedBy.length;
 };
 
 /**

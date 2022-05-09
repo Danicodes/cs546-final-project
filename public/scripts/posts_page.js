@@ -10,6 +10,15 @@
     let myPreferredFeedCheckbox = $("#my-preferred-feed");
     let sessionUserId = $("#post-user-id").text();
 
+    function checkSession(msg) {
+        $(".posts-main").find(".login-error").remove();
+        if(!sessionUserId || sessionUserId.length == 0) {
+            $(".posts-main").prepend(`<h4 class="login-error"> Please login\n ${msg} </h4>`);
+            console.log("Please login\n" + msg);
+            return false;
+        }
+        return true;
+    }
 
     async function getUserObject(userId) {
         request = {
@@ -23,6 +32,7 @@
     function addEventHandlerForReportPost(postNode, postId){
         postNode.find(".post-report").click(function(event) {
             event.preventDefault();
+            if(!checkSession("To Report the Post")) return;
             request = {
                 method : "POST",
                 url : `http://localhost:3000/posts/${postId}/report`,
@@ -47,6 +57,7 @@
     function addEventHandlerForDisLikePost(postNode, postId){
         postNode.find(".post-dislike").click(function(event) {
             event.preventDefault();
+            if(!checkSession("To dislike a post")) return;
             request = {
                 method : "POST",
                 url : `http://localhost:3000/posts/${postId}/dislike`,
@@ -71,6 +82,7 @@
     function addEventHandlerForLikePost(postNode, postId){
         postNode.find(".post-like").click(function(event) {
             event.preventDefault();
+            if(!checkSession("To like a post")) return;
             request = {
                 method : "POST",
                 url : `http://localhost:3000/posts/${postId}/like`,
@@ -114,6 +126,7 @@
     function addEventHandlerForAddCommentAction(postNode, postId) {
         let addCommentForm = postNode.find(`#${postId}-comments-section`).find("form");
         addCommentForm.submit(function(event) {
+            if(!checkSession("To add your comment")) return;
             event.preventDefault();
             console.log("Submitted a new Comment for postId " + postId);
             let commentMessage = addCommentForm.find("#comment-message").val();
@@ -141,7 +154,7 @@
         if(!append)
             commentsDiv.empty();
         for(let comment of comments){
-            let user = await getUserObject(comment.author).person;
+            let user = (await getUserObject(comment.author)).person;
             let username = user.name;
             let commentHtml =
             `<section class="comment">
@@ -159,6 +172,7 @@
 
     function clickCommentHandler(event, postId){
         event.preventDefault();
+        if(!checkSession("To see the comments of the post")) return;
 
         // If comments-section are visible already
         if($(`#${postId}-comments-section`).is(":visible")) {
@@ -197,8 +211,9 @@
         else 
             postsDiv.find(".warning").remove();
         for(let post of posts) {
-            let username = (await getUserObject(post.author));
-            username = username.person ? username.person.name : "PlaceHolder";//.person.name;
+            let username = "Anonymous";
+            if(sessionUserId)
+                username = (await getUserObject(post.author)).person.name;
             let postHtml = 
             `<li class="card" id=${post._id}>
                 <div class="card-header">
@@ -273,6 +288,7 @@
 
     postSearchForm.submit(function(event) {
         event.preventDefault();
+        if(!checkSession("To search through the posts")) return;
         let postSearchText = postSearchInput.val().trim();
         myPreferredFeedCheckbox.prop("checked", false);
         myPostsCheckbox.prop("checked", false);
@@ -293,6 +309,7 @@
      * When myPreferredFeedCheckBox is hit
      */
     myPreferredFeedCheckbox.click(async function(event) {
+        if(!checkSession("To get Your Interested Feed")) return;
         // Reset search Posts and my interest feed
         postSearchInput.val("");
         myPostsCheckbox.prop("checked", false);
@@ -302,7 +319,7 @@
             return ;
         }
          
-        let myUser = await getUserObject(sessionUserId).person;
+        let myUser = (await getUserObject(sessionUserId)).person;
         let postSearchText = myUser.myPreferredFeed;
         postSearchInput.val(postSearchText);
         loadPosts(postSearchText, false);
@@ -312,6 +329,7 @@
      * When "MyPosts" is checked
      */
      myPostsCheckbox.click(function(event) {
+        if(!checkSession("To get Your Posts")) return;
         let postSearchText = postSearchInput.val("");
         let myPosts = myPostsCheckbox.is(':checked');
         if(myPosts) 
@@ -347,6 +365,7 @@
      */
     newPostForm.submit(function(event) {
         event.preventDefault();
+        if(!checkSession("To add your post")) return;
         // Validate the form
         let newPostDesc = newPostForm.find("#post-description").val();
         let newPostTags = newPostForm.find("#post-tags").val();
