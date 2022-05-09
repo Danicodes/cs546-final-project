@@ -18,7 +18,7 @@
                 <input type="number" {{#if bool}} readonly="readonly" {{/if}} name="age" value={{person.age}}>
             </label>
             <label>Name:
-                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="name" value={{person.name}}>
+                <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="name" value="{{person.name}}">
             </label>
             <label id="profile-mentee-ID">Mentee bio:
                 <input class="bio" type="text" {{#if bool}} readonly="readonly" {{/if}} name="menteeBio" value="{{person.menteeBio}}">
