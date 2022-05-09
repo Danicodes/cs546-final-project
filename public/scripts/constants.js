@@ -1,9 +1,9 @@
 // Milliseconds vars
-var FIVE_MINUTES = 300000;
-var FIVE_SECONDS = 5000;
-var ONE_DAY = 86400 * 1000; // One day 86400 * 1000 ms
-var ONE_HOUR = 3600 * 1000;
-var ONE_MINUTE = 60000; 
+const FIVE_MINUTES = 300000;
+const FIVE_SECONDS = 5000;
+const ONE_DAY = 86400 * 1000; // One day 86400 * 1000 ms
+const ONE_HOUR = 3600 * 1000;
+const ONE_MINUTE = 60000; 
 
 const CHECKMARK = '✓';
 
