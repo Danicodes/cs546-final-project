@@ -42,7 +42,7 @@
                 <!-- <p>Feed options: Software Engineering, Education, Writing, Graphic Design, Human Resources, Cooking, Painting, Gambling, Game Design, Chicken, Art, Milkshakes, Restaurants, Party, Fun, Enjoyment, Birthday, Game Development, Events, Medieval, Hobbie, Help, Rejected, Gaming, Sports, Curling, Hello, Post, Request, SoftwareDevelopment, Adventure</p>
                 <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="myPreferredFeed" value="{{person.myPreferredFeed}}">
             </label>-->
-        <button type="submit" form="edit-user">Submit</button>
+        <button type="submit" form="edit-user" {{#if bool}}hidden{{/if}}>Submit</button>
     </form>
 </div>
 <h2 {{#if bool}} hidden {{/if}}>Search Tags</h2>
