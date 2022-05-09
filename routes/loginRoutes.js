@@ -7,7 +7,7 @@ const login_validations = require("../validations/login_validations");
 router.get("/login", async (req, res) => {
   // res.json('Login page')
   if (!req.session.user) {
-    return res.render("frames/login", { title: "Login" });
+    return res.render("frames/login", { pageTitle: "Login" });
   }
   res.redirect(HOME_PAGE_URL);
 });
@@ -15,7 +15,7 @@ router.get("/login", async (req, res) => {
 router.get("/signup", async (req, res) => {
   // res.json('Signup page')
   if (!req.session.user) {
-    return res.render("frames/signup", { title: "Signup" });
+    return res.render("frames/signup", { pageTitle: "Signup" });
   }
   res.redirect(HOME_PAGE_URL);
 });
@@ -51,7 +51,7 @@ router.post("/signup", async (req, res) => {
         res.status(e.code).render("frames/signup", { // Have form persist
           errors: true,
           error: e.error,
-          title: "Signup",
+          pageTitle: "Signup",
         });
       } else {
         res.status(500).json("Internal Server Error " + e);
@@ -76,7 +76,7 @@ router.post("/login", async (req, res) => {
       res.status(e.code).render("frames/login", {
         errors: true,
         error: e.error,
-        title: "Login",
+        pageTitle: "Login",
       });
     } else {
       res.status(500).json("Internal Server Error");
