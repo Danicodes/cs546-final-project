@@ -86,12 +86,17 @@ router.post("/login", async (req, res) => {
 
 router.get("/private", async (req, res) => {
   res.render("frames/private", {
+<<<<<<< HEAD
     title: ""
+=======
+    username: req.session.user.username,
+    pageTitle: "Private Page",
+>>>>>>> d38001b5d253cc2a8da12fb6929d368358de812f
   });
 });
 
 router.get("/logout", async (req, res) => {
   req.session.destroy();
-  res.render("frames/logout", { title: "Logged Out" });
+  res.render("frames/logout", { pageTitle: "Logged Out" });
 });
 module.exports = router;
