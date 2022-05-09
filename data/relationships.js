@@ -11,6 +11,7 @@ const validate = require('../validations/data');
 const chat = require('./chat');
 const UnprocessibleRequest = require('../errors/UnprocessibleRequest');
 const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
+const Status = require('../enums/status');
 
 
 /**
@@ -222,6 +223,8 @@ const UnauthorizedRequest = require('../errors/UnauthorizedRequest');
     let foundRelationships = await relationshipDB.find({'_id': relationshipId}).toArray();
     if (foundRelationships.length === 0) throw `Error: no relationship with id '${relationshipId}' to update`;
     if (foundRelationships.length > 1) throw `Error: Database returned multiple relationships`;
+    if(foundRelationships.status !== Status.APPROVED)
+        throw UnprocessibleRequest(`Current Relationship state - ${foundRelationships.status.toString()} doesn't approve file upload`);
 
      // To save the file to local folder
      const uploadDir = `uploads/${relationshipId}`;

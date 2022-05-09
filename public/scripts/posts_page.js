@@ -8,7 +8,7 @@
     let postSearchInput = $("#posts-search-text");
     let myPostsCheckbox = $("#my-posts");
     let myPreferredFeedCheckbox = $("#my-preferred-feed");
-    let sessionUserId = $("#user-id").text();
+    let sessionUserId = $("#post-user-id").text();
 
 
     async function getUserObject(userId) {
@@ -34,7 +34,7 @@
                 error: function(errorObj, exception) {
                     if(postNode.find(".error").length > 0)
                         postNode.find(".error").remove();
-                    postNode.append($(`<p class="error">${exception}</p>`))
+                    postNode.append($(`<p class="error">${errorObj} ${exception}</p>`));
                     console.log(errorObj);
                     console.log("Failed to report this post" + exception);
                 }
@@ -58,7 +58,7 @@
                 error: function(errorObj, exception) {
                     if(postNode.find(".error").length > 0)
                         postNode.find(".error").remove();
-                    postNode.append($(`<p class="error">${exception}</p>`))
+                    postNode.append($(`<p class="error">${errorObj} ${exception}</p>`));
                     console.log(errorObj);
                     console.log("Failed to Dislike this post" + exception);
                 }
@@ -82,7 +82,7 @@
                 error: function(errorObj, exception) {
                     if(postNode.find(".error").length > 0)
                         postNode.find(".error").remove();
-                    postNode.append($(`<p class="error">${exception}</p>`))
+                    postNode.append($(`<p class="error">${errorObj} ${exception}</p>`));
                     console.log(errorObj);
                     console.log("Failed to add your like " + exception);
                 }
@@ -92,7 +92,7 @@
         });
     }
 
-    function addCommentHandler(event, postId, commentMessage) {
+    function addCommentHandler(addCommentForm, event, postId, commentMessage) {
         if(typeof commentMessage !== "string" || commentMessage.trim().length < 0)
             return ;
         request = {
@@ -101,10 +101,10 @@
             url : `http://localhost:3000/posts/${postId}/comments`,
             success: function(newCommentAdded) {
                 renderComments([newCommentAdded], postId, true);
+                addCommentForm.find(".error").remove();
             },
             error: function(errorObj, exception) {
-                console.log(errorObj);
-                console.log("Failed to add message - " + commentMessage);
+                addCommentForm.append($(`<p class="error">Please add the comment</p>`));
             }
         }
         // Add the comment into database and update the post comments div
@@ -117,7 +117,10 @@
             event.preventDefault();
             console.log("Submitted a new Comment for postId " + postId);
             let commentMessage = addCommentForm.find("#comment-message").val();
-            addCommentHandler(event, postId, commentMessage);
+            if(commentMessage.length == 0) 
+                return addCommentForm.append($(`<p class="error">Please add the comment</p>`));
+            addCommentForm.find(".error").remove();
+            addCommentHandler(addCommentForm,event, postId, commentMessage);
             addCommentForm.find("input").val("");
         });
     }
@@ -272,6 +275,7 @@
         event.preventDefault();
         let postSearchText = postSearchInput.val().trim();
         myPreferredFeedCheckbox.prop("checked", false);
+        myPostsCheckbox.prop("checked", false);
         try {
             postSearchText = validateString(postSearchText, "Search Term", true);
             postSearchForm.find(".error").remove();
@@ -301,7 +305,7 @@
         let myUser = await getUserObject(sessionUserId).person;
         let postSearchText = myUser.myPreferredFeed;
         postSearchInput.val(postSearchText);
-        loadPosts(postSearchtext, false);
+        loadPosts(postSearchText, false);
     });
     
     /**
