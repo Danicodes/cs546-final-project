@@ -554,8 +554,6 @@ let getStatusOfRelationship = async function(req, res){
             res.json(await chatData.getStatus(id));
         }
     } catch (e) {
-        //console.log("Error in GET /relationships/:id/status route:"); // 500
-        //console.log(e); // debug
         res.status(500).json(e);
     }
 }

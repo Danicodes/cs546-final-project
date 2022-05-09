@@ -53,7 +53,7 @@ module.exports = {
         const relationshipsCollection = await relationshipsCol();
         const messageRelationship = await relationshipsCollection.findOne({ "_id": ObjectId(relationship) });
         if(messageRelationship === null) throw "newMessage: relationship must be an existing relationship";
-        if(messageRelationship.status != status.APPROVED) throw UnprocessibleRequest(`Only Active Relationships - ${messageRelationship.status} can add messages to the channel`);
+        if(messageRelationship.status != status.APPROVED) throw new UnprocessibleRequest(`Only Active Relationships - ${messageRelationship.status} can add messages to the channel`);
         let found = false;
         if(messageRelationship["mentor"].toString().localeCompare(sender) === 0 || messageRelationship["mentee"].toString().localeCompare(sender) === 0) found = true;
         if(!found) throw "newMessage: relationship must include sender";

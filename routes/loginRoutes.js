@@ -86,8 +86,7 @@ router.post("/login", async (req, res) => {
 
 router.get("/private", async (req, res) => {
   res.render("frames/private", {
-    username: req.session.user.username,
-    title: "Private Page",
+    title: ""
   });
 });
 
