@@ -19,23 +19,21 @@
                 </div>
             </header>
             <div class="wrapper">
-            <!-- Sidebar -->
-            <nav id="sidebar">
-                <!-- A user loads their workspace should get all their active users and initially have a placeholder-->
-                    <div id="workspace-sidebar" class="sidebar">
-                        {{> relationships this}}
+                <!-- Sidebar -->
+                <nav id="sidebar">
+                    <!-- A user loads their workspace should get all their active users and initially have a placeholder-->
+                        <div id="workspace-sidebar" class="sidebar">
+                            {{> relationships this}}
+                        </div>
+                </nav>
+                <main class="main-content">
+                    <div class="container-fluid">
+                        <div class="workspace-content-area">
+                            <p class="workspace-content-placeholder"> Select a workspace to join </p>
+                        </div>
                     </div>
-            </nav>
-            <main class="main-content">
-            <div class="container-fluid">
-                <div class="workspace-content-area">
-                    <p class="workspace-content-placeholder">
-                        Select a workspace to join
-                    </p>
-                </div>
-                </div>
-                </div>
-            </main>
+                </main>
+            </div>
         </div>
         <script src="/public/scripts/constants.js"></script>
         <script src="/public/scripts/helper.js"></script>

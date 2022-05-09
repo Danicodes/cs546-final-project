@@ -8,7 +8,8 @@ const search = data.search;
 async function getSearchPage(req, res){
     try {
         res.render('partials/searchbar', {
-            layout: "main" // change to appropriate layout
+            layout: "main", // change to appropriate layout
+            pageTitle: "Search Here"
         });
     }
     catch(e){
