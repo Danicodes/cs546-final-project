@@ -5,9 +5,8 @@ const MAX_FILE_SIZE = 10 * 1000 * 1000; // 10 MB
 const MIN_CHECKIN_INTERVAL = 2*1000; // 2 seconds in ms
 const MAX_CHECKIN_INTERVAL = 864000*1000; // 10 days in ms
 const HOME_PAGE_URL = "/posts/html";
-// Allow unauth'd user to see posts html but not interact with
-// SHOULD REALLY BE NAMED NOT_RESTRICTED_PATHS
-const RESTRICTED_PATHS_REGEX = /^\/(?!login|signup|posts\/html|post\/[^\/]+|private$\/).*$/; // For use in auth middleware, check any route that is not /login or signup
+// const RESTRICTED_PATHS_REGEX = /^\/(?!login|signup|\/).*$/; // For use in auth middleware, check any route that is not /login or signup
+const RESTRICTED_PATHS_REGEX = /^\/(?!login|signup|posts|posts\/html\/|user\/post\/\[\w\d\]\/).*$/;
 
 module.exports = {
     DEFAULT_PAGE_NO,
