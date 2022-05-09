@@ -25,7 +25,7 @@ router.get('/:userid', async (req, res) => {
     }
     try {
         const ret = await userData.getPersonById(userId, false);
-        return res.render('layouts/users', {person : ret, bool : bool});
+        return res.render('layouts/users', {person : ret, bool : bool, pageTitle: "Profile"});
         //return res.status(200).json(ret);
     }
     catch(e){
@@ -49,7 +49,7 @@ router.get('/post/:userid', async (req, res) => {
     }
     try {
         const ret = await userData.getPersonById(userId, false);
-        return res.json({person : ret});
+        return res.json({person : ret, pageTitle : "Profile"});
         //return res.status(200).json(ret);
     }
     catch(e){
@@ -76,7 +76,7 @@ router.put('/', async (req, res) => {
 
     try {
         const ret = await userData.updateUser(userId, name, mentorBio, menteeBio, parseInt(age), myPreferredFeed);
-        return res.render('layouts/users', {person : ret});
+        return res.render('layouts/users', {person : ret, pageTitle: "Profile"});
     }
     catch(e){
         if(e instanceof UnprocessibleRequest)
@@ -107,7 +107,7 @@ router.put('/:userid/reset', async (req, res) => {
     }
     try {
         const ret = await userData.updatePassword(userId, newpassword);
-        return res.render('layouts/users', {person : ret, updated : true});
+        return res.render('layouts/users', {person : ret, updated : true, pageTitle : "Profile"});
     }
     catch(e){
         console.log(e);
@@ -127,7 +127,7 @@ router.put('/:userid/removeTag', async (req, res) => {
     }
     try {
         const ret = await userData.removeTag(userId, searchTag);
-        return res.render('layouts/users', {person : ret});
+        return res.render('layouts/users', {person : ret, pageTitle : "Profile"});
     }
     catch(e){
         console.log(e);
@@ -146,7 +146,7 @@ router.put('/:userid/addTag', async (req, res) => {
     }
     try {
         const ret = await userData.addTag(userId, searchTag);
-        return res.render('layouts/users', {person : ret});
+        return res.render('layouts/users', {person : ret, titke : "Profile"});
     }
     catch(e){
         console.log(e);
