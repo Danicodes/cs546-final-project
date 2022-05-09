@@ -2,26 +2,26 @@ body {
     margin: 0;
 }
 
-/*Main container for the site*/
+/* Main container for the site
 .container {
     width: 100vw;
     height: 100vh;  
     
-    /* Specifies a grid layout 3x4*/
+    /* Specifies a grid layout 3x4
     display: grid;
     grid-auto-flow: column;
-    grid-template-columns: 1fr 1fr 1fr; /*3 columns each 1 fraction of the total available space, also repear(3, 1fr) works here*/
-    grid-template-rows: 50px 75px 1fr 50px; /* first row is 50px, 2nd row is 75px, 3rd 1 fraction, 4rd row is 50px */
-    gap: 5px; /*Gap between each cell of the grid*/
+    grid-template-columns: 1fr 1fr 1fr; /*3 columns each 1 fraction of the total available space, also repear(3, 1fr) works here
+    grid-template-rows: 50px 75px 1fr 50px; /* first row is 50px, 2nd row is 75px, 3rd 1 fraction, 4rd row is 50px 
+    gap: 5px; /*Gap between each cell of the grid
     /* grid-template-areas:
         "header-name header-name login"
         "nav nav nav"
         "menu content content"
-        "footer footer footer"; */
+        "footer footer footer"; 
 
     padding: 5px;
-    /* box-sizing: border-box; */
-}
+    /* box-sizing: border-box; 
+} */
 
 /* .container div {
     padding: 10px;
@@ -155,3 +155,17 @@ header h1 {
 /* .link-that-looks-like-button:visited {
 
 } */
+
+#workspace-sidebar {
+    background-color: grey;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+}
+
+.container-fluid {
+    width: 100%;
+}

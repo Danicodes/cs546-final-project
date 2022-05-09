@@ -100,24 +100,17 @@ function relationshipPollAjax(){
 
         }
     }
-    // for each STORED time in relationship obj verify whether a checkin
-    // is going to occur soon or not
-    // Depending on the result then add some visual notif depending on the page
-    // if window.pathname.!startwith('/workspaces/')
-    // then show the notif on the navbar over workspaces
-    // else in workspaces show the notif on the username
-    // $.ajax({
-
-    // });
 }
 
 var pollInterval = setInterval(function (){
     relationshipPollAjax();
 
-}, FIVE_SECONDS*6); // Every 30 seconds call the poll function because I am overwhelmed
+}, ONE_MINUTE); // Every 1 minute call the poll function
 
 function getUsersRelationships(){
-    console.log("User ");
+    if (document.getElementById('#refresh-messages')){
+        $('#refresh-messages').trigger('click');
+    }
     let user = getUserFromCookie();
     if (user == null){
         return;
