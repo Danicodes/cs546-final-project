@@ -25,9 +25,22 @@
             <label id="profile-mentor-ID" style="display:none;">Mentor bio:
                 <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="mentorBio" value="{{person.mentorBio}}">
             </label>
-            <label>My preferred feed:
+            <p>My preferred feed: {{person.myPreferredFeed}}</p>
+            {{#if bool}}
+            {{else}}
+            Switch preferred feed?
+            <select name="myPreferredFeed" {{#if bool}} readonly="readonly" {{/if}}>
+                <option value="Software Engineering">Software Engineering</option>
+                <option value="Education">Education</option>
+                <option value="Writing">Writing</option>
+                <option value="Graphic Design">Graphic Design</option>
+                <option value="Human Resources">Human Resources</option>
+            </select>
+            {{/if}}
+            <!--<label>My preferred feed:
+                <!-- <p>Feed options: Software Engineering, Education, Writing, Graphic Design, Human Resources, Cooking, Painting, Gambling, Game Design, Chicken, Art, Milkshakes, Restaurants, Party, Fun, Enjoyment, Birthday, Game Development, Events, Medieval, Hobbie, Help, Rejected, Gaming, Sports, Curling, Hello, Post, Request, SoftwareDevelopment, Adventure</p>
                 <input type="text" {{#if bool}} readonly="readonly" {{/if}} name="myPreferredFeed" value="{{person.myPreferredFeed}}">
-            </label>
+            </label>-->
         <button type="submit" form="edit-user">Submit</button>
     </form>
 </div>
